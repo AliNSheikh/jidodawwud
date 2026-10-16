@@ -1,9 +1,10 @@
-import React,{useCallback,useEffect,useMemo,useState} from 'react';
+import React,{useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, Facebook, Ghost, Instagram, MapPin, Menu as MenuIcon, MessageCircle, Minus, Music2, Phone, Plus, Search, Share2, ShoppingBag, Trash2, Truck, Wallet, CreditCard, Store, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
 import {priceOf,moneyLabel,linkToCategory,linkToProduct} from './types/store';
 import {StoreAdmin} from './components/admin/StoreAdmin';
 import {googleMapsEmbedUrl} from './utils/googleMaps';
+import {RiyalPrice} from './components/RiyalPrice';
 import bundledMenu from '../data/menu.json';
 
 function App(){
@@ -14,6 +15,7 @@ function App(){
   const [loadError,setLoadError]=useState('');
   const [search,setSearch]=useState('');
   const [activeSlide,setActiveSlide]=useState(0);
+  const categoriesScroller=useRef<HTMLDivElement>(null);
   const [navOpen,setNavOpen]=useState(false);
   const [cart,setCart]=useState<CartLine[]>(()=>{
     try{return JSON.parse(localStorage.getItem('jido-cart')||'[]');}catch{return [];}
@@ -113,10 +115,6 @@ function App(){
   const page=path.startsWith('/category/')?'category':path.startsWith('/product/')?'product':path==='/categories'?'categories':path==='/cart'?'cart':path==='/contact'?'contact':'home';
   const pageTitle=page==='category'?currentCategory?.name:page==='product'?product?.name:page==='cart'?'سلة الطلبات':page==='contact'?'تواصل معنا':page==='categories'?'الأقسام':'قائمة الطعام';
   document.title=(pageTitle||'قائمة الطعام')+' | '+restaurant.name;
-  const ProductPrice=({amount}:{amount:number})=><span className="price-amount" aria-label={moneyLabel(amount)}>
-    <span className="price-number">{new Intl.NumberFormat('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:2}).format(amount)}</span>
-    <span className="currency-mark" aria-hidden="true">⃁</span>
-  </span>;
   const ProductCard=({p}:{p:Product})=>{
     const offered=p.offerEnabled && p.offerPrice!=null&&p.offerPrice<p.basePrice;
     const pct=offered?Math.round((1-Number(p.offerPrice)/p.basePrice)*100):0;
@@ -132,17 +130,26 @@ function App(){
         <button className="product-name" onClick={()=>go(linkToProduct(p))}>{p.name}</button>
         <div className="card-bottom">
           <div className={'prices'+(offered?' has-offer':'')}>
-            {offered&&<del><ProductPrice amount={p.basePrice}/></del>}
-            <strong><ProductPrice amount={priceOf(p)}/></strong>
+            {offered&&<del><RiyalPrice amount={p.basePrice}/></del>}
+            <strong><RiyalPrice amount={priceOf(p)}/></strong>
           </div>
         </div>
       </div>
     </article>;
   };
   const Cards=({items}:{items:Product[]})=><div className="product-grid">{items.map(p=><ProductCard p={p} key={p.id}/>)}</div>;
-  const CategoryGrid=()=> <div className="category-grid">
-    {hasOffers&&<button className="category-tile offer-category" onClick={()=>go('/category/offers')}><BadgePercent size={24}/><span>العروض</span><small>{offers.length} منتج</small></button>}
-    {allCategories.map(c=><button key={c.id} className="category-tile" onClick={()=>go(linkToCategory(c))}><ShoppingBag size={22}/><span>{c.name}</span><small>{menu.items.filter(p=>p.categoryId===c.id&&p.isAvailable).length} منتج</small></button>)}
+  const CategoryGrid=({horizontal=false}:{horizontal?:boolean})=><div className={horizontal?'category-strip-container':undefined}>
+    <div className={horizontal?'category-grid category-strip':'category-grid'} ref={horizontal?categoriesScroller:undefined} role={horizontal?'region':undefined} aria-label={horizontal?'الأقسام، اسحب للتصفح':undefined} tabIndex={horizontal?0:undefined}>
+      {hasOffers&&<button className="category-tile offer-category" onClick={()=>go('/category/offers')}><BadgePercent size={24}/><span>العروض</span><small>{offers.length} منتج</small></button>}
+      {allCategories.map(c=><button key={c.id} className="category-tile" onClick={()=>go(linkToCategory(c))}><ShoppingBag size={22}/><span>{c.name}</span><small>{menu.items.filter(p=>p.categoryId===c.id&&p.isAvailable).length} منتج</small></button>)}
+    </div>
+    {horizontal&&<div className="category-strip-actions">
+      <span className="category-strip-hint">اسحب لتصفح الأقسام</span>
+      <div className="category-strip-buttons">
+        <button type="button" aria-label="الأقسام التالية" onClick={()=>categoriesScroller.current?.scrollBy({left:-240,behavior:'smooth'})}><ChevronRight size={19}/></button>
+        <button type="button" aria-label="الأقسام السابقة" onClick={()=>categoriesScroller.current?.scrollBy({left:240,behavior:'smooth'})}><ChevronLeft size={19}/></button>
+      </div>
+    </div>}
   </div>;
   const Contact=()=> <section className="contact-section" id="contact">
     <div className="section-head"><div><span className="eyebrow">نرحب بزيارتكم</span><h2>تواصل معنا</h2></div></div>
@@ -176,7 +183,7 @@ function App(){
           </>:<div className="hero-empty"><h1>أهلاً بكم في {restaurant.name}</h1><p>نكهات تجمعنا ولحظات تبقى</p></div>}
         </div></section>
         <div className="container">
-          <section className="categories-section"><div className="section-head"><div><span className="eyebrow">اكتشف أشهى الأطباق</span><h2>تصفح الأقسام</h2></div><button className="text-link" onClick={()=>go('/categories')}>كل الأقسام <ArrowLeft size={17}/></button></div><CategoryGrid/></section>
+          <section className="categories-section"><div className="section-head"><div><span className="eyebrow">اكتشف أشهى الأطباق</span><h2>تصفح الأقسام</h2></div><button className="text-link" onClick={()=>go('/categories')}>كل الأقسام <ArrowLeft size={17}/></button></div><CategoryGrid horizontal/></section>
           <div id="menu" className="menu-section"><div className="section-head"><div><span className="eyebrow">مذاق على ذوقك</span><h2>قائمة الطعام</h2></div></div>
             <div className="search-wrapper"><Search size={20}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث عن طبقك المفضل..." aria-label="بحث في الأصناف"/></div>
             {hasOffers&&searchItems(offers).length>0&&<section className="menu-group"><div className="group-title"><h3><BadgePercent/> العروض المميزة</h3><button onClick={()=>go('/category/offers')}>عرض الكل <ArrowLeft size={16}/></button></div><Cards items={searchItems(offers)}/></section>}
@@ -198,8 +205,8 @@ function App(){
         {product?<div className="product-detail"><div className="detail-media">{product.imageUrl?<img src={product.imageUrl} alt={product.name}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
           <div className="detail-info"><span className="eyebrow">{allCategories.find(c=>c.id===product.categoryId)?.name||'قائمة الطعام'}</span><h1>{product.name}</h1>{product.description&&<p>{product.description}</p>}
             <div className={'detail-prices'+(product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice?' has-offer':'')}>
-              {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del><ProductPrice amount={product.basePrice}/></del>}
-              <strong className="detail-price"><ProductPrice amount={priceOf(product)}/></strong>
+              {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del><RiyalPrice amount={product.basePrice}/></del>}
+              <strong className="detail-price"><RiyalPrice amount={priceOf(product)}/></strong>
             </div><div className="detail-actions"><button className="btn primary" onClick={()=>add(product)}><Plus size={19}/> أضف للسلة</button><button className="btn outline" onClick={share}><Share2 size={18}/> مشاركة المنتج</button></div>
           </div></div>:<div className="empty-state">هذا المنتج غير متاح</div>}
       </div>}
@@ -208,7 +215,7 @@ function App(){
         <div className="checkout-layout"><div className="checkout-main">
           <section className="white-panel"><h2>المنتجات المختارة</h2>{cartLines.map(({line,product:p})=><div key={p.id} className="cart-row">
             {p.imageUrl?<img src={p.imageUrl} alt={p.name}/>:<div className="cart-placeholder"><ShoppingBag/></div>}
-            <div className="cart-row-content"><strong>{p.name}</strong><span>{moneyLabel(priceOf(p))}</span><div className="quantity"><button onClick={()=>adjust(p.id,-1)} aria-label="تقليل"><Minus size={14}/></button><span>{line.quantity}</span><button onClick={()=>adjust(p.id,1)} aria-label="زيادة"><Plus size={14}/></button></div></div>
+            <div className="cart-row-content"><strong>{p.name}</strong><span><RiyalPrice amount={priceOf(p)}/></span><div className="quantity"><button onClick={()=>adjust(p.id,-1)} aria-label="تقليل"><Minus size={14}/></button><span>{line.quantity}</span><button onClick={()=>adjust(p.id,1)} aria-label="زيادة"><Plus size={14}/></button></div></div>
             <button className="delete-product" onClick={()=>adjust(p.id,-line.quantity)} aria-label="حذف"><Trash2 size={18}/></button>
           </div>)}</section>
           <section className="white-panel"><h2>بيانات الطلب</h2><div className="form-grid"><label>الاسم الكامل <input required value={customer.customerName} onChange={e=>setCustomer({...customer,customerName:e.target.value})} placeholder="الاسم"/></label><label>رقم الجوال <input required type="tel" dir="ltr" value={customer.phone} onChange={e=>setCustomer({...customer,phone:e.target.value})} placeholder="05xxxxxxxx"/></label></div>
@@ -227,11 +234,11 @@ function App(){
         <aside className="white-panel checkout-summary"><h2>ملخص الطلب</h2>
           <label>هل لديك كود خصم؟<div className="promo-input"><input value={customer.promo} onChange={e=>setCustomer({...customer,promo:e.target.value})} placeholder="أدخل رمز الخصم"/>{selectedPromo&&<Check size={18}/>}</div></label>
           {customer.promo&&!selectedPromo&&<small className="hint">رمز الخصم غير متاح</small>}
-          <div className="sum-line"><span>المجموع الفرعي</span><strong>{moneyLabel(subtotal)}</strong></div>
-          {discount>0&&<div className="sum-line saving"><span>الخصم</span><strong>- {moneyLabel(discount)}</strong></div>}
-          <div className="sum-line"><span>التوصيل</span><strong>{customer.service==='pickup'?'استلام':deliveryFee>0?moneyLabel(deliveryFee):'مجاني'}</strong></div>
-          {customer.service==='delivery'&&restaurant.freeDeliveryMinimum>0&&<small className="hint">توصيل مجاني للطلبات من {moneyLabel(restaurant.freeDeliveryMinimum)}</small>}
-          <div className="sum-line sum-total"><span>الإجمالي</span><strong>{moneyLabel(total)}</strong></div>
+          <div className="sum-line"><span>المجموع الفرعي</span><strong><RiyalPrice amount={subtotal}/></strong></div>
+          {discount>0&&<div className="sum-line saving"><span>الخصم</span><strong>- <RiyalPrice amount={discount}/></strong></div>}
+          <div className="sum-line"><span>التوصيل</span><strong>{customer.service==='pickup'?'استلام':deliveryFee>0?<RiyalPrice amount={deliveryFee}/>: 'مجاني'}</strong></div>
+          {customer.service==='delivery'&&restaurant.freeDeliveryMinimum>0&&<small className="hint">توصيل مجاني للطلبات من <RiyalPrice amount={restaurant.freeDeliveryMinimum}/></small>}
+          <div className="sum-line sum-total"><span>الإجمالي</span><strong><RiyalPrice amount={total}/></strong></div>
           <button className="btn primary checkout-button" disabled={placing||!customer.customerName.trim()||!customer.phone.trim()||(customer.service==='delivery'&&!customer.address.trim())||(!!customer.promo&&!selectedPromo)} onClick={send}><MessageCircle size={20}/>{placing?'جارٍ حفظ الطلب...':'إرسال الطلب عبر واتساب'}</button>
           <p className="hint">سيتم تسجيل طلبك ثم فتح واتساب لإرساله إلى المطعم. لا يتم تحصيل المدفوعات عبر الموقع.</p>
           {orderError&&<p role="alert" className="form-error">{orderError}</p>}{orderSuccess&&<p className="form-success">{orderSuccess}</p>}
@@ -240,7 +247,7 @@ function App(){
       {page==='contact'&&<div className="container page-container"><Contact/></div>}
     </main>
     <footer className="site-footer"><div className="container footer-inner"><div className="footer-brand"><img src={restaurant.logoUrl||'/logo.webp'} alt="الشعار"/><span>{restaurant.name}</span></div><p>نعتز بوجودكم معنا، ونتشرف بخدمتكم دائمًا.</p><p>© {new Date().getFullYear()} {restaurant.name} — جميع الحقوق محفوظة</p></div></footer>
-    {cartCount>0&&page!=='cart'&&<button className="floating-cart" onClick={()=>go('/cart')}><span><ShoppingBag size={20}/> عرض السلة ({cartCount})</span><strong>{moneyLabel(subtotal)}</strong><ArrowLeft size={18}/></button>}
+    {cartCount>0&&page!=='cart'&&<button className="floating-cart" onClick={()=>go('/cart')}><span><ShoppingBag size={20}/> عرض السلة ({cartCount})</span><strong><RiyalPrice amount={subtotal}/></strong><ArrowLeft size={18}/></button>}
   </div>;
 }
 export default App;
