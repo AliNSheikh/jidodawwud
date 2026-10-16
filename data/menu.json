@@ -13,9 +13,9 @@
     "hours": "من 3 عصراً حتى 3 صباحاً",
     "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3454.5276523755397!2d46.690731199999995!3d24.5415019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f0f9cb8a0e8d5%3A0xbebc473f93fa37ff!2z2KzYr9mIINiv2KfZiNmI2K8!5e1!3m2!1sen!2sae!4v1792164156167!5m2!1sen!2sae",
     "googleFontUrl": "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap",
-    "deliveryEnabled": false,
+    "deliveryEnabled": true,
     "deliveryFee": 0,
-    "freeDeliveryMinimum": 100,
+    "freeDeliveryMinimum": 0,
     "social": {
       "facebook": "https://www.facebook.com/profile.php?id=61594698938432",
       "instagram": "https://www.instagram.com/jidwdawwud/",
