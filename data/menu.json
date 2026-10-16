@@ -44,6 +44,13 @@
       "description": "",
       "displayOrder": 3,
       "isActive": true
+    },
+    {
+      "id": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
+      "name": "صوصات",
+      "description": "",
+      "displayOrder": 4,
+      "isActive": true
     }
   ],
   "items": [],
