@@ -1,7 +1,7 @@
 import React,{useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, Facebook, Ghost, Instagram, MapPin, Menu as MenuIcon, MessageCircle, Minus, Music2, Phone, Plus, Search, Share2, ShoppingBag, Trash2, Truck, Wallet, CreditCard, Store, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
-import {priceOf,moneyLabel,linkToCategory,linkToProduct} from './types/store';
+import {priceOf,linkToCategory,linkToProduct} from './types/store';
 import {StoreAdmin} from './components/admin/StoreAdmin';
 import {googleMapsEmbedUrl} from './utils/googleMaps';
 import {RiyalPrice} from './components/RiyalPrice';
