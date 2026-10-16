@@ -11,7 +11,7 @@
     "phone": "",
     "address": "",
     "hours": "",
-    "mapEmbedUrl": "https://maps.app.goo.gl/kVUTdwKaUcVAughD7",
+    "mapEmbedUrl": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3454.5276523755397!2d46.690731199999995!3d24.5415019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f0f9cb8a0e8d5%3A0xbebc473f93fa37ff!2z2KzYr9mIINiv2KfZiNmI2K8!5e1!3m2!1sen!2sae!4v1792164156167!5m2!1sen!2sae\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>",
     "googleFontUrl": "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap",
     "deliveryEnabled": false,
     "deliveryFee": 0,
