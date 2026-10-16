@@ -194,3 +194,58 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
  .category-strip-buttons button{width:32px;height:32px}
  .price-amount{gap:.19em}
 }
+
+/* Product card details, sorting and order volume. */
+.sort-control{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:800;color:var(--navy);white-space:nowrap}
+.sort-control select{width:auto;max-width:100%;padding:9px 11px;font-size:12px;font-weight:700;cursor:pointer;border-radius:9px}
+.page-container>.sort-control{margin:3px 0 25px}
+.product-excerpt{border:0;background:none;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:right;width:100%;padding:0;color:#6f7e95;font-size:12px;line-height:1.75;min-height:42px;max-height:42px;cursor:pointer}
+.product-excerpt:hover{color:var(--navy)}
+.product-order-count{display:block;color:#8896a8;font-size:11px;font-weight:700;margin-top:6px}
+.product-meta .card-bottom{margin-top:8px}
+.detail-product-meta{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.detail-product-meta .rating-badge{position:static;box-shadow:none;background:#fff8dc}
+.detail-product-meta small{font-size:12px;color:var(--muted);font-weight:700}
+.rating-badge{position:absolute;top:9px;left:9px;display:inline-flex;align-items:center;gap:4px;min-height:27px;padding:4px 7px;border-radius:8px;background:rgba(255,255,255,.97);box-shadow:0 2px 9px #0000001f;color:#b47b10;font-family:var(--restaurant-font),sans-serif;font-weight:800;font-size:12px;z-index:2;direction:ltr}
+.rating-badge .rating-count{color:#596a83;font-size:10px}
+.review-section{padding:36px 0 60px;margin-top:20px;border-top:1px solid var(--line)}
+.review-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:21px;align-items:start}
+.review-list h3,.review-form h3{margin:0 0 14px;font-size:18px}
+.review-list{display:grid;align-content:start;gap:11px}
+.review-card{border:1px solid var(--line);padding:17px 20px;background:#fff;border-radius:13px}
+.review-card-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.review-card strong{font-size:14px}
+.review-card small{font-size:11px;color:var(--muted)}
+.review-card p{font-size:13px;line-height:1.9;margin:8px 0 0;overflow-wrap:anywhere}
+.stars-row{display:inline-flex;align-items:center;gap:3px;color:#dba62b;white-space:nowrap}
+.stars-row .star-empty{color:#d6dbe4}
+.stars-row.interactive{direction:ltr;justify-content:flex-end;gap:5px}
+.stars-row.interactive button{background:transparent;border:0;color:#dba62b;padding:4px;display:inline-grid;place-items:center}
+.review-form{display:grid;gap:14px}
+.review-form>label{display:grid;gap:8px;font-size:13px;font-weight:800}
+.review-form textarea{resize:vertical}
+.review-form>.btn{justify-self:start}
+.review-honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none}
+.reviews-stats{display:flex;gap:20px;flex-wrap:wrap;border-radius:12px;padding:14px;background:var(--pale);font-size:13px}
+.admin-reviews-list{display:grid;gap:14px}
+.admin-review-card{border:1px solid var(--line);border-radius:13px;padding:18px;background:white}
+.admin-review-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.admin-review-head strong{font-size:15px}
+.admin-review-head p{font-size:11px;color:var(--muted);margin:3px 0}
+.review-stars-mini{display:flex;gap:3px;color:#dba62b;margin:11px 0}
+.review-comment{font-size:13px;color:var(--ink);line-height:1.9;overflow-wrap:anywhere}
+.review-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.review-edit-form{display:grid;gap:8px;margin-top:14px}
+.review-edit-form .admin-field{margin-bottom:0}
+.delete-review{color:#b64b50!important}
+@media(max-width:720px){
+ .menu-section .section-head{align-items:start;flex-wrap:wrap}
+ .menu-section .section-head .sort-control{width:100%;justify-content:space-between}
+ .sort-control select{min-width:145px}
+ .product-excerpt{font-size:11px;min-height:38px;max-height:38px}
+ .rating-badge{top:7px;left:7px;font-size:11px;padding:3px 5px}
+ .rating-badge svg{width:13px;height:13px}
+ .review-layout{grid-template-columns:1fr}
+ .review-section{padding-bottom:30px}
+ .review-form{padding:18px}
+}
