@@ -1,357 +1,60 @@
 {
   "restaurant": {
-    "name": "L'Étoile Gastronomie",
-    "tagline": "Modern Haute Gastronomie & Artisanal Terroir",
-    "currency": "USD",
-    "currencySymbol": "$",
-    "locale": "en-US",
-    "address": "42 Rue de l'Amirauté, Paris 8e",
-    "phone": "+33 1 42 68 55 00",
-    "hours": "Dinner: Tue–Sat 18:00 – 23:30 | Lunch: Sat–Sun 12:00 – 15:00",
-    "serviceChargePercent": 10,
-    "taxPercent": 8.5
+    "name": "جدو داوود",
+    "tagline": "نكهات تجمعنا ولحظات تبقى",
+    "currency": "SAR",
+    "currencySymbol": "⃁",
+    "locale": "ar-SA",
+    "logoUrl": "/logo.webp",
+    "faviconUrl": "/logo.webp",
+    "whatsapp": "",
+    "phone": "",
+    "address": "",
+    "hours": "",
+    "mapEmbedUrl": "",
+    "googleFontUrl": "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap",
+    "deliveryEnabled": false,
+    "deliveryFee": 0,
+    "freeDeliveryMinimum": 100,
+    "social": {
+      "facebook": "",
+      "instagram": "",
+      "tiktok": "",
+      "snapchat": ""
+    }
   },
   "categories": [
     {
-      "id": "starters",
-      "name": "Starters & Crudo",
-      "description": "Wild ocean crudo, seasonal foraged mushrooms, and velvety emulsified starters",
+      "id": "main",
+      "name": "الأطباق الرئيسية",
+      "description": "",
       "displayOrder": 1,
       "isActive": true
     },
     {
-      "id": "mains",
-      "name": "Chef's Specials & Mains",
-      "description": "Dry-aged heritage meats, line-caught seafood, and black winter truffles",
+      "id": "starters",
+      "name": "المقبلات",
+      "description": "",
       "displayOrder": 2,
       "isActive": true
     },
     {
-      "id": "sides",
-      "name": "Artisanal Sides",
-      "description": "Heritage grains, wood-fired seasonal greens, and cellar-aged tubers",
+      "id": "drinks",
+      "name": "المشروبات",
+      "description": "",
       "displayOrder": 3,
-      "isActive": true
-    },
-    {
-      "id": "desserts",
-      "name": "Desserts & Mignardises",
-      "description": "Grand cru chocolate entremets, blown sugar creations, and house churned sorbets",
-      "displayOrder": 4,
-      "isActive": true
-    },
-    {
-      "id": "cellar",
-      "name": "Cellar & Signature Libations",
-      "description": "Curated biodynamic grower champagnes, Grand Cru pairings, and house botanicals",
-      "displayOrder": 5,
       "isActive": true
     }
   ],
-  "items": [
+  "items": [],
+  "promos": [],
+  "slides": [
     {
-      "id": "item-ribeye",
-      "categoryId": "mains",
-      "name": "Dry-Aged Wagyu Ribeye (A5 Miyazaki)",
-      "description": "45-day Himalayan salt-aged Wagyu ribeye, smoked bone marrow glaze, charred shallot petals, and wild thyme jus.",
-      "basePrice": 54.0,
-      "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["gluten-free", "halal"],
-      "allergens": ["Dairy"],
-      "displayOrder": 1,
-      "customizationGroups": [
-        {
-          "id": "temp",
-          "title": "Cooking Temperature",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "t-rare", "name": "Rare (Cool red center)", "priceModifier": 0.0, "isDefault": false },
-            { "id": "t-med-rare", "name": "Medium-Rare (Warm pink center, recommended)", "priceModifier": 0.0, "isDefault": true },
-            { "id": "t-med", "name": "Medium (Warm rose center)", "priceModifier": 0.0, "isDefault": false },
-            { "id": "t-med-well", "name": "Medium-Well (Slight pink)", "priceModifier": 0.0, "isDefault": false }
-          ]
-        },
-        {
-          "id": "lux-addons",
-          "title": "Culinary Enhancements & Add-ons",
-          "type": "multiple",
-          "required": false,
-          "maxSelections": 3,
-          "options": [
-            { "id": "addon-truffle-butter", "name": "Truffle Butter Quenelle", "priceModifier": 4.0 },
-            { "id": "addon-asparagus", "name": "Grilled Jumbo Asparagus", "priceModifier": 7.0 },
-            { "id": "addon-foie-gras", "name": "Pan-Seared Rougié Foie Gras", "priceModifier": 14.0 },
-            { "id": "addon-caviar-bump", "name": "10g Oscietra Royal Caviar Spoon", "priceModifier": 18.0 }
-          ]
-        },
-        {
-          "id": "sauce-choice",
-          "title": "Artisanal Reduction Sauce",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "sauce-bordelaise", "name": "Classic Bordeaux Red Wine Jus", "priceModifier": 0.0, "isDefault": true },
-            { "id": "sauce-peppercorn", "name": "Green Peppercorn & Cognac Reduction", "priceModifier": 0.0, "isDefault": false },
-            { "id": "sauce-chimichurri", "name": "Fermented Wild Herb Chimichurri", "priceModifier": 0.0, "isDefault": false }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-scallops",
-      "categoryId": "starters",
-      "name": "Pan-Seared Hokkaido King Scallops",
-      "description": "Caramelized diver scallops on silky parsnip velouté, Oscietra caviar pearls, yuzu beurre blanc, and golden bronze fennel.",
-      "basePrice": 28.0,
-      "imageUrl": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["gluten-free", "halal"],
-      "allergens": ["Molluscs", "Dairy"],
-      "displayOrder": 1,
-      "customizationGroups": [
-        {
-          "id": "caviar-upgrade",
-          "title": "Caviar Selection",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "cav-standard", "name": "Royal Oscietra Caviar (Included)", "priceModifier": 0.0, "isDefault": true },
-            { "id": "cav-beluga", "name": "Imperial Beluga Caviar (+15g Upgrade)", "priceModifier": 22.0, "isDefault": false }
-          ]
-        },
-        {
-          "id": "starter-bread",
-          "title": "Bread & Butter Accompaniment",
-          "type": "multiple",
-          "required": false,
-          "maxSelections": 2,
-          "options": [
-            { "id": "brioche", "name": "Warm Toasted Brioche Feuilletée", "priceModifier": 3.5 },
-            { "id": "smoked-butter", "name": "House Smoked Sea Salt Butter", "priceModifier": 2.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-tartare",
-      "categoryId": "starters",
-      "name": "Bluefin Tuna & Oscietra Crudo",
-      "description": "Sustainably caught bluefin akami, finger lime caviar, cold-pressed white sesame oil, pickled daikon radish, and crispy lotus root.",
-      "basePrice": 26.0,
-      "imageUrl": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["gluten-free", "halal", "nut-free"],
-      "allergens": ["Fish", "Sesame"],
-      "displayOrder": 2,
-      "customizationGroups": [
-        {
-          "id": "spice-level",
-          "title": "Wasabi & Pungency",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "sp-subtle", "name": "Subtle Fresh Shizuoka Wasabi", "priceModifier": 0.0, "isDefault": true },
-            { "id": "sp-extra", "name": "Generous Hand-Grated Wasabi", "priceModifier": 0.0 },
-            { "id": "sp-none", "name": "No Wasabi (Citrus Dressing Only)", "priceModifier": 0.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-tagliolini",
-      "categoryId": "mains",
-      "name": "Hand-Cut Black Truffle Tagliolini",
-      "description": "36-yolk hand-rolled pasta strands, 24-month aged Parmigiano Reggiano emulsion, Normandy cultured butter, and shaved Norcia black truffles.",
-      "basePrice": 42.0,
-      "imageUrl": "https://images.unsplash.com/photo-1621996346565-e3d5d6281691?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["vegetarian", "halal", "nut-free"],
-      "allergens": ["Gluten", "Dairy", "Eggs"],
-      "displayOrder": 2,
-      "customizationGroups": [
-        {
-          "id": "truffle-intensity",
-          "title": "Truffle Shaving Portion",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "truf-standard", "name": "Standard Shaving (5g Norcia Black)", "priceModifier": 0.0, "isDefault": true },
-            { "id": "truf-double", "name": "Double Shaving (10g Black Truffle)", "priceModifier": 12.0 },
-            { "id": "truf-white", "name": "Alba White Truffle Upgrade (Seasonal)", "priceModifier": 28.0 }
-          ]
-        },
-        {
-          "id": "pasta-gluten",
-          "title": "Pasta Preparation",
-          "type": "single",
-          "required": false,
-          "options": [
-            { "id": "pasta-trad", "name": "Traditional Hand-Rolled 36-Yolk Pasta", "priceModifier": 0.0, "isDefault": true },
-            { "id": "pasta-gf", "name": "Artisanal Gluten-Free Fresh Tagliolini", "priceModifier": 3.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-halibut",
-      "categoryId": "mains",
-      "name": "Pan-Roasted Atlantic Halibut",
-      "description": "Wild line-caught halibut fillet, caramelized braised leek fondue, saffron mussel broth, and pickled sea beans.",
-      "basePrice": 46.0,
-      "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["gluten-free", "halal", "nut-free"],
-      "allergens": ["Fish", "Molluscs", "Dairy"],
-      "displayOrder": 3,
-      "customizationGroups": [
-        {
-          "id": "halibut-side",
-          "title": "Side Vegetable Pairing",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "side-leeks", "name": "Braised Leek Fondue & Sea Beans", "priceModifier": 0.0, "isDefault": true },
-            { "id": "side-pommes", "name": "Crispy Pommes Paillasson", "priceModifier": 4.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-mushrooms",
-      "categoryId": "sides",
-      "name": "Charred King Oyster & Morels",
-      "description": "Binchotan-grilled forest mushrooms, aged black garlic reduction, toasted pine nuts, and tarragon foam.",
-      "basePrice": 16.0,
-      "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["vegan", "vegetarian", "gluten-free", "halal"],
-      "allergens": ["Tree Nuts"],
-      "displayOrder": 1,
-      "customizationGroups": [
-        {
-          "id": "nut-pref",
-          "title": "Nut Allergies",
-          "type": "single",
-          "required": false,
-          "options": [
-            { "id": "nuts-inc", "name": "Toasted Pine Nuts Included", "priceModifier": 0.0, "isDefault": true },
-            { "id": "nuts-exc", "name": "Exclude Pine Nuts (Nut-Free)", "priceModifier": 0.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-puree",
-      "categoryId": "sides",
-      "name": "Robuchon-Style Silk Purée",
-      "description": "Ratte du Touquet potatoes whipped with 50% Normandy churned butter and fleur de sel.",
-      "basePrice": 14.0,
-      "imageUrl": "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["vegetarian", "gluten-free", "halal", "nut-free"],
-      "allergens": ["Dairy"],
-      "displayOrder": 2,
-      "customizationGroups": [
-        {
-          "id": "puree-lux",
-          "title": "Purée Finishes",
-          "type": "multiple",
-          "required": false,
-          "maxSelections": 2,
-          "options": [
-            { "id": "pur-truffle", "name": "Black Truffle Caviar Swirl", "priceModifier": 6.0 },
-            { "id": "pur-crispy-shallots", "name": "Crispy Shallot Crumbs", "priceModifier": 2.5 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-valrhona",
-      "categoryId": "desserts",
-      "name": "Valrhona Guanaja 70% Entremet",
-      "description": "Dark chocolate mirror dome, caramelized Piedmont hazelnut praline, smoked Bourbon vanilla cream, and 24k gold leaf.",
-      "basePrice": 19.0,
-      "imageUrl": "https://images.unsplash.com/photo-1579372786545-d24232daf58c?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["vegetarian", "halal"],
-      "allergens": ["Dairy", "Eggs", "Tree Nuts", "Gluten"],
-      "displayOrder": 1,
-      "customizationGroups": [
-        {
-          "id": "ice-cream-pref",
-          "title": "House Churned Ice Cream Pairing",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "ic-vanilla", "name": "Smoked Madagascar Vanilla Bean", "priceModifier": 0.0, "isDefault": true },
-            { "id": "ic-espresso", "name": "Ethiopian Espresso Gelato", "priceModifier": 0.0 },
-            { "id": "ic-raspberry", "name": "Wild Raspberry Sorbet (Dairy-Free)", "priceModifier": 0.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-souffle",
-      "categoryId": "desserts",
-      "name": "Grand Marnier Warm Soufflé",
-      "description": "Risen to order with candied orange zest, poured tableside with crème anglaise and blood orange reduction.",
-      "basePrice": 22.0,
-      "imageUrl": "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": false,
-      "dietary": ["vegetarian", "halal", "nut-free"],
-      "allergens": ["Dairy", "Eggs", "Alcohol"],
-      "displayOrder": 2,
-      "customizationGroups": []
-    },
-    {
-      "id": "item-champagne",
-      "categoryId": "cellar",
-      "name": "Billecart-Salmon Brut Rosé (Glass)",
-      "description": "Champagne, France. Radiant pale pink with fine persistent bubbles, aromas of wild strawberries and freshly baked brioche.",
-      "basePrice": 32.0,
-      "imageUrl": "https://images.unsplash.com/photo-1569919659476-f0852f6834b7?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["vegan", "vegetarian", "gluten-free", "halal", "nut-free"],
-      "allergens": ["Sulphites"],
-      "displayOrder": 1,
-      "customizationGroups": [
-        {
-          "id": "portion-size",
-          "title": "Serving Size",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "serv-glass", "name": "Flute (150ml)", "priceModifier": 0.0, "isDefault": true },
-            { "id": "serv-bottle", "name": "Full Bottle (750ml)", "priceModifier": 145.0 }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "item-cocktail",
-      "categoryId": "cellar",
-      "name": "Smoked Saffron Negroni",
-      "description": "Monkey 47 Gin, saffron-infused Carpano Antica vermouth, Campari, presented under an applewood smoke cloche with crystallized orange peel.",
-      "basePrice": 24.0,
-      "imageUrl": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=900&q=80",
-      "isAvailable": true,
-      "dietary": ["vegan", "vegetarian", "gluten-free", "nut-free"],
-      "allergens": ["Alcohol"],
-      "displayOrder": 2,
-      "customizationGroups": [
-        {
-          "id": "spirit-style",
-          "title": "Spirit Base",
-          "type": "single",
-          "required": true,
-          "options": [
-            { "id": "gin-botanical", "name": "Monkey 47 Schwarzwald Gin", "priceModifier": 0.0, "isDefault": true },
-            { "id": "gin-mezcal", "name": "Smoked Mezcal Oaxaqueño Twist", "priceModifier": 2.0 }
-          ]
-        }
-      ]
+      "id": "welcome",
+      "imageUrl": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1800&q=85",
+      "title": "حياكم الله في جدو داوود",
+      "description": "اكتشفوا قائمة طعامنا واختاروا ما يحلو لكم",
+      "enabled": true
     }
   ]
 }
