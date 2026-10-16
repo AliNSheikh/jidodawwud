@@ -10,7 +10,21 @@ const emptyCategory=():ProductCategory=>({id:createId(),name:'',description:'',d
 const emptyPromo=():Promo=>({id:createId(),code:'',type:'percent',value:10,enabled:true});
 const emptySlide=():Slide=>({id:createId(),title:'',description:'',imageUrl:'',enabled:true});
 const statusNames:{[k:string]:string}={pending:'جديد',preparing:'قيد التجهيز',delivered:'تم التسليم',cancelled:'ملغي'};
-async function readJson(r:Response){const x=await r.json();if(!r.ok)throw new Error(x.error||'تعذر إتمام العملية');return x;}
+async function readJson(r:Response){
+  const contentType=r.headers.get('content-type')||'';
+  const raw=await r.text();
+  let result:any;
+  try {result=JSON.parse(raw);}
+  catch {
+    const isServerError=raw.includes('FUNCTION_INVOCATION_FAILED')||raw.includes('A server error');
+    throw new Error(isServerError
+      ? 'تعذر تشغيل وظيفة الحفظ على Vercel (HTTP '+r.status+'). يرجى مراجعة إعدادات الخادم أو إعادة النشر.'
+      : 'الخادم لم يعطِ استجابة JSON صالحة (HTTP '+r.status+'). يرجى المحاولة لاحقًا.');
+  }
+  if(!contentType.includes('application/json')&&r.ok)throw new Error('استجابة الخادم ليست من النوع المتوقع.');
+  if(!r.ok)throw new Error(result?.error||'تعذر إتمام العملية (HTTP '+r.status+')');
+  return result;
+}
 const TextInput=({label,value,onChange,type='text',placeholder=''}:{label:string;value:string|number;onChange:(v:string)=>void;type?:string;placeholder?:string})=><label className="admin-field">{label}<input type={type} value={value??''} placeholder={placeholder} onChange={e=>onChange(e.target.value)}/></label>;
 const CheckInput=({label,value,onChange}:{label:string;value:boolean;onChange:(v:boolean)=>void})=><label className="admin-check"><input type="checkbox" checked={!!value} onChange={e=>onChange(e.target.checked)}/>{label}</label>;
 export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;onReload:()=>Promise<void>}){
@@ -35,7 +49,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const [filterStatus,setFilterStatus]=useState('all');
   const [filterDate,setFilterDate]=useState('');
   const [search,setSearch]=useState('');
-  const [configured,setConfigured]=useState<{githubConfigured:boolean;ordersEncrypted:boolean}|null>(null);
+  const [configured,setConfigured]=useState<{githubConfigured:boolean;ordersEncrypted:boolean;githubAccess?:boolean|null;githubError?:string}|null>(null);
   useEffect(()=>{if(data&&!dirty){setDraft(structuredClone(data));setSavedSha(sha);}},[data,sha]);
   useEffect(()=>{
     if(!token)return;
@@ -142,7 +156,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   <div className="admin-body">{message&&<div role="status" className={message.startsWith('خطأ')||message.startsWith('فشل')?'admin-message error':'admin-message'}>{message}</div>}
     {tab==='overview'&&<><div className="stats-grid">
       {[['المنتجات',draft.items.length,Package],['الأقسام',draft.categories.length,MenuIcon],['الطلبات الجديدة',orders.filter(o=>o.status==='pending').length,ShoppingBag],['العروض النشطة',draft.items.filter(p=>p.offerEnabled).length,BadgePercent]].map(([name,value,Icon]:any)=><div className="stat-card" key={name}><Icon size={22}/><span>{name}</span><strong>{value}</strong></div>)}
-    </div><section className="admin-panel"><h2>حالة التكامل</h2><p>الربط مع GitHub: {configured?.githubConfigured?'مفعّل':'يحتاج إعداد GITHUB_TOKEN على Vercel'}</p><p>حفظ الطلبات المشفّر: {configured?.ordersEncrypted?'مفعّل':'يحتاج إعداد ORDERS_ENCRYPTION_KEY'}</p><p>يتم حفظ منتجات المطعم والأقسام والإعدادات في مستودع GitHub وتحديثها على الموقع. تُشفّر بيانات الطلبات قبل إرسالها للمستودع.</p><button className="btn outline" onClick={getOrders}>تحديث الطلبات</button></section></>}
+    </div><section className="admin-panel"><h2>حالة التكامل</h2><p>الربط مع GitHub: {configured?.githubAccess===true?'اتصال ناجح بالقائمة على GitHub':configured?.githubAccess===false?'يوجد خطأ في الاتصال أو الصلاحيات':configured?.githubConfigured?'تم إدخال الرمز، جارٍ التحقق':'يحتاج إعداد GITHUB_TOKEN على Vercel'}</p>{configured?.githubError&&<p className="form-error">{configured.githubError}</p>}<p>حفظ الطلبات المشفّر: {configured?.ordersEncrypted?'مفعّل':'يحتاج إعداد ORDERS_ENCRYPTION_KEY'}</p><p>يتم حفظ منتجات المطعم والأقسام والإعدادات في مستودع GitHub وتحديثها على الموقع. تُشفّر بيانات الطلبات قبل إرسالها للمستودع.</p><button className="btn outline" onClick={getOrders}>تحديث الطلبات</button></section></>}
     {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><h2>إدارة المنتجات</h2><button className="btn primary" onClick={()=>{const p=emptyProduct();p.categoryId=draft.categories[0]?.id||'';modifyProduct(p);setProductId(p.id);}}><Plus size={17}/> إضافة منتج</button></div>
       {productId&&product&&<div className="editor-panel"><h3>بيانات المنتج</h3>
         <div className="admin-form-grid">
