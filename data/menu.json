@@ -53,7 +53,20 @@
       "isActive": true
     }
   ],
-  "items": [],
+  "items": [
+    {
+      "id": "b08fc0c7-4ee3-449f-bf5d-b2da883ecddd",
+      "name": "صحن بطاطا كبير",
+      "description": "",
+      "categoryId": "starters",
+      "basePrice": 11,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792165349537-1158614390374389.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    }
+  ],
   "promos": [],
   "slides": [
     {
