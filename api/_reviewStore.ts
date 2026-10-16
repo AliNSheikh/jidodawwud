@@ -7,7 +7,8 @@ export type Review = {
 const OWNER=process.env.GITHUB_REPO_OWNER || 'AliNSheikh';
 const REPO=process.env.GITHUB_REPO_NAME || 'jidodawwud';
 const BRANCH=process.env.GITHUB_BRANCH || 'main';
-const FILE='data/reviews.json';
+const FILE='data/reviews.encrypted.json';
+const ENCRYPTION_KEY=process.env.ORDERS_ENCRYPTION_KEY || '';
 const TOKEN=process.env.GITHUB_TOKEN || process.env.GITHUB_PAT || '';
 const URL='https://api.github.com/repos/'+encodeURIComponent(OWNER)+'/'+encodeURIComponent(REPO)+'/contents/'+FILE;
 const headers=()=>({
@@ -41,8 +42,27 @@ export function clean(value:any,max:number) {
 }
 export function publicView(r:Review) {return {id:r.id,productId:r.productId,name:r.name,rating:r.rating,comment:r.comment,createdAt:r.createdAt};}
 export function isWriteConflict(status:number){return status===409||status===422;}
-export function tokenConfigured(){return !!TOKEN;}
+export function tokenConfigured(){return !!TOKEN && /^[a-f0-9]{64}$/i.test(ENCRYPTION_KEY);}
+function reviewCipherKey() {
+  if(!/^[a-f0-9]{64}$/i.test(ENCRYPTION_KEY))throw new Error('ORDERS_ENCRYPTION_KEY required for review privacy');
+  return crypto.createHash('sha256').update(Buffer.from(ENCRYPTION_KEY,'hex')).update('jidodawwud/reviews/v1').digest();
+}
+function encryptReviews(items:Review[]){
+  const iv=crypto.randomBytes(12);
+  const cipher=crypto.createCipheriv('aes-256-gcm',reviewCipherKey(),iv);
+  const ciphertext=Buffer.concat([cipher.update(JSON.stringify(items),'utf8'),cipher.final()]);
+  return {version:1,algorithm:'aes-256-gcm',iv:iv.toString('base64'),tag:cipher.getAuthTag().toString('base64'),ciphertext:ciphertext.toString('base64')};
+}
+function decryptReviews(doc:any):Review[]{
+  if(doc?.algorithm!=='aes-256-gcm')throw new Error('Unsupported review cipher');
+  const dec=crypto.createDecipheriv('aes-256-gcm',reviewCipherKey(),Buffer.from(doc.iv,'base64'));
+  dec.setAuthTag(Buffer.from(doc.tag,'base64'));
+  const data=JSON.parse(Buffer.concat([dec.update(Buffer.from(doc.ciphertext,'base64')),dec.final()]).toString('utf8'));
+  if(!Array.isArray(data))throw new Error('Invalid decrypted reviews');
+  return data;
+}
 export async function readReviews():Promise<{items:Review[];sha:string}> {
+  reviewCipherKey(); // Missing/invalid encryption configuration must not expose reviews.
   const response=await fetch(URL+'?ref='+encodeURIComponent(BRANCH),{
     headers:headers(),cache:'no-store',signal:AbortSignal.timeout(12000)
   });
@@ -50,15 +70,15 @@ export async function readReviews():Promise<{items:Review[];sha:string}> {
   if(!response.ok)throw new Error('GitHub reviews read failed ('+response.status+')');
   const file:any=await response.json();
   const parsed=JSON.parse(Buffer.from(file.content.replace(/\s/g,''),'base64').toString('utf8'));
-  if(!Array.isArray(parsed))throw new Error('Reviews file is not an array');
-  return {items:parsed.filter((r:any)=>r&&typeof r.id==='string') as Review[],sha:file.sha};
+  const reviews=decryptReviews(parsed);
+  return {items:reviews.filter((r:any)=>r&&typeof r.id==='string') as Review[],sha:file.sha};
 }
 export async function saveReviews(items:Review[],sha:string) {
   if(!TOKEN)throw new Error('Missing GITHUB_TOKEN');
   const response=await fetch(URL,{
     method:'PUT',headers:{...headers(),'Content-Type':'application/json'},
     body:JSON.stringify({message:'chore(reviews): update moderated product reviews',branch:BRANCH,
-      ...(sha?{sha}:{}),content:Buffer.from(JSON.stringify(items,null,2),'utf8').toString('base64')}),
+      ...(sha?{sha}:{}),content:Buffer.from(JSON.stringify(encryptReviews(items)),'utf8').toString('base64')}),
     signal:AbortSignal.timeout(16000)
   });
   if(!response.ok){const err:any=new Error('GitHub reviews write failed ('+response.status+')');err.status=response.status;throw err;}
