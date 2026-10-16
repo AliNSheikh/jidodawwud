@@ -88,7 +88,8 @@ async function getMenu() {
 }
 const validNumber=(n:any)=> Number.isFinite(Number(n)) && Number(n)>=0 ? Number(n) : 0;
 function effectivePrice(p:any) {
-  return p.offerEnabled && validNumber(p.offerPrice)<validNumber(p.basePrice) ? validNumber(p.offerPrice) : validNumber(p.basePrice);
+  const base=validNumber(p.basePrice), offer=Number(p.offerPrice);
+  return p.offerEnabled && p.offerPrice!==undefined && p.offerPrice!==null && Number.isFinite(offer) && offer>=0 && offer<base ? offer : base;
 }
 function calculate(menu:any, lines:any[], code:string, service:string) {
   const items=(Array.isArray(lines)?lines:[]).slice(0,60).map((line:any)=>{
