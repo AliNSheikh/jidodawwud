@@ -22,3 +22,5 @@ jobs:
         run: npx tsx scripts/verify-api.ts
       - name: Test GitHub settings saving and conflict handling
         run: npx tsx scripts/verify-save-menu.ts
+      - name: Test product ratings and review moderation
+        run: npx tsx scripts/verify-reviews.ts
