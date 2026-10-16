@@ -61,7 +61,7 @@
       "categoryId": "starters",
       "basePrice": 11,
       "offerPrice": 7,
-      "offerEnabled": false,
+      "offerEnabled": true,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792165349537-1158614390374389.webp",
       "displayOrder": 0,
       "isAvailable": true
