@@ -3,6 +3,7 @@ import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, F
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
 import {priceOf,moneyLabel,linkToCategory,linkToProduct} from './types/store';
 import {StoreAdmin} from './components/admin/StoreAdmin';
+import bundledMenu from '../data/menu.json';
 
 function App(){
   const [path,setPath]=useState(window.location.pathname);
@@ -24,10 +25,17 @@ function App(){
     setLoading(true);
     try{
       const r=await fetch('/api/menu',{cache:'no-store'});
+      const ct=r.headers.get('content-type')||'';
+      if(!ct.includes('application/json'))throw new Error('استجابة الخادم غير صالحة (HTTP '+r.status+')');
       const data=await r.json();
-      if(!r.ok)throw new Error(data.error||'تعذر تحميل القائمة');
-      setMenu(data.menu);setSha(data.sha||'');setLoadError('');
-    }catch(e:any){setLoadError(e.message);}finally{setLoading(false);}
+      if(!r.ok||!data?.menu?.restaurant)throw new Error(data.error||'تعذر تحميل القائمة');
+      setMenu(data.menu);setSha(data.sha||'');
+      setLoadError(data.warning||'');
+    }catch(e:any){
+      console.error('Menu API unavailable:',e);
+      setMenu(prev=>prev||(bundledMenu as unknown as StoreData));
+      setLoadError('تعذر تحديث القائمة مباشرةً من الخادم. يتم عرض البيانات المحفوظة مؤقتًا، ويمكنك إعادة المحاولة.');
+    }finally{setLoading(false);}
   },[]);
   useEffect(()=>{load();},[load]);
   useEffect(()=>{localStorage.setItem('jido-cart',JSON.stringify(cart));},[cart]);
@@ -138,6 +146,7 @@ function App(){
     <div className="map-panel">{restaurant.mapEmbedUrl&&/^https:\/\/(www\.)?google\.com\/maps\/embed/.test(restaurant.mapEmbedUrl)?<iframe src={restaurant.mapEmbedUrl} title="موقع المطعم" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen/>:<div className="map-placeholder"><MapPin size={38}/><span>يمكن إضافة موقع المطعم على الخريطة من لوحة التحكم</span></div>}</div></div>
   </section>;
   return <div className="site" dir="rtl" style={{fontFamily:'var(--restaurant-font), Tahoma, sans-serif'}}>
+    {loadError&&<div role="status" className="api-warning"><span>{loadError}</span><button onClick={load}>إعادة المحاولة</button></div>}
     <header className="site-header"><div className="header-inner">
       <button className="brand" onClick={()=>go('/')} aria-label="الصفحة الرئيسية">
         <img src={restaurant.logoUrl||'/logo.webp'} alt={'شعار '+restaurant.name}/>
