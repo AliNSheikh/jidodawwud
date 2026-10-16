@@ -1,5 +1,17 @@
 import crypto from 'node:crypto';
-import initialMenu from '../data/menu.json';
+// Avoid a native Node ESM JSON import in Vercel's serverless runtime.
+const initialMenu = {
+  restaurant: {
+    name: 'جدو داوود', tagline: 'نكهات تجمعنا ولحظات تبقى',
+    currency: 'SAR', currencySymbol: '⃁', locale: 'ar-SA',
+    logoUrl: '/logo.webp', faviconUrl: '/logo.webp',
+    whatsapp: '', phone: '', address: '', hours: '', mapEmbedUrl: '',
+    googleFontUrl: 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap',
+    deliveryEnabled: false, deliveryFee: 0, freeDeliveryMinimum: 100,
+    social: { facebook: '', instagram: '', tiktok: '', snapchat: '' }
+  },
+  categories: [], items: [], promos: [], slides: []
+};
 
 const OWNER = process.env.GITHUB_REPO_OWNER || 'AliNSheikh';
 const REPO = process.env.GITHUB_REPO_NAME || 'jidodawwud';
