@@ -120,6 +120,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792169776864-68974811ca0a159c.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "ec48d872-cb6e-4ab0-8cc8-99859cbbfc93",
+      "name": "سلطة الرانش",
+      "description": "مزيج طازج ومقرمش من أوراق الخس الأخضر الغض، شرائح الطماطم الطازجة، والفجل المنعش. مغطاة بقطع مقرمشة ومتبلة وممشوقة بصلصة الرانش الكريمية الغنية بطعمها الفريد، لتمنحك طبق مقبلات فاخر ينعش حواسك ويفتتح به وجبتك بكل لذة.",
+      "categoryId": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
+      "basePrice": 8,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792170300046-f3d07ea864e5d342.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "ef2e6331-c41f-40d1-bfcf-6fbd2558d604",
+      "name": "سلطة جرجير",
+      "description": "أوراق الجرجير الطازجة والمنعشة، محضرة بعناية لتضفي نكهة غنية وحيوية على مائدتك. طبق مقبلات صحي ومميز يفتح الشهية ويكمل وجبتك بأفضل طعم.",
+      "categoryId": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
+      "basePrice": 7,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792170417517-cb56d1ae3b19c353.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "9adbbf98-0563-4b06-925c-a88501d4778b",
+      "name": "سلطة خضار بالذرة",
+      "description": "مزيج ملون ومنعش من حبات الذرة الصفراء الحلوة، شرائح الخيار الطازج، وقطع البصل المتبلة بلمسة خفيفة. طبق مقبلات غني بالنكهات الحيوية والقرمشة الطبيعية، ليضفي بهجة وطعماً لذيذاً يفتتح به وجبتك في مطعم جدو داوود.",
+      "categoryId": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
+      "basePrice": 6,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792170489555-d45b1764997077de.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
