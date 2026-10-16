@@ -84,6 +84,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792165970855-b99a28ff501790b9.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "2824c965-45a1-498f-970e-4605c1607d34",
+      "name": "كبة دجاج",
+      "description": "استمتع ببداية شهية لوجبتك مع كبة الدجاج المميزة من مطعم جدو داوود. كرات البرغل الذهبية المقرمشة محشوة بخليط غني من قطع الدجاج الطرية والمتبلة بعناية مع البهارات الشرقية الأصيلة والبصل، ومقلية حتى الكمال. تقدم ساخنة ومقرمشة، وتكتمل نكهتها الرائعة بلمسة من الحموضة من قطع الليمون الطازج.",
+      "categoryId": "starters",
+      "basePrice": 3,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792169347860-d71532faa0ead3c3.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
