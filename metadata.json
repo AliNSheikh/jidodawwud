@@ -1,0 +1,6 @@
+{
+  "name": "L'Étoile Gastronomie - Digital Menu & Admin",
+  "description": "High-end digital restaurant menu and administrative control panel with Git-backed persistence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

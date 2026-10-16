@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>L'Étoile Gastronomie – Haute Cuisine & Digital Menu</title>
+    <meta name="description" content="Explore L'Étoile's seasonal tasting menus, artisanal entrees, and sommelier wine pairings with live dietary filtering and tableside ordering." />
+    
+    <!-- OpenGraph -->
+    <meta property="og:type" content="restaurant.menu" />
+    <meta property="og:title" content="L'Étoile Gastronomie – Haute Cuisine & Digital Menu" />
+    <meta property="og:description" content="Explore L'Étoile's seasonal tasting menus, artisanal entrees, and sommelier wine pairings with live dietary filtering and tableside ordering." />
+    <meta property="og:site_name" content="L'Étoile Gastronomie" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="L'Étoile Gastronomie – Haute Cuisine & Digital Menu" />
+    <meta name="twitter:description" content="Explore L'Étoile's seasonal tasting menus, artisanal entrees, and sommelier wine pairings with live dietary filtering and tableside ordering." />
+    
+    <!-- Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "L'Étoile Gastronomie",
+      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80",
+      "servesCuisine": ["French", "Contemporary Fine Dining", "European"],
+      "priceRange": "$$$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "42 Rue de l'Amirauté",
+        "addressLocality": "Paris",
+        "postalCode": "75008",
+        "addressCountry": "FR"
+      },
+      "telephone": "+33 1 42 68 55 00",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "18:00",
+          "closes": "23:30"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Saturday", "Sunday"],
+          "opens": "12:00",
+          "closes": "15:00"
+        }
+      ],
+      "hasMenu": {
+        "@type": "Menu",
+        "name": "Seasonal Haute Gastronomie Menu",
+        "hasMenuSection": [
+          {
+            "@type": "MenuSection",
+            "name": "Starters & Crudo",
+            "description": "Wild ocean crudo, seasonal foraged mushrooms, and velvety emulsified starters"
+          },
+          {
+            "@type": "MenuSection",
+            "name": "Chef's Specials & Mains",
+            "description": "Dry-aged heritage meats, line-caught seafood, and black winter truffles"
+          },
+          {
+            "@type": "MenuSection",
+            "name": "Desserts & Mignardises",
+            "description": "Grand cru chocolate entremets, blown sugar creations, and house churned sorbets"
+          }
+        ]
+      }
+    }
+    </script>
+  </head>
+  <body class="bg-[#0D0D0E] text-[#F5F5F0] antialiased selection:bg-[#C5A880]/30 selection:text-[#E8D8B8]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
