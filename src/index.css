@@ -142,3 +142,8 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
  .admin-mobile-toggle{display:grid;border:0;background:none}.admin-top{height:70px;padding:0 12px;gap:8px}.admin-top h1{font-size:16px}.admin-top .btn{padding:9px 12px;font-size:11px}.unsaved{display:none}.admin-body{padding:14px}.admin-panel{padding:15px}.admin-form-grid{grid-template-columns:1fr}.stats-grid{gap:8px}.stat-card{padding:14px}.stat-card strong{font-size:22px}.order-detail-grid{grid-template-columns:1fr}
 }
 @media(max-width:370px){.brand strong{font-size:14px}.brand small{display:none}.category-grid{grid-template-columns:repeat(2,1fr)}.header-inner{gap:7px}}
+
+/* Visible warning when the GitHub menu API is temporarily unavailable. */
+.api-warning{background:#fff5e8;color:#8e5220;display:flex;align-items:center;justify-content:center;gap:14px;padding:9px 15px;font-size:12px;line-height:1.8;text-align:center;position:relative;z-index:36}
+.api-warning button{background:transparent;border:1px solid #c99466;border-radius:9px;padding:4px 10px;font-weight:800;color:#8e5220;white-space:nowrap}
+@media(max-width:520px){.api-warning{font-size:11px;flex-wrap:wrap;gap:7px}}
