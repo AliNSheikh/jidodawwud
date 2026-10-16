@@ -156,6 +156,66 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792170489555-d45b1764997077de.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "a8d72779-d941-4c1f-9de9-bc806753ff54",
+      "name": "صحن بطاطا صغير",
+      "description": "أصابع البطاطا الطازجة والمقرمشة، المقلية بعناية لتمنحك قواماً ذهبياً مقرمشاً من الخارج وقلباً طرياً من الداخل. تقدم ساخنة في طبق مناسب مع علبة صلصة الكاتشب الشهية، لتكون رفيقاً مثالياً ومقرمشاً يكمل وجبتك بكل لذة. ",
+      "categoryId": "starters",
+      "basePrice": 7,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173334637-d6578cbb1430525e.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "7090534d-65ec-4aeb-94f2-1584e7678be6",
+      "name": "صوص جدو داوود",
+      "description": "الصوص الخاص والمميز من مطعم جدو داوود، محضر بخلطتنا السرية الغنية بالنكهات المتوازنة والتوابل العطرة. يقدم في وعاء أنيق على قاعدة خشبية مع لمسات طازجة، ليكون الإضافة المثالية التي تمنح وجبتك طعماً استثنائياً لا يُقاوم.",
+      "categoryId": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
+      "basePrice": 2,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173449629-f2d32d9b905b20ce.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "9ba5cfd4-d121-4113-990b-369a98a87d07",
+      "name": "صوص حار",
+      "description": "صوص حار كريمي وغني بالنكهة، محضر بخلطة مميزة تضفي لمسة من الحرارة اللاذعة واللذيذة. يقدم في وعاء أبيض أنيق، ليكون الإضافة المثالية التي تمنح وجبتك طعماً حيوياً يرضي عشاق النكهات الحارة.",
+      "categoryId": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
+      "basePrice": 2,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173497140-e18a7af71c243c87.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "b02eb207-bb49-45dc-9ed8-234fa7c35fe0",
+      "name": "صوص مايونيز",
+      "description": "صوص مايونيز كريمي غني وناعم الملمس، محضر بعناية ليضفي قواماً مخملياً ونكهة غنية تزيد من لذة أطباقك وسندويشاتك المفضلة. يقدم في وعاء أبيض أنيق ليضفي لمسة شهية ومميزة على مائدتك.   ",
+      "categoryId": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
+      "basePrice": 2,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173573373-1a9be896698c1be3.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "07459500-f199-48b6-9882-cc1035b597c2",
+      "name": "صوص ثومية",
+      "description": "صوص الثومية الكريمي الغني والناعم، محضر على الطريقة التقليدية بنكهة الثوم القوية واللذيذة. يقدم في وعاء أبيض أنيق بقوام مخملي يضفي طعماً مميزاً ويزيد من لذة السندويشات والأطباق المفضلة.   ",
+      "categoryId": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
+      "basePrice": 2,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173657274-055a9b9c4d6634d3.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
