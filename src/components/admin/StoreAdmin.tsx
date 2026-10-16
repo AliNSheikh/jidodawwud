@@ -96,10 +96,25 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     setUploading(key);setMessage('');
     try{
       const img=await new Promise<HTMLImageElement>((resolve,reject)=>{const x=new Image();const u=URL.createObjectURL(file);x.onload=()=>{URL.revokeObjectURL(u);resolve(x)};x.onerror=()=>{URL.revokeObjectURL(u);reject(new Error('الصورة غير قابلة للقراءة'))};x.src=u;});
-      const scale=Math.min(1,1400/Math.max(img.width,img.height));
-      const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
-      canvas.getContext('2d')?.drawImage(img,0,0,canvas.width,canvas.height);
-      const encoded=canvas.toDataURL('image/webp',0.78);
+      const isProductPhoto=key.startsWith('product-');
+      const canvas=document.createElement('canvas');
+      const context=canvas.getContext('2d');
+      if(!context)throw new Error('لا يمكن معالجة الصورة في هذا المتصفح');
+      if(isProductPhoto){
+        // Produce a real 1024 × 1024 image and preserve the complete original photo.
+        // White padding is preferable to cropping off food or text from the image.
+        canvas.width=1024;canvas.height=1024;
+        context.fillStyle='#ffffff';
+        context.fillRect(0,0,1024,1024);
+        const scale=Math.min(1024/img.width,1024/img.height);
+        const width=img.width*scale,height=img.height*scale;
+        context.drawImage(img,(1024-width)/2,(1024-height)/2,width,height);
+      }else{
+        const scale=Math.min(1,1400/Math.max(img.width,img.height));
+        canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+        context.drawImage(img,0,0,canvas.width,canvas.height);
+      }
+      const encoded=canvas.toDataURL('image/webp',isProductPhoto?0.84:0.78);
       const out=await auth('/api/admin/upload',{method:'POST',body:JSON.stringify({data:encoded})});
       callback(out.url);
     }catch(e:any){setMessage('فشل رفع الصورة: '+e.message);}finally{setUploading('');}
@@ -166,7 +181,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
           <TextInput label="السعر الأصلي (ر.س)" type="number" value={product.basePrice} onChange={v=>modifyProduct({...product,basePrice:Number(v)})}/>
           <TextInput label="السعر بعد الخصم (ر.س)" type="number" value={product.offerPrice??0} onChange={v=>modifyProduct({...product,offerPrice:Number(v)})}/>
           <TextInput label="ترتيب الظهور" type="number" value={product.displayOrder} onChange={v=>modifyProduct({...product,displayOrder:Number(v)})}/>
-          <div className="admin-field"><span>الصورة</span><Upload id={'product-'+product.id} onPick={file=>imageUpload(file,url=>modifyProduct({...product,imageUrl:url}),'product-'+product.id)}/></div>
+          <div className="admin-field"><span>الصورة (1024 × 1024)</span><Upload id={'product-'+product.id} onPick={file=>imageUpload(file,url=>modifyProduct({...product,imageUrl:url}),'product-'+product.id)}/><small className="hint">سيتم تجهيز صورة المنتج تلقائيًا بمقاس 1024 × 1024 بكسل عند الرفع دون قص الطعام.</small></div>
         </div>
         {product.imageUrl&&<img className="admin-image-preview" src={product.imageUrl} alt="معاينة المنتج"/>}
         <label className="admin-field">الوصف<textarea rows={3} value={product.description} onChange={e=>modifyProduct({...product,description:e.target.value})}/></label>
