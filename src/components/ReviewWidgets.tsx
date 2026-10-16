@@ -24,7 +24,7 @@ function Stars({rating,interactive=false,onChoose}:{rating:number;interactive?:b
 export function ReviewSection({productId,reviews,onSubmitted}:{productId:string;reviews:ProductReview[];onSubmitted:()=>Promise<void>}){
   const [name,setName]=useState('');
   const [comment,setComment]=useState('');
-  const [rating,setRating]=useState(5);
+  const [rating,setRating]=useState(0);
   const [sending,setSending]=useState(false);
   const [feedback,setFeedback]=useState('');
   const [error,setError]=useState('');
@@ -34,13 +34,14 @@ export function ReviewSection({productId,reviews,onSubmitted}:{productId:string;
     .slice(0,10);
   async function submit(e:React.FormEvent){
     e.preventDefault();if(sending)return;
+    if(rating<1){setError('اختر عدد النجوم من 1 إلى 5 قبل إرسال التقييم.');return;}
     setSending(true);setError('');setFeedback('');
     try{
       const r=await fetch('/api/reviews',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({name,comment,rating,productId,website})});
       const d=await r.json();
       if(!r.ok)throw new Error(d.error||'تعذر إرسال التقييم');
-      setFeedback(d.message||'تم إرسال التقييم للمراجعة');setComment('');setName('');setRating(5);
+      setFeedback(d.message||'تم إرسال التقييم للمراجعة');setComment('');setName('');setRating(0);
       await onSubmitted().catch(()=>{});
     }catch(err:any){setError(err.message||'يرجى المحاولة لاحقًا');}
     finally{setSending(false);}
@@ -59,11 +60,15 @@ export function ReviewSection({productId,reviews,onSubmitted}:{productId:string;
       <form className="review-form white-panel" onSubmit={submit}>
         <h3>أضف تقييمك</h3>
         <p className="hint">نرحب بتجربتك. يُنشر التقييم بعد مراجعة إدارة المطعم. سيظهر اسمك المكتوب هنا للعامة.</p>
-        <label>تقييمك <Stars rating={rating} interactive onChoose={setRating}/></label>
+        <div className="review-rating-input">
+          <span>تقييمك</span>
+          <Stars rating={rating} interactive onChoose={value=>{setRating(value);setError('');}}/>
+          <small>{rating===0?'اضغط على النجوم لاختيار تقييمك':rating+' من 5 نجوم'}</small>
+        </div>
         <label>الاسم الذي سيظهر <input required minLength={2} maxLength={45} value={name} onChange={e=>setName(e.target.value)} placeholder="اسمك أو اسم مستعار"/></label>
         <label>رأيك في المنتج <textarea required minLength={12} maxLength={700} rows={4} value={comment} onChange={e=>setComment(e.target.value)} placeholder="شاركنا تجربتك مع هذا المنتج..."/></label>
         <div className="review-honeypot" aria-hidden="true"><label>الموقع الإلكتروني<input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={e=>setWebsite(e.target.value)}/></label></div>
-        <button type="submit" className="btn primary" disabled={sending||name.trim().length<2||comment.trim().length<12}><Send size={17}/>{sending?'يتم إرسال التقييم...':'إرسال التقييم'}</button>
+        <button type="submit" className="btn primary" disabled={sending||rating===0||name.trim().length<2||comment.trim().length<12}><Send size={17}/>{sending?'يتم إرسال التقييم...':'إرسال التقييم'}</button>
         {feedback&&<p role="status" className="form-success">{feedback}</p>}
         {error&&<p role="alert" className="form-error">{error}</p>}
       </form>
