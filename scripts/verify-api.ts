@@ -25,7 +25,7 @@ function fakeRes() {
     globalThis.fetch=(async()=>({
       ok:true,status:200,
       json:async()=>({sha:'test-sha',content:Buffer.from(JSON.stringify(seed),'utf8').toString('base64')})
-    })) as typeof fetch;
+    })) as unknown as typeof fetch;
     {
       const {res,result}=fakeRes();
       await menuHandler({method:'GET'},res);
