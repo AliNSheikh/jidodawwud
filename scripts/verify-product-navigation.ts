@@ -20,7 +20,7 @@ function run() {
   const storage={getItem:(key:string)=>mem.get(key)||null,setItem:(key:string,value:string)=>{mem.set(key,value);}};
   assert.equal(initialMenu(menu,storage).items.length,menu.items.length);
   const revised={...menu,items:[{...menu.items[0],name:'منتج حديث'}]};
-  persistMenu(revised as typeof menu,storage);
+  persistMenu(revised as any,storage);
   assert.equal(initialMenu(menu,storage).items[0]?.name,'منتج حديث','recent edits should work on shared product URL');
   mem.set(MENU_CACHE_KEY,'invalid json');
   assert.equal(initialMenu(menu,storage).items.length,menu.items.length,'corrupted mobile cache should not blank product pages');
