@@ -249,3 +249,13 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
  .review-section{padding-bottom:30px}
  .review-form{padding:18px}
 }
+
+.rating-badge-stars{display:inline-flex;align-items:center;gap:1px;color:#dba62b}
+.rating-badge-stars .star-empty{color:#c4cbd6}
+.rating-badge-stars svg{width:11px;height:11px}
+@media(max-width:720px){
+ .rating-badge{top:7px;left:7px;gap:2px;font-size:10px;padding:3px 4px}
+ .rating-badge-stars svg{width:10px;height:10px}
+ .rating-badge .rating-count{font-size:9px}
+ .product-media .offer-badge{top:auto;bottom:8px;right:8px;font-size:10px;padding:4px 6px}
+}
