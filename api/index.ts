@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import initialMenu from '../data/menu.json';
 
 const OWNER = process.env.GITHUB_REPO_OWNER || 'AliNSheikh';
-const REPO = process.env.GITHUB_REPO_NAME || 'jedodawod';
+const REPO = process.env.GITHUB_REPO_NAME || 'jidodawwud';
 const BRANCH = process.env.GITHUB_BRANCH || 'main';
 const GH_TOKEN = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT || '';
 const PASS = process.env.ADMIN_PASSWORD || process.env.ADMIN_SECRET_KEY || '';
