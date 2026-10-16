@@ -23,8 +23,8 @@ export interface Order {
   subtotal:number;discount:number;deliveryFee:number;total:number;status:OrderStatus;
 }
 export const priceOf=(p:Product)=>p.offerEnabled && Number(p.offerPrice)>=0 && Number(p.offerPrice)<p.basePrice ? Number(p.offerPrice):p.basePrice;
-export const money=(n:number)=>new Intl.NumberFormat('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:2}).format(n)+' \uE900';
-export const moneyLabel=(n:number)=>new Intl.NumberFormat('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:2}).format(n)+' ⃁';
+export const money=(n:number)=>new Intl.NumberFormat('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:2}).format(n)+' ر.س';
+export const moneyLabel=(n:number)=>new Intl.NumberFormat('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:2}).format(n)+' ر.س';
 export const slug=(s:string)=>s.trim().replace(/\s+/g,'-').replace(/[^\p{L}\p{N}-]/gu,'').toLowerCase();
 export const linkToProduct=(p:Product)=>'/product/'+encodeURIComponent(slug(p.name))+'--'+encodeURIComponent(p.id);
 export const linkToCategory=(c:ProductCategory)=>'/category/'+encodeURIComponent(slug(c.name))+'--'+encodeURIComponent(c.id);
