@@ -2,6 +2,7 @@ import React,{useEffect,useMemo,useState} from 'react';
 import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
 import {moneyLabel,priceOf,linkToProduct,linkToCategory} from '../../types/store';
+import {googleMapsEmbedUrl} from '../../utils/googleMaps';
 
 type Tab='overview'|'products'|'categories'|'orders'|'promos'|'slides'|'settings';
 const createId=()=>globalThis.crypto?.randomUUID?.()||'id-'+Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -215,7 +216,15 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         <TextInput label="رقم هاتف المطعم" value={draft.restaurant.phone} onChange={v=>change({...draft,restaurant:{...draft.restaurant,phone:v}})}/>
         <TextInput label="العنوان" value={draft.restaurant.address} onChange={v=>change({...draft,restaurant:{...draft.restaurant,address:v}})}/>
         <TextInput label="ساعات العمل" value={draft.restaurant.hours} onChange={v=>change({...draft,restaurant:{...draft.restaurant,hours:v}})}/>
-        <TextInput label="رابط تضمين Google Maps" value={draft.restaurant.mapEmbedUrl} onChange={v=>change({...draft,restaurant:{...draft.restaurant,mapEmbedUrl:v}})}/>
+        <label className="admin-field">رابط موقع المطعم من Google Maps
+          <input type="text" dir="ltr" placeholder='الصق رابط Google Maps أو كود iframe الكامل'
+            value={googleMapsEmbedUrl(draft.restaurant.mapEmbedUrl) || draft.restaurant.mapEmbedUrl}
+            onChange={e=>{const input=e.target.value;change({...draft,restaurant:{...draft.restaurant,mapEmbedUrl:googleMapsEmbedUrl(input)||input}});}}/>
+          <small className="hint">يمكنك لصق كود &lt;iframe&gt; كاملًا أو رابط src فقط. سيستخرج الموقع الرابط تلقائيًا.</small>
+          {draft.restaurant.mapEmbedUrl && <small className={googleMapsEmbedUrl(draft.restaurant.mapEmbedUrl)?'form-success':'form-error'}>
+            {googleMapsEmbedUrl(draft.restaurant.mapEmbedUrl)?'✓ الرابط صحيح وسيظهر موقع المطعم على الخريطة.':'يرجى إدخال رابط Google Maps من خيار تضمين خريطة (Embed a map).'}
+          </small>}
+        </label>
         <TextInput label="رابط الخط من Google Fonts" value={draft.restaurant.googleFontUrl} onChange={v=>change({...draft,restaurant:{...draft.restaurant,googleFontUrl:v}})} placeholder="https://fonts.googleapis.com/css2?family=..."/>
       </div>
       <div className="admin-form-grid admin-upload-pair"><div className="admin-field"><span>تغيير الشعار</span><Upload id="logo" onPick={f=>imageUpload(f,url=>change({...draft,restaurant:{...draft.restaurant,logoUrl:url}}),'logo')}/>{draft.restaurant.logoUrl&&<img src={draft.restaurant.logoUrl} className="admin-logo-preview" alt="الشعار"/>}</div><div className="admin-field"><span>تغيير أيقونة الموقع (favicon)</span><Upload id="favicon" onPick={f=>imageUpload(f,url=>change({...draft,restaurant:{...draft.restaurant,faviconUrl:url}}),'favicon')}/>{draft.restaurant.faviconUrl&&<img src={draft.restaurant.faviconUrl} className="admin-favicon-preview" alt="الأيقونة"/>}</div></div>
