@@ -5,7 +5,9 @@ import type {ProductReview,RatingSummary} from '../types/store';
 export function RatingBadge({summary}:{summary?:RatingSummary}) {
   const avg=summary?.average||0,count=summary?.count||0;
   return <span className="rating-badge" title={count?'التقييم '+avg+' من 5 ('+count+' تقييم)':'لا توجد تقييمات بعد'}>
-    <Star size={15} fill={count?'currentColor':'none'}/>
+    <span className="rating-badge-stars">
+      {[1,2,3,4,5].map(n=><Star key={n} size={12} className={n<=Math.round(avg)?'star-lit':'star-empty'} fill={n<=Math.round(avg)?'currentColor':'none'}/>)}
+    </span>
     <span>{count?avg.toFixed(1):'0.0'}</span>
     <span className="rating-count">({count})</span>
   </span>;
