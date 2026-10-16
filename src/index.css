@@ -55,16 +55,21 @@ img{max-width:100%;display:block}
 .menu-group{margin-bottom:43px}.group-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px;padding-bottom:12px;border-bottom:1px solid var(--line)}
 .group-title h3{margin:0;font-size:20px;display:flex;gap:8px;align-items:center;font-weight:800}.group-title h3 svg{color:var(--copper)}
 .product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.product-card{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 5px 22px rgba(34,54,80,.035)}
-.product-image-button{width:100%;aspect-ratio:1/.83;position:relative;border:0;background:#f5f6f7;padding:0;display:block;overflow:hidden}
+.product-card{overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 5px 22px rgba(34,54,80,.035);min-width:0}
+.product-media{position:relative}
+.product-image-button{width:100%;aspect-ratio:1/1;position:relative;border:0;background:#f5f6f7;padding:0;display:block;overflow:hidden}
 .product-image{width:100%;height:100%;object-fit:cover;transition:transform .25s}.product-image-button:hover .product-image{transform:scale(1.04)}
 .product-placeholder{height:100%;width:100%;min-height:145px;display:grid;place-items:center;color:#9bb0ca;background:#f2f5f8}
 .offer-badge{position:absolute;right:9px;top:9px;color:#fff;background:#b86639;padding:5px 9px;border-radius:7px;font-size:11px;font-weight:800}
-.product-meta{padding:12px 13px 14px}
-.product-name{font-size:14px;font-weight:800;text-align:right;background:none;border:0;color:var(--navy);min-height:40px;padding:0;line-height:1.7}
-.card-bottom{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-top:12px}
-.prices{display:flex;flex-direction:column;gap:2px;min-width:0}.prices strong{font-size:14px;white-space:nowrap}.prices del{font-size:11px;color:#8a96a6;white-space:nowrap}
-.add-circle{background:var(--navy);border:0;color:white;display:grid;place-items:center;width:35px;height:35px;border-radius:11px;flex-shrink:0}
+.product-meta{padding:13px 14px 17px;min-width:0}
+.product-name{font-size:15px;font-weight:800;text-align:right;background:none;border:0;color:var(--navy);min-height:40px;padding:0;line-height:1.7}
+.card-bottom{display:flex;align-items:center;min-width:0;margin-top:9px}
+.prices{display:flex;flex-direction:row;align-items:baseline;gap:10px;min-width:0;white-space:nowrap}
+.prices strong{font-size:22px;font-weight:900;color:var(--navy);white-space:nowrap;line-height:1.45}
+.prices del{font-size:15px;color:#8993a5;white-space:nowrap;font-weight:700;line-height:1.45}
+.price-amount{display:inline-flex;direction:ltr;unicode-bidi:isolate;align-items:baseline;gap:.18em;white-space:nowrap;font-variant-numeric:tabular-nums}
+.currency-mark{font-family:'Segoe UI Symbol','Arial Unicode MS','Cairo',sans-serif;font-size:1.22em;font-weight:900;line-height:1;display:inline-block}
+.product-media .add-circle{position:absolute;left:12px;bottom:12px;z-index:2;background:var(--navy);border:2px solid #fff;color:white;display:grid;place-items:center;width:42px;height:42px;border-radius:12px;box-shadow:0 4px 12px #122c4e33}
 .contact-section{padding:30px 0 60px}.contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:22px}
 .contact-information{border:1px solid var(--line);border-radius:17px;padding:24px;display:flex;flex-direction:column;gap:19px}
 .contact-line{display:flex;gap:14px;align-items:flex-start}.contact-line>svg{width:21px;color:var(--copper);flex-shrink:0}
@@ -82,7 +87,11 @@ img{max-width:100%;display:block}
 .back-link{margin:4px 0 15px;padding:7px 0}
 .product-detail{display:grid;grid-template-columns:1fr 1fr;gap:45px;margin-top:22px}
 .detail-media{overflow:hidden;border-radius:18px;background:var(--pale);aspect-ratio:1/1;max-height:530px}.detail-media>img{width:100%;height:100%;object-fit:cover}
-.detail-info{padding:20px 0}.detail-info h1{font-size:32px;font-weight:800;line-height:1.6}.detail-info p{font-size:15px;color:var(--muted);line-height:2;margin:20px 0}.detail-info del{font-size:14px;color:var(--muted)}.detail-price{font-size:28px;font-weight:800;margin:12px 0 27px}.detail-actions{display:flex;gap:12px;flex-wrap:wrap}
+.detail-info{padding:20px 0}.detail-info h1{font-size:32px;font-weight:800;line-height:1.6}.detail-info p{font-size:15px;color:var(--muted);line-height:2;margin:20px 0}
+.detail-prices{display:flex;flex-direction:row;align-items:baseline;gap:17px;white-space:nowrap;margin:12px 0 27px}
+.detail-prices del{font-size:20px;font-weight:700;color:var(--muted)}
+.detail-price{font-size:36px;font-weight:900;color:var(--navy);line-height:1.4}
+.detail-actions{display:flex;gap:12px;flex-wrap:wrap}
 .count-pill{display:inline-block;background:var(--pale);border-radius:100px;font-size:17px;padding:3px 12px}
 .checkout-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:19px;align-items:start}
 .checkout-main{display:grid;gap:19px}
@@ -133,9 +142,9 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
  .hero-wrap{margin-top:13px}.hero-slider{height:260px;border-radius:15px}.hero-content{padding:26px 22px;width:100%}.hero-content h1{font-size:27px}.hero-content p{font-size:12px;line-height:1.8;margin-bottom:16px;max-width:270px}.hero-content .btn{min-height:37px;padding:8px 13px;font-size:12px}
  .slide-controls{bottom:12px;left:12px}.slide-controls button{width:29px;height:29px}
  .section-head h2{font-size:24px}.categories-section{padding-top:29px}.category-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.category-tile{min-height:94px;padding:11px 6px}.category-tile span{font-size:12px}.category-tile small{font-size:10px}
- .menu-section{padding-top:34px}.group-title h3{font-size:18px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-card{border-radius:12px}.product-meta{padding:10px}.product-name{font-size:12px;min-height:38px}.prices strong{font-size:12px}.prices del{font-size:10px}.add-circle{height:30px;width:30px}.add-circle svg{width:18px}.product-image-button{aspect-ratio:1/.82}.menu-group{margin-bottom:31px}
+ .menu-section{padding-top:34px}.group-title h3{font-size:18px}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-card{border-radius:12px}.product-meta{padding:11px}.product-name{font-size:13px;min-height:38px}.prices{gap:6px}.prices strong{font-size:clamp(16px,3.8vw,20px)}.prices del{font-size:clamp(11px,2.7vw,14px)}.product-media .add-circle{height:36px;width:36px;left:8px;bottom:8px}.product-media .add-circle svg{width:19px}.product-image-button{aspect-ratio:1/1}.menu-group{margin-bottom:31px}
  .contact-grid{grid-template-columns:1fr}.contact-section{padding:10px 0 60px}.map-panel,.map-panel iframe,.map-placeholder{min-height:230px}.footer-inner{display:grid;justify-content:center;text-align:center}.footer-brand{justify-content:center}
- .page-container{padding-top:20px}.page-heading h1{font-size:25px}.product-detail{grid-template-columns:1fr;gap:18px}.detail-media{max-height:370px}.detail-info{padding:0}.detail-info h1{font-size:26px}.detail-price{font-size:24px}
+ .page-container{padding-top:20px}.page-heading h1{font-size:25px}.product-detail{grid-template-columns:1fr;gap:18px}.detail-media{max-height:370px}.detail-info{padding:0}.detail-info h1{font-size:26px}.detail-price{font-size:30px}.detail-prices del{font-size:16px}
  .checkout-layout{grid-template-columns:1fr}.checkout-summary{position:static}.white-panel{padding:17px}.white-panel h2{font-size:18px}
  .form-grid{grid-template-columns:1fr}.floating-cart{bottom:11px}
  .admin-sidebar{position:fixed;right:0;top:0;transform:translateX(101%);transition:transform .2s;height:100dvh;box-shadow:-9px 0 30px #142d4722}.admin-sidebar.opened{transform:translateX(0)}.admin-overlay{display:block;position:fixed;inset:0;background:#1a293a77;z-index:38}.admin-close{display:grid;margin-right:auto;border:0;background:none}
@@ -147,3 +156,6 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
 .api-warning{background:#fff5e8;color:#8e5220;display:flex;align-items:center;justify-content:center;gap:14px;padding:9px 15px;font-size:12px;line-height:1.8;text-align:center;position:relative;z-index:36}
 .api-warning button{background:transparent;border:1px solid #c99466;border-radius:9px;padding:4px 10px;font-weight:800;color:#8e5220;white-space:nowrap}
 @media(max-width:520px){.api-warning{font-size:11px;flex-wrap:wrap;gap:7px}}
+
+/* Preserve side-by-side offer prices even in compact product cards. */
+@media(max-width:390px){.product-meta{padding:9px}.prices{gap:4px}.prices strong{font-size:16px}.prices del{font-size:11px}.currency-mark{font-size:1.14em}}
