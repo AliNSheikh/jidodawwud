@@ -154,9 +154,9 @@ async function storeOrder(order:any) {
   }
   throw new Error('تعذر حفظ الطلب بسبب عمليات متزامنة، حاول مرة أخرى');
 }
-export default async function handler(req:any,res:any) {
+export default async function handler(req:any,res:any, overrideRoute?:string) {
   const rewrite=Array.isArray(req.query?.route)?req.query.route.join('/'):req.query?.route;
-  const route=rewrite?'/'+String(rewrite).replace(/^\/+/, ''):((req.url||'').split('?')[0].replace(/^\/api/,'')||'/');
+  const route=overrideRoute || (rewrite?'/'+String(rewrite).replace(/^\/+/, ''):((req.url||'').split('?')[0].replace(/^\/api/,'')||'/'));
   try{
     if(route==='/menu'&&req.method==='GET'){
       const d=await getMenu();
