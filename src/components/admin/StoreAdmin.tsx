@@ -1,11 +1,13 @@
 import React,{useEffect,useMemo,useState} from 'react';
-import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X} from 'lucide-react';
+import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X, Star} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
 import {priceOf,linkToProduct,linkToCategory} from '../../types/store';
 import {RiyalPrice} from '../RiyalPrice';
+import {ReviewManagement} from './ReviewManagement';
+import {orderDisplay} from '../../types/store';
 import {googleMapsEmbedUrl} from '../../utils/googleMaps';
 
-type Tab='overview'|'products'|'categories'|'orders'|'promos'|'slides'|'settings';
+type Tab='overview'|'products'|'categories'|'orders'|'reviews'|'promos'|'slides'|'settings';
 const createId=()=>globalThis.crypto?.randomUUID?.()||'id-'+Date.now()+'-'+Math.random().toString(36).slice(2);
 const emptyProduct=():Product=>({id:createId(),name:'',description:'',categoryId:'',basePrice:0,offerPrice:0,offerEnabled:false,imageUrl:'',displayOrder:0,isAvailable:true});
 const emptyCategory=():ProductCategory=>({id:createId(),name:'',description:'',displayOrder:0,isActive:true});
@@ -47,6 +49,16 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const [promoId,setPromoId]=useState<string|null>(null);
   const [slideId,setSlideId]=useState<string|null>(null);
   const [orders,setOrders]=useState<Order[]>([]);
+  const ordersByProduct=useMemo(()=>{
+    const counts:Record<string,number>={};
+    const seenOrderIds=new Set<string>();
+    orders.forEach(o=>{
+      if(o.status==='cancelled'||seenOrderIds.has(o.id))return;
+      seenOrderIds.add(o.id);
+      new Set(o.items.map(line=>line.productId)).forEach(id=>{counts[id]=(counts[id]||0)+1;});
+    });
+    return counts;
+  },[orders]);
   const [ordersError,setOrdersError]=useState('');
   const [filterStatus,setFilterStatus]=useState('all');
   const [filterDate,setFilterDate]=useState('');
@@ -150,6 +162,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const tabs:{id:Tab;name:string;Icon:any}[]=[
     {id:'overview',name:'الرئيسية',Icon:LayoutDashboard},{id:'products',name:'المنتجات',Icon:Package},
     {id:'categories',name:'الأقسام',Icon:MenuIcon},{id:'orders',name:'الطلبات',Icon:ShoppingBag},
+    {id:'reviews',name:'التقييمات والمراجعات',Icon:Star},
     {id:'promos',name:'أكواد الخصم',Icon:BadgePercent},{id:'slides',name:'الشرائح الرئيسية',Icon:ImageIcon},
     {id:'settings',name:'إعدادات المطعم',Icon:Settings}
   ];
@@ -175,7 +188,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
       {[['المنتجات',draft.items.length,Package],['الأقسام',draft.categories.length,MenuIcon],['الطلبات الجديدة',orders.filter(o=>o.status==='pending').length,ShoppingBag],['العروض النشطة',draft.items.filter(p=>p.offerEnabled).length,BadgePercent]].map(([name,value,Icon]:any)=><div className="stat-card" key={name}><Icon size={22}/><span>{name}</span><strong>{value}</strong></div>)}
     </div><section className="admin-panel"><h2>حالة التكامل</h2><p>الربط مع GitHub: {configured?.githubAccess===true?'اتصال ناجح بالقائمة على GitHub':configured?.githubAccess===false?'يوجد خطأ في الاتصال أو الصلاحيات':configured?.githubConfigured?'تم إدخال الرمز، جارٍ التحقق':'يحتاج إعداد GITHUB_TOKEN على Vercel'}</p>{configured?.githubError&&<p className="form-error">{configured.githubError}</p>}<p>حفظ الطلبات المشفّر: {configured?.ordersEncrypted?'مفعّل':'يحتاج إعداد ORDERS_ENCRYPTION_KEY'}</p><p>يتم حفظ منتجات المطعم والأقسام والإعدادات في مستودع GitHub وتحديثها على الموقع. تُشفّر بيانات الطلبات قبل إرسالها للمستودع.</p><button className="btn outline" onClick={getOrders}>تحديث الطلبات</button></section></>}
     {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><h2>إدارة المنتجات</h2><button className="btn primary" onClick={()=>{const p=emptyProduct();p.categoryId=draft.categories[0]?.id||'';modifyProduct(p);setProductId(p.id);}}><Plus size={17}/> إضافة منتج</button></div>
-      {productId&&product&&<div className="editor-panel"><h3>بيانات المنتج</h3>
+      {productId&&product&&<div className="editor-panel"><h3>بيانات المنتج</h3><p className="hint">عدد الطلبات المسجلة لهذا المنتج: <b>{ordersByProduct[product.id]||0}</b> (لا يشمل الطلبات الملغاة؛ يتم العد لكل طلب مرة واحدة).</p>
         <div className="admin-form-grid">
           <TextInput label="اسم المنتج" value={product.name} onChange={v=>modifyProduct({...product,name:v})}/>
           <label className="admin-field">القسم<select value={product.categoryId} onChange={e=>modifyProduct({...product,categoryId:e.target.value})}><option value="">اختر القسم</option>{draft.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
@@ -192,7 +205,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
       </div>}
       <TextInput label="بحث عن منتج" value={search} onChange={setSearch} placeholder="اسم المنتج"/>
       <div className="admin-list">{draft.items.filter(p=>p.name.includes(search)).map(p=><div className="admin-list-row" key={p.id}>
-        {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}<div className="list-info"><strong>{p.name||'منتج جديد'}</strong><small>{draft.categories.find(c=>c.id===p.categoryId)?.name||'بدون قسم'} · <RiyalPrice amount={priceOf(p)}/></small></div>
+        {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}<div className="list-info"><strong>{p.name||'منتج جديد'}</strong><small>{draft.categories.find(c=>c.id===p.categoryId)?.name||'بدون قسم'} · <RiyalPrice amount={priceOf(p)}/> · عدد الطلبات: <b>{ordersByProduct[p.id]||0}</b> (للعرض: {orderDisplay(ordersByProduct[p.id]||0)})</small></div>
         <button className="mini-action" onClick={()=>setProductId(p.id)}>تعديل</button>
         <button className="icon-danger" aria-label="حذف المنتج" onClick={()=>{if(confirm('هل تريد حذف المنتج؟')){update('items',draft.items.filter(x=>x.id!==p.id));if(productId===p.id)setProductId(null);}}}><Trash2 size={17}/></button>
       </div>)}</div></section>}
@@ -224,6 +237,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         <div className="order-totals"><span>خصم: <RiyalPrice amount={o.discount}/></span><span>توصيل: <RiyalPrice amount={o.deliveryFee}/></span><strong>الإجمالي: <RiyalPrice amount={o.total}/></strong></div>{o.notes&&<p className="order-notes">ملاحظات: {o.notes}</p>}
         <label className="admin-field">تغيير الحالة<select value={o.status} onChange={e=>changeStatus(o.id,e.target.value as OrderStatus)}>{Object.entries(statusNames).map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
       </article>)}{visibleOrders.length===0&&<div className="empty-state">لا توجد طلبات مطابقة</div>}</div></section>}
+    {tab==='reviews'&&<ReviewManagement products={draft.items}/>}
     {tab==='settings'&&<section className="admin-panel"><h2>هوية المطعم ومعلومات الاتصال</h2>
       <div className="admin-form-grid">
         <TextInput label="اسم المطعم" value={draft.restaurant.name} onChange={v=>change({...draft,restaurant:{...draft.restaurant,name:v}})}/>
