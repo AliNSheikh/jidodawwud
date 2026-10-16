@@ -113,19 +113,28 @@ function App(){
   const page=path.startsWith('/category/')?'category':path.startsWith('/product/')?'product':path==='/categories'?'categories':path==='/cart'?'cart':path==='/contact'?'contact':'home';
   const pageTitle=page==='category'?currentCategory?.name:page==='product'?product?.name:page==='cart'?'سلة الطلبات':page==='contact'?'تواصل معنا':page==='categories'?'الأقسام':'قائمة الطعام';
   document.title=(pageTitle||'قائمة الطعام')+' | '+restaurant.name;
+  const ProductPrice=({amount}:{amount:number})=><span className="price-amount" aria-label={moneyLabel(amount)}>
+    <span className="price-number">{new Intl.NumberFormat('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:2}).format(amount)}</span>
+    <span className="currency-mark" aria-hidden="true">⃁</span>
+  </span>;
   const ProductCard=({p}:{p:Product})=>{
     const offered=p.offerEnabled && p.offerPrice!=null&&p.offerPrice<p.basePrice;
     const pct=offered?Math.round((1-Number(p.offerPrice)/p.basePrice)*100):0;
     return <article className="product-card">
-      <button className="product-image-button" aria-label={'عرض '+p.name} onClick={()=>go(linkToProduct(p))}>
-        {p.imageUrl?<img loading="lazy" className="product-image" src={p.imageUrl} alt={p.name}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
-        {offered&&<span className="offer-badge">خصم {pct}٪</span>}
-      </button>
+      <div className="product-media">
+        <button className="product-image-button" aria-label={'عرض '+p.name} onClick={()=>go(linkToProduct(p))}>
+          {p.imageUrl?<img loading="lazy" className="product-image" src={p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
+          {offered&&<span className="offer-badge">خصم {pct}٪</span>}
+        </button>
+        <button className="add-circle" onClick={()=>add(p)} aria-label={'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
+      </div>
       <div className="product-meta">
         <button className="product-name" onClick={()=>go(linkToProduct(p))}>{p.name}</button>
         <div className="card-bottom">
-          <div className="prices">{offered&&<del>{moneyLabel(p.basePrice)}</del>}<strong>{moneyLabel(priceOf(p))}</strong></div>
-          <button className="add-circle" onClick={()=>add(p)} aria-label={'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
+          <div className={'prices'+(offered?' has-offer':'')}>
+            {offered&&<del><ProductPrice amount={p.basePrice}/></del>}
+            <strong><ProductPrice amount={priceOf(p)}/></strong>
+          </div>
         </div>
       </div>
     </article>;
@@ -188,8 +197,10 @@ function App(){
       {page==='product'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/')}><ArrowRight size={16}/> العودة إلى القائمة</button>
         {product?<div className="product-detail"><div className="detail-media">{product.imageUrl?<img src={product.imageUrl} alt={product.name}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
           <div className="detail-info"><span className="eyebrow">{allCategories.find(c=>c.id===product.categoryId)?.name||'قائمة الطعام'}</span><h1>{product.name}</h1>{product.description&&<p>{product.description}</p>}
-            {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del>{moneyLabel(product.basePrice)}</del>}
-            <div className="detail-price">{moneyLabel(priceOf(product))}</div><div className="detail-actions"><button className="btn primary" onClick={()=>add(product)}><Plus size={19}/> أضف للسلة</button><button className="btn outline" onClick={share}><Share2 size={18}/> مشاركة المنتج</button></div>
+            <div className={'detail-prices'+(product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice?' has-offer':'')}>
+              {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del><ProductPrice amount={product.basePrice}/></del>}
+              <strong className="detail-price"><ProductPrice amount={priceOf(product)}/></strong>
+            </div><div className="detail-actions"><button className="btn primary" onClick={()=>add(product)}><Plus size={19}/> أضف للسلة</button><button className="btn outline" onClick={share}><Share2 size={18}/> مشاركة المنتج</button></div>
           </div></div>:<div className="empty-state">هذا المنتج غير متاح</div>}
       </div>}
       {page==='cart'&&<div className="container page-container"><div className="page-heading"><span className="eyebrow">خطوة واحدة تفصلك عن طلبك</span><h1>سلة الطلبات <span className="count-pill">{cartCount}</span></h1></div>
