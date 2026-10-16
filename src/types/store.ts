@@ -15,6 +15,15 @@ export interface Restaurant {
   social:{facebook:string;instagram:string;tiktok:string;snapchat:string};
 }
 export interface StoreData {restaurant:Restaurant; categories:ProductCategory[];items:Product[];promos:Promo[];slides:Slide[]}
+export interface ProductReview {
+  id:string;productId:string;name:string;rating:number;comment:string;createdAt:string;updatedAt?:string;approved?:boolean;
+}
+export interface RatingSummary {average:number;count:number}
+export type PriceOrder='asc'|'desc';
+export function sortByPrice<T extends Product>(products:T[],direction:PriceOrder='asc'):T[]{
+  return [...products].sort((a,b)=>(priceOf(a)-priceOf(b))*(direction==='asc'?1:-1)||a.name.localeCompare(b.name,'ar'));
+}
+export function orderDisplay(count:number){return count>100?'+100':String(Math.max(0,count));}
 export interface CartLine {productId:string;quantity:number}
 export interface Order {
   id:string;createdAt:string;updatedAt?:string; customerName:string;phone:string;address:string;
