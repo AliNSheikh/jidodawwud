@@ -12,7 +12,7 @@ Arabic RTL mobile-first restaurant menu, built with React + Vite and Vercel Serv
 - /admin — password-protected restaurant dashboard
 
 ## Vercel setup (required for live use)
-Connect GitHub repository AliNSheikh/jedodawod as a Vite project on Vercel, using npm run build and output directory dist. Add these server-side environment variables in Production and Preview:
+Connect GitHub repository AliNSheikh/jidodawwud as a Vite project on Vercel, using npm run build and output directory dist. Add these server-side environment variables in Production and Preview:
 
 | Variable | Purpose |
 | --- | --- |
