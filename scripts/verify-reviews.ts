@@ -19,7 +19,7 @@ async function main() {
   globalThis.fetch=(async(url:any,options:any)=>{
     const p=String(url),method=options?.method||'GET';
     if(p.includes('/data/menu.json'))return wrap(200,{content:Buffer.from(JSON.stringify({items:[{id:'food-1',isAvailable:true}]})).toString('base64')});
-    if(p.includes('/data/reviews.json')){
+    if(p.includes('/data/reviews.encrypted.json')){
       if(method==='GET')return sha?wrap(200,{sha,content:Buffer.from(JSON.stringify(encrypted)).toString('base64')}):wrap(404,{});
       if(method==='PUT'){
         const payload=JSON.parse(options.body);
