@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 async function main() {
   const original={GITHUB_TOKEN:process.env.GITHUB_TOKEN,SESSION_SECRET:process.env.SESSION_SECRET,
-    GITHUB_REPO_OWNER:process.env.GITHUB_REPO_OWNER,GITHUB_REPO_NAME:process.env.GITHUB_REPO_NAME};
+    GITHUB_REPO_OWNER:process.env.GITHUB_REPO_OWNER,GITHUB_REPO_NAME:process.env.GITHUB_REPO_NAME,ORDERS_ENCRYPTION_KEY:process.env.ORDERS_ENCRYPTION_KEY};
   const originalFetch=globalThis.fetch;
   process.env.GITHUB_TOKEN='test-reviews-token';
+  process.env.ORDERS_ENCRYPTION_KEY='ab'.repeat(32);
   process.env.SESSION_SECRET='test-session-secret';
   process.env.GITHUB_REPO_OWNER='AliNSheikh';
   process.env.GITHUB_REPO_NAME='jidodawwud';
@@ -12,16 +13,23 @@ async function main() {
   const admin=await import('../api/admin/reviews');
   const ratings:any[]=[];
   let sha='';
+  let encrypted:any=null;
+  const secretKey=crypto.createHash('sha256').update(Buffer.from(process.env.ORDERS_ENCRYPTION_KEY,'hex')).update('jidodawwud/reviews/v1').digest();
   const wrap=(code:number,obj:any)=>({ok:code>=200&&code<300,status:code,json:async()=>obj}) as unknown as Response;
   globalThis.fetch=(async(url:any,options:any)=>{
     const p=String(url),method=options?.method||'GET';
     if(p.includes('/data/menu.json'))return wrap(200,{content:Buffer.from(JSON.stringify({items:[{id:'food-1',isAvailable:true}]})).toString('base64')});
     if(p.includes('/data/reviews.json')){
-      if(method==='GET')return sha?wrap(200,{sha,content:Buffer.from(JSON.stringify(ratings)).toString('base64')}):wrap(404,{});
+      if(method==='GET')return sha?wrap(200,{sha,content:Buffer.from(JSON.stringify(encrypted)).toString('base64')}):wrap(404,{});
       if(method==='PUT'){
         const payload=JSON.parse(options.body);
         assert.equal(payload.sha||'',sha);
-        ratings.splice(0,ratings.length,...JSON.parse(Buffer.from(payload.content,'base64').toString('utf8')));
+        encrypted=JSON.parse(Buffer.from(payload.content,'base64').toString('utf8'));
+        assert.equal(encrypted.algorithm,'aes-256-gcm');
+        const dec=crypto.createDecipheriv('aes-256-gcm',secretKey,Buffer.from(encrypted.iv,'base64'));
+        dec.setAuthTag(Buffer.from(encrypted.tag,'base64'));
+        const decrypted=JSON.parse(Buffer.concat([dec.update(Buffer.from(encrypted.ciphertext,'base64')),dec.final()]).toString('utf8'));
+        ratings.splice(0,ratings.length,...decrypted);
         sha='sha-'+(parseInt(sha.split('-')[1]||'0',10)+1);
         return wrap(201,{content:{sha}});
       }
