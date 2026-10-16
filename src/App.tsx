@@ -1,7 +1,9 @@
 import React,{useCallback,useEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, Facebook, Ghost, Instagram, MapPin, Menu as MenuIcon, MessageCircle, Minus, Music2, Phone, Plus, Search, Share2, ShoppingBag, Trash2, Truck, Wallet, CreditCard, Store, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
-import {priceOf,linkToCategory,linkToProduct} from './types/store';
+import {priceOf,linkToCategory,linkToProduct,sortByPrice,orderDisplay} from './types/store';
+import type {ProductReview,RatingSummary,PriceOrder} from './types/store';
+import {RatingBadge,ReviewSection} from './components/ReviewWidgets';
 import {StoreAdmin} from './components/admin/StoreAdmin';
 import {googleMapsEmbedUrl} from './utils/googleMaps';
 import {RiyalPrice} from './components/RiyalPrice';
@@ -14,6 +16,10 @@ function App(){
   const [loading,setLoading]=useState(true);
   const [loadError,setLoadError]=useState('');
   const [search,setSearch]=useState('');
+  const [priceOrder,setPriceOrder]=useState<PriceOrder>('asc');
+  const [reviews,setReviews]=useState<ProductReview[]>([]);
+  const [ratingSummaries,setRatingSummaries]=useState<Record<string,RatingSummary>>({});
+  const [orderCounts,setOrderCounts]=useState<Record<string,number>>({});
   const [activeSlide,setActiveSlide]=useState(0);
   const categoriesScroller=useRef<HTMLDivElement>(null);
   const [navOpen,setNavOpen]=useState(false);
@@ -41,6 +47,21 @@ function App(){
     }finally{setLoading(false);}
   },[]);
   useEffect(()=>{load();},[load]);
+  const loadReviews=useCallback(async()=>{
+    try{
+      const r=await fetch('/api/reviews',{cache:'no-store'});
+      const data=await r.json();
+      if(!r.ok)throw new Error(data.error||'لم يتم تحميل التقييمات');
+      setReviews(data.reviews||[]);setRatingSummaries(data.summary||{});
+    }catch(e){console.warn('Reviews are temporarily unavailable:',e);}
+  },[]);
+  useEffect(()=>{loadReviews();},[loadReviews]);
+  useEffect(()=>{
+    fetch('/api/product-stats',{cache:'no-store'}).then(async r=>{
+      if(!r.ok)throw new Error('Order counts unavailable');
+      const d=await r.json();if(d.available)setOrderCounts(d.counts||{});
+    }).catch(e=>console.warn('Product order counts unavailable:',e));
+  },[]);
   useEffect(()=>{localStorage.setItem('jido-cart',JSON.stringify(cart));},[cart]);
   useEffect(()=>{
     const onPop=()=>{setPath(window.location.pathname);window.scrollTo(0,0);};
@@ -85,7 +106,7 @@ function App(){
   const offers=menu?.items.filter(p=>p.isAvailable&&p.offerEnabled&&p.offerPrice!=null&&p.offerPrice<p.basePrice)||[];
   const allCategories=(menu?.categories.filter(c=>c.isActive).sort((a,b)=>a.displayOrder-b.displayOrder)||[]);
   const hasOffers=offers.length>0;
-  const searchItems=(items:Product[])=>items.filter(p=>p.isAvailable&&(!search||p.name.includes(search)||p.description.includes(search))).sort((a,b)=>a.displayOrder-b.displayOrder);
+  const searchItems=(items:Product[])=>sortByPrice(items.filter(p=>p.isAvailable&&(!search||p.name.includes(search)||p.description?.includes(search))),priceOrder);
   const send=async()=>{
     setOrderError('');setOrderSuccess('');
     if(!cartLines.length){setOrderError('السلة فارغة');return;}
@@ -123,11 +144,16 @@ function App(){
         <button className="product-image-button" aria-label={'عرض '+p.name} onClick={()=>go(linkToProduct(p))}>
           {p.imageUrl?<img loading="lazy" className="product-image" src={p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
           {offered&&<span className="offer-badge">خصم {pct}٪</span>}
+          <RatingBadge summary={ratingSummaries[p.id]}/>
         </button>
         <button className="add-circle" onClick={()=>add(p)} aria-label={'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
       </div>
       <div className="product-meta">
         <button className="product-name" onClick={()=>go(linkToProduct(p))}>{p.name}</button>
+        {path==='/'&&p.description?.trim()&&<button className="product-excerpt" onClick={()=>go(linkToProduct(p))} aria-label={'تفاصيل '+p.name}>
+          {p.description.trim().slice(0,85).trimEnd()}...
+        </button>}
+        <small className="product-order-count">تم الطلب: {orderDisplay(orderCounts[p.id]||0)}</small>
         <div className="card-bottom">
           <div className={'prices'+(offered?' has-offer':'')}>
             {offered&&<del><RiyalPrice amount={p.basePrice}/></del>}
@@ -137,7 +163,13 @@ function App(){
       </div>
     </article>;
   };
-  const Cards=({items}:{items:Product[]})=><div className="product-grid">{items.map(p=><ProductCard p={p} key={p.id}/>)}</div>;
+  const Cards=({items}:{items:Product[]})=><div className="product-grid">{sortByPrice(items,priceOrder).map(p=><ProductCard p={p} key={p.id}/>)}</div>;
+  const SortControl=()=> <label className="sort-control">ترتيب السعر
+    <select value={priceOrder} aria-label="ترتيب الأصناف حسب السعر" onChange={e=>setPriceOrder(e.target.value as PriceOrder)}>
+      <option value="asc">من الأقل إلى الأعلى ↑</option>
+      <option value="desc">من الأعلى إلى الأقل ↓</option>
+    </select>
+  </label>;
   const CategoryGrid=({horizontal=false}:{horizontal?:boolean})=><div className={horizontal?'category-strip-container':undefined}>
     <div className={horizontal?'category-grid category-strip':'category-grid'} ref={horizontal?categoriesScroller:undefined} role={horizontal?'region':undefined} aria-label={horizontal?'الأقسام، اسحب للتصفح':undefined} tabIndex={horizontal?0:undefined}>
       {hasOffers&&<button className="category-tile offer-category" onClick={()=>go('/category/offers')}><BadgePercent size={24}/><span>العروض</span><small>{offers.length} منتج</small></button>}
@@ -184,7 +216,7 @@ function App(){
         </div></section>
         <div className="container">
           <section className="categories-section"><div className="section-head"><div><span className="eyebrow">اكتشف أشهى الأطباق</span><h2>تصفح الأقسام</h2></div><button className="text-link" onClick={()=>go('/categories')}>كل الأقسام <ArrowLeft size={17}/></button></div><CategoryGrid horizontal/></section>
-          <div id="menu" className="menu-section"><div className="section-head"><div><span className="eyebrow">مذاق على ذوقك</span><h2>قائمة الطعام</h2></div></div>
+          <div id="menu" className="menu-section"><div className="section-head"><div><span className="eyebrow">مذاق على ذوقك</span><h2>قائمة الطعام</h2></div><SortControl/></div>
             <div className="search-wrapper"><Search size={20}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث عن طبقك المفضل..." aria-label="بحث في الأصناف"/></div>
             {hasOffers&&searchItems(offers).length>0&&<section className="menu-group"><div className="group-title"><h3><BadgePercent/> العروض المميزة</h3><button onClick={()=>go('/category/offers')}>عرض الكل <ArrowLeft size={16}/></button></div><Cards items={searchItems(offers)}/></section>}
             {allCategories.map(c=>{
@@ -197,18 +229,19 @@ function App(){
           <Contact/>
         </div>
       </>}
-      {page==='categories'&&<div className="container page-container"><div className="page-heading"><span className="eyebrow">اختر ما تشتهي</span><h1>أقسام القائمة</h1></div><CategoryGrid/></div>}
-      {page==='category'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/categories')}><ArrowRight size={16}/> العودة للأقسام</button>
+      {page==='categories'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/')}><ArrowRight size={16}/> العودة إلى الرئيسية</button><div className="page-heading"><span className="eyebrow">اختر ما تشتهي</span><h1>أقسام القائمة</h1></div><CategoryGrid/></div>}
+      {page==='category'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/categories')}><ArrowRight size={16}/> العودة للأقسام</button><SortControl/>
         {(path==='/category/offers'&&hasOffers)?<><div className="page-heading"><h1>العروض المميزة</h1></div><Cards items={offers}/></>:currentCategory?<><div className="page-heading"><h1>{currentCategory.name}</h1><p>{currentCategory.description}</p></div><Cards items={searchItems(menu.items.filter(p=>p.categoryId===currentCategory.id))}/></>:<div className="empty-state">القسم غير موجود</div>}
       </div>}
       {page==='product'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/')}><ArrowRight size={16}/> العودة إلى القائمة</button>
         {product?<div className="product-detail"><div className="detail-media">{product.imageUrl?<img src={product.imageUrl} alt={product.name}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
-          <div className="detail-info"><span className="eyebrow">{allCategories.find(c=>c.id===product.categoryId)?.name||'قائمة الطعام'}</span><h1>{product.name}</h1>{product.description&&<p>{product.description}</p>}
+          <div className="detail-info"><span className="eyebrow">{allCategories.find(c=>c.id===product.categoryId)?.name||'قائمة الطعام'}</span><h1>{product.name}</h1><div className="detail-product-meta"><RatingBadge summary={ratingSummaries[product.id]}/><small>تم الطلب: {orderDisplay(orderCounts[product.id]||0)}</small></div>{product.description&&<p>{product.description}</p>}
             <div className={'detail-prices'+(product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice?' has-offer':'')}>
               {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del><RiyalPrice amount={product.basePrice}/></del>}
               <strong className="detail-price"><RiyalPrice amount={priceOf(product)}/></strong>
             </div><div className="detail-actions"><button className="btn primary" onClick={()=>add(product)}><Plus size={19}/> أضف للسلة</button><button className="btn outline" onClick={share}><Share2 size={18}/> مشاركة المنتج</button></div>
           </div></div>:<div className="empty-state">هذا المنتج غير متاح</div>}
+        {product&&<ReviewSection key={product.id} productId={product.id} reviews={reviews} onSubmitted={loadReviews}/>}
       </div>}
       {page==='cart'&&<div className="container page-container"><div className="page-heading"><span className="eyebrow">خطوة واحدة تفصلك عن طلبك</span><h1>سلة الطلبات <span className="count-pill">{cartCount}</span></h1></div>
         {!cartLines.length?<div className="empty-state"><ShoppingBag size={42}/><h3>سلتك فارغة حاليًا</h3><button className="btn primary" onClick={()=>go('/')}>تصفح الطعام</button></div>:
