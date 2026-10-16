@@ -20,3 +20,5 @@ jobs:
         run: npm run build
       - name: Smoke-test serverless APIs
         run: npx tsx scripts/verify-api.ts
+      - name: Test GitHub settings saving and conflict handling
+        run: npx tsx scripts/verify-save-menu.ts
