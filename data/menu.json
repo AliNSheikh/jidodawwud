@@ -64,7 +64,7 @@
     {
       "id": "b08fc0c7-4ee3-449f-bf5d-b2da883ecddd",
       "name": "صحن بطاطا كبير",
-      "description": "",
+      "description": "حصص وفيرة من أصابع البطاطا الطازجة والمقرمشة، مذهبة بعناية لتمنحك القوام الخارجي المقرمش واللب الداخلي الطري. تقدم ساخنة في طبق كبير مع علبة صلصة الكاتشب الغنية، لتكون الإضافة المثالية والمقرمشة التي تكمل متعة وجبتك.",
       "categoryId": "starters",
       "basePrice": 11,
       "offerPrice": 0,
@@ -76,7 +76,7 @@
     {
       "id": "f622ab7b-6c49-4fe2-90c8-bb0f3cbd6a04",
       "name": "سلطة كول سلو",
-      "description": "",
+      "description": "مزيج منعش ومنقرمش من شرائح الملفوف الأبيض الطازج والجزر المبشور، محضرة بخلطة المايونيز الكريمية الخاصة بلمسة متوازنة من الحلاوة والخفة. طبق جانبي ومقبلات مثالية تضفي انتعاشاً وطعماً غنياً يكمل وجبتك بكل لذة.",
       "categoryId": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
       "basePrice": 8,
       "offerPrice": 4,
@@ -94,6 +94,30 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792169347860-d71532faa0ead3c3.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "26420ad4-73d1-4acd-a404-59c3970f7eda",
+      "name": " طبق ورق عنب (8 قطع )",
+      "description": "ابدأ وجبتك بأصابع ورق العنب الطري والملفوف بإتقان على الطريقة التقليدية، محشو بخليط غني من الأرز والخضار المتبلة بلمسة حامضة ومنعشة. يقدم الطبق مزينا بحبات الرمان اللامعة مع صلصة الكريمة البيضاء الطازجة فوق فرش من الخس الأخضر، ليمنحك مزيجا مثاليا من النكهات الشهية في كل قضمة.",
+      "categoryId": "starters",
+      "basePrice": 10,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792169634739-dc4e3112ee5318d4.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "5d433906-1f6c-492f-96c9-05a637cfc338",
+      "name": "حمص ( 250 غرام )",
+      "description": "طبق حمص كريمي ناعم ومحضر بعناية على الطريقة الأصيلة من حبوب الحمص المختارة والطحينة الفاخرة. يزين الطبق بزيت الزيتون الصافي، حبات الحمص الكاملة، لمسات من البهارات، وأوراق النعناع الطازجة ليمنحك مذاقاً غنياً ومتوازناً يفتتح به وجبتك بكل شهية.",
+      "categoryId": "starters",
+      "basePrice": 10,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792169776864-68974811ca0a159c.webp",
       "displayOrder": 0,
       "isAvailable": true
     }
