@@ -3,6 +3,7 @@ import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, F
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
 import {priceOf,moneyLabel,linkToCategory,linkToProduct} from './types/store';
 import {StoreAdmin} from './components/admin/StoreAdmin';
+import {googleMapsEmbedUrl} from './utils/googleMaps';
 import bundledMenu from '../data/menu.json';
 
 function App(){
@@ -143,7 +144,7 @@ function App(){
       <div className="social-links">{social.filter(s=>restaurant.social?.[s.id]).map(({id,label,Icon})=><a key={id} target="_blank" rel="noopener noreferrer" href={restaurant.social[id]} aria-label={label} title={label}><Icon size={20}/></a>)}</div>
       {restaurant.whatsapp&&<a className="btn primary whatsapp-btn" target="_blank" rel="noopener noreferrer" href={'https://wa.me/'+restaurant.whatsapp.replace(/\D/g,'')}><MessageCircle size={18}/> تواصل عبر واتساب</a>}
     </div>
-    <div className="map-panel">{restaurant.mapEmbedUrl&&/^https:\/\/(www\.)?google\.com\/maps\/embed/.test(restaurant.mapEmbedUrl)?<iframe src={restaurant.mapEmbedUrl} title="موقع المطعم" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen/>:<div className="map-placeholder"><MapPin size={38}/><span>يمكن إضافة موقع المطعم على الخريطة من لوحة التحكم</span></div>}</div></div>
+    <div className="map-panel">{googleMapsEmbedUrl(restaurant.mapEmbedUrl)?<iframe src={googleMapsEmbedUrl(restaurant.mapEmbedUrl)} title="موقع المطعم" loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/>:<div className="map-placeholder"><MapPin size={38}/><span>يمكن إضافة موقع المطعم على الخريطة من لوحة التحكم</span></div>}</div></div>
   </section>;
   return <div className="site" dir="rtl" style={{fontFamily:'var(--restaurant-font), Tahoma, sans-serif'}}>
     {loadError&&<div role="status" className="api-warning"><span>{loadError}</span><button onClick={load}>إعادة المحاولة</button></div>}
