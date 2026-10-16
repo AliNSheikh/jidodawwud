@@ -51,6 +51,13 @@
       "description": "",
       "displayOrder": 4,
       "isActive": true
+    },
+    {
+      "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
+      "name": "السلطات",
+      "description": "",
+      "displayOrder": 3,
+      "isActive": true
     }
   ],
   "items": [
