@@ -259,3 +259,37 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
  .rating-badge .rating-count{font-size:9px}
  .product-media .offer-badge{top:auto;bottom:8px;right:8px;font-size:10px;padding:4px 6px}
 }
+
+/* Product image labels: discount on upper-right; rating directly below image on the right. */
+.product-media .offer-badge{
+  top:10px!important;right:10px!important;bottom:auto!important;left:auto!important;
+  z-index:3;padding:6px 11px;border-radius:8px;
+  background:#b86430;color:#fff;font-size:12px;font-weight:900;box-shadow:0 3px 10px #38220f39;
+}
+.product-image-button{display:block;text-decoration:none;color:inherit;touch-action:manipulation;}
+.product-rating-strip{display:flex;flex-direction:row;direction:rtl;justify-content:flex-start;align-items:center;min-height:24px;margin-bottom:7px;}
+.product-rating-strip .rating-badge{
+  position:static;top:auto;left:auto;right:auto;bottom:auto;
+  display:inline-flex;direction:ltr;align-items:center;gap:6px;
+  border-radius:0;padding:0;min-height:auto;box-shadow:none;background:transparent;
+  font-size:13px;white-space:nowrap;
+}
+.product-rating-strip .rating-badge-stars{gap:2px;}
+.product-rating-strip .rating-badge-stars svg{width:14px;height:14px;}
+.product-rating-strip .rating-badge .rating-count{font-size:12px;color:#6a778a;}
+.product-name{display:block;width:100%;color:var(--navy);text-align:right;text-decoration:none;}
+.product-excerpt{display:-webkit-box;text-decoration:none;touch-action:manipulation;}
+.review-rating-input{display:flex;flex-direction:column;align-items:flex-start;gap:7px;font-size:13px;font-weight:800;}
+.review-rating-input small{font-size:11px;color:var(--muted);font-weight:600;}
+.stars-row.interactive{display:inline-flex;align-items:center;gap:4px;touch-action:manipulation;}
+.stars-row.interactive button{width:44px;height:44px;min-width:44px;min-height:44px;display:inline-grid;place-items:center;touch-action:manipulation;cursor:pointer;border-radius:9px;}
+.stars-row.interactive button:hover{background:#fff8e4;}
+.stars-row.interactive button svg{width:28px;height:28px;}
+@media(max-width:720px){
+  .product-media .offer-badge{top:8px!important;right:8px!important;bottom:auto!important;font-size:11px;padding:5px 8px;}
+  .product-rating-strip{margin-bottom:5px;}
+  .product-rating-strip .rating-badge{font-size:11px;gap:3px;}
+  .product-rating-strip .rating-badge-stars{gap:0;}
+  .product-rating-strip .rating-badge-stars svg{width:11px;height:11px;}
+  .product-rating-strip .rating-badge .rating-count{font-size:10px;}
+}
