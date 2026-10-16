@@ -57,7 +57,7 @@ function App(){
   },[]);
   useEffect(()=>{loadReviews();},[loadReviews]);
   useEffect(()=>{
-    fetch('/api/product-stats',{cache:'no-store'}).then(async r=>{
+    fetch('/api/reviews?stats=orders',{cache:'no-store'}).then(async r=>{
       if(!r.ok)throw new Error('Order counts unavailable');
       const d=await r.json();if(d.available)setOrderCounts(d.counts||{});
     }).catch(e=>console.warn('Product order counts unavailable:',e));
