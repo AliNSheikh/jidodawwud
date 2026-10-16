@@ -65,7 +65,8 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const slide=slideId&&draft?.slides.find(p=>p.id===slideId);
   async function save(){
     if(!draft||saving)return;
-    if(draft.items.some(p=>!p.name.trim()||!p.categoryId||p.basePrice<0))return setMessage('تحقق من أسماء المنتجات وأسعارها والأقسام المرتبطة بها');
+    if(draft.items.some(p=>!p.name.trim()||!p.categoryId||!Number.isFinite(p.basePrice)||p.basePrice<0))return setMessage('تحقق من أسماء المنتجات وأسعارها والأقسام المرتبطة بها');
+    if(draft.items.some(p=>p.offerEnabled&&(!Number.isFinite(p.offerPrice)||Number(p.offerPrice)<0||Number(p.offerPrice)>=p.basePrice)))return setMessage('سعر العرض يجب أن يكون غير سالب وأقل من السعر الأصلي');
     if(draft.restaurant.deliveryFee<0||draft.restaurant.freeDeliveryMinimum<0)return setMessage('قيم التوصيل يجب أن تكون موجبة');
     setSaving(true);setMessage('');
     try{
