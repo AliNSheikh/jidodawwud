@@ -1,7 +1,8 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
-import {moneyLabel,priceOf,linkToProduct,linkToCategory} from '../../types/store';
+import {priceOf,linkToProduct,linkToCategory} from '../../types/store';
+import {RiyalPrice} from '../RiyalPrice';
 import {googleMapsEmbedUrl} from '../../utils/googleMaps';
 
 type Tab='overview'|'products'|'categories'|'orders'|'promos'|'slides'|'settings';
@@ -186,12 +187,12 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         {product.imageUrl&&<img className="admin-image-preview" src={product.imageUrl} alt="معاينة المنتج"/>}
         <label className="admin-field">الوصف<textarea rows={3} value={product.description} onChange={e=>modifyProduct({...product,description:e.target.value})}/></label>
         <div className="admin-check-row"><CheckInput label="المنتج متاح" value={product.isAvailable} onChange={v=>modifyProduct({...product,isAvailable:v})}/><CheckInput label="تفعيل العرض الخاص" value={!!product.offerEnabled} onChange={v=>modifyProduct({...product,offerEnabled:v})}/></div>
-        {product.offerEnabled&&product.offerPrice!=null&&product.basePrice>product.offerPrice&&<div className="discount-preview"><del>{moneyLabel(product.basePrice)}</del><strong>{moneyLabel(product.offerPrice)}</strong><span>خصم {Math.round((1-product.offerPrice/product.basePrice)*100)}٪</span></div>}
+        {product.offerEnabled&&product.offerPrice!=null&&product.basePrice>product.offerPrice&&<div className="discount-preview"><del><RiyalPrice amount={product.basePrice}/></del><strong><RiyalPrice amount={product.offerPrice}/></strong><span>خصم {Math.round((1-product.offerPrice/product.basePrice)*100)}٪</span></div>}
         <button className="btn outline" onClick={()=>setProductId(null)}>إغلاق المحرر</button>
       </div>}
       <TextInput label="بحث عن منتج" value={search} onChange={setSearch} placeholder="اسم المنتج"/>
       <div className="admin-list">{draft.items.filter(p=>p.name.includes(search)).map(p=><div className="admin-list-row" key={p.id}>
-        {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}<div className="list-info"><strong>{p.name||'منتج جديد'}</strong><small>{draft.categories.find(c=>c.id===p.categoryId)?.name||'بدون قسم'} · {moneyLabel(priceOf(p))}</small></div>
+        {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}<div className="list-info"><strong>{p.name||'منتج جديد'}</strong><small>{draft.categories.find(c=>c.id===p.categoryId)?.name||'بدون قسم'} · <RiyalPrice amount={priceOf(p)}/></small></div>
         <button className="mini-action" onClick={()=>setProductId(p.id)}>تعديل</button>
         <button className="icon-danger" aria-label="حذف المنتج" onClick={()=>{if(confirm('هل تريد حذف المنتج؟')){update('items',draft.items.filter(x=>x.id!==p.id));if(productId===p.id)setProductId(null);}}}><Trash2 size={17}/></button>
       </div>)}</div></section>}
@@ -207,7 +208,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         <label className="admin-field">نوع الخصم<select value={promo.type} onChange={e=>modifyPromo({...promo,type:e.target.value as 'percent'|'fixed'})}><option value="percent">نسبة مئوية</option><option value="fixed">مبلغ ثابت</option></select></label>
         <TextInput label={promo.type==='percent'?'النسبة المئوية':'القيمة (ر.س)'} type="number" value={promo.value} onChange={v=>modifyPromo({...promo,value:Number(v)})}/>
       </div><CheckInput label="الكود مفعّل" value={promo.enabled} onChange={v=>modifyPromo({...promo,enabled:v})}/><button className="btn outline" onClick={()=>setPromoId(null)}>إغلاق المحرر</button></div>}
-      <div className="admin-list">{draft.promos.map(p=><div className="admin-list-row" key={p.id}><BadgePercent/><div className="list-info"><strong dir="ltr">{p.code||'كود جديد'}</strong><small>{p.type==='percent'?p.value+'٪':moneyLabel(p.value)} · {p.enabled?'مفعّل':'متوقف'}</small></div><button className="mini-action" onClick={()=>setPromoId(p.id)}>تعديل</button><button className="icon-danger" onClick={()=>{if(confirm('حذف كود الخصم؟')){update('promos',draft.promos.filter(x=>x.id!==p.id));setPromoId(null);}}}><Trash2 size={17}/></button></div>)}</div></section>}
+      <div className="admin-list">{draft.promos.map(p=><div className="admin-list-row" key={p.id}><BadgePercent/><div className="list-info"><strong dir="ltr">{p.code||'كود جديد'}</strong><small>{p.type==='percent'?p.value+'٪':<RiyalPrice amount={p.value}/>} · {p.enabled?'مفعّل':'متوقف'}</small></div><button className="mini-action" onClick={()=>setPromoId(p.id)}>تعديل</button><button className="icon-danger" onClick={()=>{if(confirm('حذف كود الخصم؟')){update('promos',draft.promos.filter(x=>x.id!==p.id));setPromoId(null);}}}><Trash2 size={17}/></button></div>)}</div></section>}
     {tab==='slides'&&<section className="admin-panel"><div className="admin-section-title"><h2>الصور المتحركة في الرئيسية</h2><button className="btn primary" onClick={()=>{const s=emptySlide();modifySlide(s);setSlideId(s.id);}}><Plus size={17}/> إضافة شريحة</button></div>
       {slideId&&slide&&<div className="editor-panel"><div className="admin-form-grid"><TextInput label="العنوان" value={slide.title} onChange={v=>modifySlide({...slide,title:v})}/><div className="admin-field"><span>صورة الشريحة</span><Upload id={'slide-'+slide.id} onPick={f=>imageUpload(f,url=>modifySlide({...slide,imageUrl:url}),'slide-'+slide.id)}/></div></div>
         <label className="admin-field">الوصف<textarea rows={2} value={slide.description} onChange={e=>modifySlide({...slide,description:e.target.value})}/></label><CheckInput label="الشريحة مفعّلة" value={slide.enabled} onChange={v=>modifySlide({...slide,enabled:v})}/>{slide.imageUrl&&<img className="admin-wide-preview" src={slide.imageUrl} alt="معاينة"/>}<button className="btn outline" onClick={()=>setSlideId(null)}>إغلاق المحرر</button></div>}
@@ -219,8 +220,8 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
       <div className="orders-list">{visibleOrders.map(o=><article className="order-card" key={o.id}>
         <div className="order-top"><div><strong>{o.id}</strong><small>{new Date(o.createdAt).toLocaleString('ar-SA')}</small></div><span className={'order-status status-'+o.status}>{statusNames[o.status]}</span></div>
         <div className="order-detail-grid"><span><b>العميل:</b> {o.customerName}</span><span><b>الجوال:</b> <a href={'tel:'+o.phone}>{o.phone}</a></span><span><b>طريقة الاستلام:</b> {o.service==='delivery'?'توصيل':'استلام'}</span><span><b>الدفع:</b> {o.payment==='visa'?'فيزا عند الاستلام':'نقدًا'}</span>{o.address&&<span className="order-address"><b>العنوان:</b> {o.address}</span>}</div>
-        <div className="order-items">{o.items.map((p,i)=><div key={i}><span>{p.name} × {p.quantity}</span><strong>{moneyLabel(p.total)}</strong></div>)}</div>
-        <div className="order-totals"><span>خصم: {moneyLabel(o.discount)}</span><span>توصيل: {moneyLabel(o.deliveryFee)}</span><strong>الإجمالي: {moneyLabel(o.total)}</strong></div>{o.notes&&<p className="order-notes">ملاحظات: {o.notes}</p>}
+        <div className="order-items">{o.items.map((p,i)=><div key={i}><span>{p.name} × {p.quantity}</span><strong><RiyalPrice amount={p.total}/></strong></div>)}</div>
+        <div className="order-totals"><span>خصم: <RiyalPrice amount={o.discount}/></span><span>توصيل: <RiyalPrice amount={o.deliveryFee}/></span><strong>الإجمالي: <RiyalPrice amount={o.total}/></strong></div>{o.notes&&<p className="order-notes">ملاحظات: {o.notes}</p>}
         <label className="admin-field">تغيير الحالة<select value={o.status} onChange={e=>changeStatus(o.id,e.target.value as OrderStatus)}>{Object.entries(statusNames).map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
       </article>)}{visibleOrders.length===0&&<div className="empty-state">لا توجد طلبات مطابقة</div>}</div></section>}
     {tab==='settings'&&<section className="admin-panel"><h2>هوية المطعم ومعلومات الاتصال</h2>
