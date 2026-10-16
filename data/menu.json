@@ -72,6 +72,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792165349537-1158614390374389.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "f622ab7b-6c49-4fe2-90c8-bb0f3cbd6a04",
+      "name": "سلطة كول سلو",
+      "description": "",
+      "categoryId": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
+      "basePrice": 8,
+      "offerPrice": 4,
+      "offerEnabled": true,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792165970855-b99a28ff501790b9.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
