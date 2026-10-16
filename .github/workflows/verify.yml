@@ -18,3 +18,5 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+      - name: Smoke-test serverless APIs
+        run: npx tsx scripts/verify-api.ts
