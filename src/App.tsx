@@ -1,4 +1,4 @@
-import React,{useCallback,useEffect,useMemo,useRef,useState} from 'react';
+import React,{useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, Facebook, Ghost, Instagram, MapPin, Menu as MenuIcon, MessageCircle, Minus, Music2, Phone, Plus, Search, Share2, ShoppingBag, Trash2, Truck, Wallet, CreditCard, Store, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
 import {priceOf,linkToCategory,linkToProduct,sortByPrice,orderDisplay} from './types/store';
@@ -8,10 +8,15 @@ import {StoreAdmin} from './components/admin/StoreAdmin';
 import {googleMapsEmbedUrl} from './utils/googleMaps';
 import {RiyalPrice} from './components/RiyalPrice';
 import bundledMenu from '../data/menu.json';
+import {initialMenu,persistMenu,routeId,scrollToPageTop,validMenu} from './utils/productNavigation';
 
 function App(){
   const [path,setPath]=useState(window.location.pathname);
-  const [menu,setMenu]=useState<StoreData|null>(null);
+  // Render bundled or recently synchronized menu instantly, even for shared deep links.
+  const [menu,setMenu]=useState<StoreData|null>(()=>{
+    const fallback=bundledMenu as unknown as StoreData;
+    return initialMenu(fallback,typeof localStorage!=='undefined'?localStorage:undefined);
+  });
   const [sha,setSha]=useState('');
   const [loading,setLoading]=useState(true);
   const [loadError,setLoadError]=useState('');
@@ -33,12 +38,12 @@ function App(){
   const load=useCallback(async()=>{
     setLoading(true);
     try{
-      const r=await fetch('/api/menu',{cache:'no-store'});
+      const r=await fetch('/api/menu',{cache:'no-store',signal:AbortSignal.timeout(12000)});
       const ct=r.headers.get('content-type')||'';
       if(!ct.includes('application/json'))throw new Error('استجابة الخادم غير صالحة (HTTP '+r.status+')');
       const data=await r.json();
-      if(!r.ok||!data?.menu?.restaurant)throw new Error(data.error||'تعذر تحميل القائمة');
-      setMenu(data.menu);setSha(data.sha||'');
+      if(!r.ok||!validMenu(data?.menu))throw new Error(data.error||'تعذر تحميل القائمة');
+      setMenu(data.menu);setSha(data.sha||'');persistMenu(data.menu,localStorage);
       setLoadError(data.warning||'');
     }catch(e:any){
       console.error('Menu API unavailable:',e);
@@ -64,9 +69,11 @@ function App(){
   },[]);
   useEffect(()=>{localStorage.setItem('jido-cart',JSON.stringify(cart));},[cart]);
   useEffect(()=>{
-    const onPop=()=>{setPath(window.location.pathname);window.scrollTo(0,0);};
+    const onPop=()=>{setPath(window.location.pathname);scrollToPageTop();};
     window.addEventListener('popstate',onPop);return()=>window.removeEventListener('popstate',onPop);
   },[]);
+  // Reset after the new page is committed too, to avoid mobile browser scroll anchoring.
+  useLayoutEffect(()=>{scrollToPageTop();},[path]);
   useEffect(()=>{
     if(!menu?.restaurant.googleFontUrl)return;
     const url=menu.restaurant.googleFontUrl;
@@ -86,7 +93,11 @@ function App(){
   useEffect(()=>{if(slides.length<2)return;const timer=window.setInterval(()=>setActiveSlide(i=>(i+1)%slides.length),6000);return()=>clearInterval(timer);},[slides.length]);
   const go=(to:string)=>{
     if(to!==window.location.pathname)history.pushState({},'',to);
-    setPath(to);setNavOpen(false);window.scrollTo({top:0,behavior:'smooth'});
+    setPath(to);setNavOpen(false);scrollToPageTop();
+  };
+  const followLink=(event:React.MouseEvent<HTMLAnchorElement>,to:string)=>{
+    if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.defaultPrevented)return;
+    event.preventDefault();go(to);
   };
   const add=(product:Product)=>{
     setCart(old=>{
@@ -129,9 +140,9 @@ function App(){
   if(loading&&!menu)return <div className="center-loading" dir="rtl">يتم تحميل قائمة جدو داوود...</div>;
   if(!menu)return <div className="center-loading" dir="rtl"><p>{loadError||'تعذر تحميل القائمة'}</p><button className="btn primary" onClick={load}>إعادة المحاولة</button></div>;
   const restaurant=menu.restaurant;
-  const categoryId=decodeURIComponent(path.split('--').slice(-1)[0]||'');
+  const categoryId=routeId(path,'/category/');
   const currentCategory=allCategories.find(c=>c.id===categoryId);
-  const productId=decodeURIComponent(path.split('--').slice(-1)[0]||'');
+  const productId=routeId(path,'/product/');
   const product=menu.items.find(p=>p.id===productId&&p.isAvailable);
   const page=path.startsWith('/category/')?'category':path.startsWith('/product/')?'product':path==='/categories'?'categories':path==='/cart'?'cart':path==='/contact'?'contact':'home';
   const pageTitle=page==='category'?currentCategory?.name:page==='product'?product?.name:page==='cart'?'سلة الطلبات':page==='contact'?'تواصل معنا':page==='categories'?'الأقسام':'قائمة الطعام';
@@ -141,18 +152,18 @@ function App(){
     const pct=offered?Math.round((1-Number(p.offerPrice)/p.basePrice)*100):0;
     return <article className="product-card">
       <div className="product-media">
-        <button className="product-image-button" aria-label={'عرض '+p.name} onClick={()=>go(linkToProduct(p))}>
-          {p.imageUrl?<img loading="lazy" className="product-image" src={p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
+        <a className="product-image-button" aria-label={'عرض '+p.name} href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))}>
+          {p.imageUrl?<img loading="lazy" decoding="async" className="product-image" src={p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
           {offered&&<span className="offer-badge">خصم {pct}٪</span>}
-          <RatingBadge summary={ratingSummaries[p.id]}/>
-        </button>
+        </a>
         <button className="add-circle" onClick={()=>add(p)} aria-label={'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
       </div>
       <div className="product-meta">
-        <button className="product-name" onClick={()=>go(linkToProduct(p))}>{p.name}</button>
-        {path==='/'&&p.description?.trim()&&<button className="product-excerpt" onClick={()=>go(linkToProduct(p))} aria-label={'تفاصيل '+p.name}>
+        <div className="product-rating-strip"><RatingBadge summary={ratingSummaries[p.id]}/></div>
+        <a className="product-name" href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))}>{p.name}</a>
+        {path==='/'&&p.description?.trim()&&<a className="product-excerpt" href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))} aria-label={'تفاصيل '+p.name}>
           {p.description.trim().slice(0,85).trimEnd()}...
-        </button>}
+        </a>}
         <small className="product-order-count">تم الطلب: {orderDisplay(orderCounts[p.id]||0)}</small>
         <div className="card-bottom">
           <div className={'prices'+(offered?' has-offer':'')}>
@@ -234,7 +245,7 @@ function App(){
         {(path==='/category/offers'&&hasOffers)?<><div className="page-heading"><h1>العروض المميزة</h1></div><Cards items={offers}/></>:currentCategory?<><div className="page-heading"><h1>{currentCategory.name}</h1><p>{currentCategory.description}</p></div><Cards items={searchItems(menu.items.filter(p=>p.categoryId===currentCategory.id))}/></>:<div className="empty-state">القسم غير موجود</div>}
       </div>}
       {page==='product'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/')}><ArrowRight size={16}/> العودة إلى القائمة</button>
-        {product?<div className="product-detail"><div className="detail-media">{product.imageUrl?<img src={product.imageUrl} alt={product.name}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
+        {product?<div className="product-detail"><div className="detail-media">{product.imageUrl?<img loading="eager" fetchPriority="high" decoding="async" src={product.imageUrl} alt={product.name} onError={event=>{const img=event.currentTarget;if(!img.src.endsWith('/logo.webp'))img.src='/logo.webp';}}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
           <div className="detail-info"><span className="eyebrow">{allCategories.find(c=>c.id===product.categoryId)?.name||'قائمة الطعام'}</span><h1>{product.name}</h1><div className="detail-product-meta"><RatingBadge summary={ratingSummaries[product.id]}/><small>تم الطلب: {orderDisplay(orderCounts[product.id]||0)}</small></div>{product.description&&<p>{product.description}</p>}
             <div className={'detail-prices'+(product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice?' has-offer':'')}>
               {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del><RiyalPrice amount={product.basePrice}/></del>}
