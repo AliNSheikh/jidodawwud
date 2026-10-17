@@ -75,6 +75,32 @@ export default async function handler(req: any, res: any) {
         typeof p.categoryId !== 'string' || !Number.isFinite(p.basePrice) || p.basePrice < 0)) {
       return json(res, 400, { error: 'يوجد منتج باسم أو سعر أو قسم غير صالح.' });
     }
+    // Variants are optional, but configured variants must be fully valid.
+    for (const p of menu.items) {
+      if (p.variants === undefined || p.variants === null) continue;
+      if (!Array.isArray(p.variants) || p.variants.length > 50) {
+        return json(res, 400, { error: 'عدد خيارات المنتج كبير أو غير صالح.' });
+      }
+      const seen = new Set<string>();
+      for (const v of p.variants) {
+        if (!v || typeof v.id !== 'string' || !v.id.trim() || seen.has(v.id) ||
+            typeof v.name !== 'string' || !v.name.trim() || v.name.length > 110) {
+          return json(res, 400, { error: 'يوجد خيار بدون اسم أو بمعرّف مكرر.' });
+        }
+        seen.add(v.id);
+        if (v.imageUrl != null && typeof v.imageUrl !== 'string') {
+          return json(res, 400, { error: 'رابط صورة الخيار غير صالح.' });
+        }
+        if (v.price != null && (!Number.isFinite(v.price) || v.price < 0)) {
+          return json(res, 400, { error: 'سعر الخيار يجب أن يكون رقمًا موجبًا أو فارغًا.' });
+        }
+        const regular = v.price == null ? p.basePrice : v.price;
+        if (v.offerEnabled && (v.offerPrice == null || !Number.isFinite(v.offerPrice) ||
+            v.offerPrice < 0 || v.offerPrice >= regular)) {
+          return json(res, 400, { error: 'يجب أن يكون سعر خصم الخيار أقل من سعره الأساسي.' });
+        }
+      }
+    }
     const serialized = JSON.stringify(menu, null, 2);
     if (Buffer.byteLength(serialized, 'utf8') > 3_000_000) {
       return json(res, 413, { error: 'ملف القائمة كبير جدًا ولا يمكن حفظه بهذه الصيغة.' });
