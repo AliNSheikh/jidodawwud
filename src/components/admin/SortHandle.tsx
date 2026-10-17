@@ -1,10 +1,12 @@
-import React,{useRef,useState} from 'react';
+import React,{useEffect,useRef,useState} from 'react';
 import {GripVertical} from 'lucide-react';
 
 /**
- * Pointer-based drag handle; supports mouse, touch and pen without relying
- * on HTML5 draggable (unreliable on Android Chrome). Arrow keys work too.
- * Only the handle consumes touch gestures; rows and their buttons scroll normally.
+ * Reorder grip with touch, pen, mouse and keyboard support.
+ *
+ * Event listeners belong to window, not a captured DOM node: React moves rows
+ * during a sort and moving that node can release pointer capture on Android.
+ * Touch-action:none applies only to the grip, so the rest of the list scrolls.
  */
 export function SortHandle({
   id,scope,ids,onMove,label,disabled=false
@@ -13,41 +15,56 @@ export function SortHandle({
   onMove:(source:string,target:string)=>void;
   label:string;disabled?:boolean;
 }) {
-  const active=useRef<{pointerId:number;lastTarget:string}|null>(null);
+  const propsRef=useRef({id,scope,ids,onMove,disabled});
+  propsRef.current={id,scope,ids,onMove,disabled};
+  const dragRef=useRef<{pointerId:number;lastTarget:string;cleanup:()=>void}|null>(null);
   const [dragging,setDragging]=useState(false);
-  function finish(e:React.PointerEvent<HTMLButtonElement>){
-    if(active.current?.pointerId!==e.pointerId)return;
-    active.current=null;
-    setDragging(false);
-    if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);
-  }
+  useEffect(()=>()=>dragRef.current?.cleanup(),[]);
   function down(e:React.PointerEvent<HTMLButtonElement>){
-    if(disabled||!e.isPrimary||e.button!==0)return;
+    if(disabled||!e.isPrimary||e.button!==0||dragRef.current)return;
     e.preventDefault();
-    active.current={pointerId:e.pointerId,lastTarget:id};
-    e.currentTarget.setPointerCapture(e.pointerId);
-    setDragging(true);
-  }
-  function drag(e:React.PointerEvent<HTMLButtonElement>){
-    if(disabled||active.current?.pointerId!==e.pointerId)return;
-    e.preventDefault();
-    // Escaped literal IDs: attribute value is checked against the allowed scope.
-    const hovered=document.elementFromPoint(e.clientX,e.clientY);
-    let node=hovered instanceof Element?hovered:null;
-    while(node){
-      if(node.getAttribute('data-sort-scope')===scope){
-        const target=node.getAttribute('data-sort-id');
-        if(target && target!==id && target!==active.current.lastTarget && ids.includes(target)){
-          active.current.lastTarget=target;
-          onMove(id,target);
-        }
-        break;
-      }
-      node=node.parentElement;
+    const pointerId=e.pointerId;
+    const previousUserSelect=document.body.style.userSelect;
+    document.body.style.userSelect='none';
+    function cleanup(){
+      window.removeEventListener('pointermove',move);
+      window.removeEventListener('pointerup',up);
+      window.removeEventListener('pointercancel',up);
+      document.body.style.userSelect=previousUserSelect;
     }
-    // Make it possible to drag through long menus while holding the grip.
-    const margin=65,delta=e.clientY<margin?-17:e.clientY>window.innerHeight-margin?17:0;
-    if(delta)window.scrollBy({top:delta,behavior:'instant'});
+    function move(ev:PointerEvent){
+      const drag=dragRef.current,props=propsRef.current;
+      if(!drag||ev.pointerId!==drag.pointerId||props.disabled)return;
+      if(ev.cancelable)ev.preventDefault();
+      const hovered=document.elementFromPoint(ev.clientX,ev.clientY);
+      let node=hovered instanceof Element?hovered:null;
+      while(node){
+        if(node.getAttribute('data-sort-scope')===props.scope){
+          const target=node.getAttribute('data-sort-id');
+          if(target && target!==props.id && target!==drag.lastTarget && props.ids.includes(target)){
+            drag.lastTarget=target;
+            props.onMove(props.id,target);
+          }
+          break;
+        }
+        node=node.parentElement;
+      }
+      // Help moving items in a long, vertically scrolling admin panel.
+      const edge=65,dy=ev.clientY<edge?-16:ev.clientY>window.innerHeight-edge?16:0;
+      if(dy)window.scrollBy({top:dy,behavior:'auto'});
+    }
+    function up(ev:PointerEvent){
+      if(dragRef.current?.pointerId!==ev.pointerId)return;
+      const cleanup=dragRef.current.cleanup;
+      dragRef.current=null;
+      cleanup();
+      setDragging(false);
+    }
+    dragRef.current={pointerId,lastTarget:id,cleanup};
+    window.addEventListener('pointermove',move,{passive:false});
+    window.addEventListener('pointerup',up);
+    window.addEventListener('pointercancel',up);
+    setDragging(true);
   }
   function onKeys(e:React.KeyboardEvent<HTMLButtonElement>){
     if(disabled||!['ArrowUp','ArrowDown','Home','End'].includes(e.key))return;
@@ -65,8 +82,7 @@ export function SortHandle({
     aria-label={'تغيير ترتيب '+label+'. اسحب أو استخدم الأسهم للأعلى والأسفل'}
     aria-pressed={dragging}
     disabled={disabled}
-    onPointerDown={down} onPointerMove={drag} onPointerUp={finish}
-    onPointerCancel={finish} onLostPointerCapture={finish} onKeyDown={onKeys}>
+    onPointerDown={down} onKeyDown={onKeys}>
     <GripVertical size={20}/>
   </button>;
 }
