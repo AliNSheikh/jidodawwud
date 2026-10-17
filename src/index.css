@@ -293,3 +293,145 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
   .product-rating-strip .rating-badge-stars svg{width:11px;height:11px;}
   .product-rating-strip .rating-badge .rating-count{font-size:10px;}
 }
+
+
+/* FIX: Android product-detail page must never increase the layout viewport.
+   Use minmax(0, ...) for grids and min-width:0 for flex/grid descendants.
+   overflow-x:clip prevents a wide review, price or action row from making
+   Chrome auto-fit a much wider document and visually shrinking everything. */
+html,body,#root{
+  box-sizing:border-box;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow-x:clip;
+}
+.site,.site main,.site-header,.site-footer,.page-container{
+  box-sizing:border-box;
+  min-width:0;
+  max-width:100%;
+}
+.site,.site main{width:100%}
+.container{box-sizing:border-box;max-width:calc(100% - 26px);min-width:0}
+.product-detail{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  min-width:0;
+  max-width:100%;
+}
+.product-detail>*,
+.detail-media,.detail-info,
+.review-section,.review-layout,.review-list,.review-form,
+.review-card,.white-panel,.detail-actions,.detail-prices{
+  min-width:0;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.detail-media>img{
+  display:block;
+  max-width:100%;
+}
+.detail-info h1,.detail-info p,.review-card p,
+.review-card strong,.review-form h3,.review-form p{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+.review-card-top,.detail-product-meta,.detail-actions{min-width:0;flex-wrap:wrap}
+.review-layout{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}
+
+@media(max-width:720px){
+  html,body,#root{width:100%;max-width:100%;overflow-x:clip}
+  .site,.site main,.site-header,.site-footer{width:100%;max-width:100%;min-width:0}
+  .container,.page-container{
+    width:calc(100% - 28px);
+    max-width:calc(100% - 28px);
+    min-width:0;
+    margin-inline:auto;
+  }
+  .product-detail{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    width:100%;
+    max-width:100%;
+    gap:18px;
+    margin-top:14px;
+  }
+  .detail-media{
+    width:100%;
+    max-width:100%;
+    aspect-ratio:1 / 1;
+    max-height:none;
+    height:auto;
+    overflow:hidden;
+    border-radius:14px;
+    flex:0 0 auto;
+  }
+  .detail-media>img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+  .detail-info{
+    width:100%;
+    max-width:100%;
+    padding:0 1px;
+  }
+  .detail-info h1{
+    font-size:clamp(22px,6vw,29px);
+    line-height:1.55;
+    margin:8px 0 10px;
+  }
+  .detail-info p{
+    font-size:14px;
+    line-height:1.9;
+    margin:12px 0;
+  }
+  .detail-prices{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px 14px;
+    white-space:normal;
+    margin:14px 0 20px;
+  }
+  .detail-price{font-size:clamp(25px,7vw,32px)}
+  .detail-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}
+  .detail-actions>.btn{width:100%;min-width:0;font-size:12px;padding:11px 7px;text-align:center}
+  .review-section{
+    width:100%;
+    margin-top:26px;
+    padding:24px 0 30px;
+    overflow:visible;
+  }
+  .review-layout{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:17px;
+    width:100%;
+    max-width:100%;
+  }
+  .review-list,.review-form{width:100%;max-width:100%;min-width:0}
+  .review-card{width:100%;padding:14px;overflow-wrap:anywhere}
+  .review-card-top{flex-wrap:wrap}
+  .review-form{padding:16px}
+  .review-form input,.review-form textarea{width:100%;min-width:0;max-width:100%}
+  .stars-row.interactive{
+    max-width:100%;
+    display:flex;
+    gap:0;
+    flex-wrap:nowrap;
+  }
+  .stars-row.interactive button{
+    width:42px;
+    min-width:0;
+    flex:0 1 42px;
+    height:42px;
+    min-height:42px;
+  }
+  .footer-inner{width:100%;max-width:100%;min-width:0}
+}
+@media(max-width:360px){
+  .detail-actions{grid-template-columns:1fr}
+  .stars-row.interactive button{flex-basis:39px}
+}
