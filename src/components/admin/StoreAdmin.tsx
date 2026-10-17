@@ -1,11 +1,12 @@
-import React,{useEffect,useMemo,useState} from 'react';
-import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X, Star} from 'lucide-react';
+import React,{useEffect,useMemo,useRef,useState} from 'react';
+import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X, Star, ChevronDown, ChevronLeft} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
 import {priceOf,linkToProduct,linkToCategory} from '../../types/store';
 import {RiyalPrice} from '../RiyalPrice';
 import {ReviewManagement} from './ReviewManagement';
 import {orderDisplay} from '../../types/store';
 import {googleMapsEmbedUrl} from '../../utils/googleMaps';
+import {groupProductsByCategory,duplicateProduct} from '../../utils/adminProducts';
 
 type Tab='overview'|'products'|'categories'|'orders'|'reviews'|'promos'|'slides'|'settings';
 const createId=()=>globalThis.crypto?.randomUUID?.()||'id-'+Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -63,6 +64,9 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const [filterStatus,setFilterStatus]=useState('all');
   const [filterDate,setFilterDate]=useState('');
   const [search,setSearch]=useState('');
+  const [productCategoryFilter,setProductCategoryFilter]=useState('all');
+  const [collapsedProductGroups,setCollapsedProductGroups]=useState<string[]>([]);
+  const productEditorRef=useRef<HTMLDivElement>(null);
   const [configured,setConfigured]=useState<{githubConfigured:boolean;ordersEncrypted:boolean;githubAccess?:boolean|null;githubError?:string}|null>(null);
   useEffect(()=>{if(data&&!dirty){setDraft(structuredClone(data));setSavedSha(sha);}},[data,sha]);
   useEffect(()=>{
@@ -84,6 +88,29 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   function change(next:StoreData){setDraft(next);setDirty(true);setMessage('');}
   function update<K extends keyof StoreData>(key:K,value:StoreData[K]){if(draft)change({...draft,[key]:value});}
   function modifyProduct(product:Product){if(draft)update('items',draft.items.some(p=>p.id===product.id)?draft.items.map(p=>p.id===product.id?product:p):[...draft.items,product]);}
+  function createProduct(categoryId?:string){
+    if(!draft)return;
+    const p=emptyProduct();
+    p.categoryId=categoryId&&categoryId!=='uncategorized'
+      ? categoryId
+      : (draft.categories.find(c=>c.id===productCategoryFilter)?.id||draft.categories[0]?.id||'');
+    modifyProduct(p);
+    setProductId(p.id);
+    setCollapsedProductGroups(previous=>previous.filter(id=>id!==p.categoryId));
+  }
+  function copyProduct(source:Product) {
+    if(!draft)return;
+    const copy=duplicateProduct(source,createId());
+    modifyProduct(copy);
+    setProductCategoryFilter('all');
+    setSearch('');
+    setCollapsedProductGroups(previous=>previous.filter(id=>id!==source.categoryId));
+    setProductId(copy.id);
+    setMessage('تم إنشاء نسخة غير منشورة من «'+source.name+'». يمكنك تعديل الاسم والسعر والصورة ثم تفعيل إتاحتها وحفظ التغييرات.');
+  }
+  function toggleProductGroup(id:string){
+    setCollapsedProductGroups(previous=>previous.includes(id)?previous.filter(x=>x!==id):[...previous,id]);
+  }
   function modifyCategory(category:ProductCategory){if(draft)update('categories',draft.categories.some(c=>c.id===category.id)?draft.categories.map(c=>c.id===category.id?category:c):[...draft.categories,category]);}
   function modifyPromo(promo:Promo){if(draft)update('promos',draft.promos.some(p=>p.id===promo.id)?draft.promos.map(p=>p.id===promo.id?promo:p):[...draft.promos,promo]);}
   function modifySlide(slide:Slide){if(draft)update('slides',draft.slides.some(p=>p.id===slide.id)?draft.slides.map(p=>p.id===slide.id?slide:p):[...draft.slides,slide]);}
@@ -91,6 +118,13 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const category=categoryId&&draft?.categories.find(p=>p.id===categoryId);
   const promo=promoId&&draft?.promos.find(p=>p.id===promoId);
   const slide=slideId&&draft?.slides.find(p=>p.id===slideId);
+  const productGroups=draft?groupProductsByCategory(draft.categories,draft.items,search,productCategoryFilter):[];
+  useEffect(()=>{
+    if(tab==='products'&&productId){
+      const frame=window.requestAnimationFrame(()=>productEditorRef.current?.scrollIntoView({behavior:'smooth',block:'start'}));
+      return()=>window.cancelAnimationFrame(frame);
+    }
+  },[tab,productId]);
   async function save(){
     if(!draft||saving)return;
     if(draft.items.some(p=>!p.name.trim()||!p.categoryId||!Number.isFinite(p.basePrice)||p.basePrice<0))return setMessage('تحقق من أسماء المنتجات وأسعارها والأقسام المرتبطة بها');
@@ -187,8 +221,12 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     {tab==='overview'&&<><div className="stats-grid">
       {[['المنتجات',draft.items.length,Package],['الأقسام',draft.categories.length,MenuIcon],['الطلبات الجديدة',orders.filter(o=>o.status==='pending').length,ShoppingBag],['العروض النشطة',draft.items.filter(p=>p.offerEnabled).length,BadgePercent]].map(([name,value,Icon]:any)=><div className="stat-card" key={name}><Icon size={22}/><span>{name}</span><strong>{value}</strong></div>)}
     </div><section className="admin-panel"><h2>حالة التكامل</h2><p>الربط مع GitHub: {configured?.githubAccess===true?'اتصال ناجح بالقائمة على GitHub':configured?.githubAccess===false?'يوجد خطأ في الاتصال أو الصلاحيات':configured?.githubConfigured?'تم إدخال الرمز، جارٍ التحقق':'يحتاج إعداد GITHUB_TOKEN على Vercel'}</p>{configured?.githubError&&<p className="form-error">{configured.githubError}</p>}<p>حفظ الطلبات المشفّر: {configured?.ordersEncrypted?'مفعّل':'يحتاج إعداد ORDERS_ENCRYPTION_KEY'}</p><p>يتم حفظ منتجات المطعم والأقسام والإعدادات في مستودع GitHub وتحديثها على الموقع. تُشفّر بيانات الطلبات قبل إرسالها للمستودع.</p><button className="btn outline" onClick={getOrders}>تحديث الطلبات</button></section></>}
-    {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><h2>إدارة المنتجات</h2><button className="btn primary" onClick={()=>{const p=emptyProduct();p.categoryId=draft.categories[0]?.id||'';modifyProduct(p);setProductId(p.id);}}><Plus size={17}/> إضافة منتج</button></div>
-      {productId&&product&&<div className="editor-panel"><h3>بيانات المنتج</h3><p className="hint">عدد الطلبات المسجلة لهذا المنتج: <b>{ordersByProduct[product.id]||0}</b> (لا يشمل الطلبات الملغاة؛ يتم العد لكل طلب مرة واحدة).</p>
+    {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><div><h2>إدارة المنتجات حسب القسم</h2><p className="hint">اختر قسمًا لعرض منتجاته، أو انسخ أي منتج لتعديل بيانات النسخة بشكل مستقل.</p></div><button type="button" className="btn primary" disabled={!draft.categories.length} onClick={()=>createProduct()}><Plus size={17}/> إضافة منتج</button></div>
+      {!draft.categories.length&&<p className="form-error">أنشئ قسمًا في صفحة الأقسام قبل إضافة المنتجات.</p>}
+      {productId&&product&&<div className="editor-panel" ref={productEditorRef}>
+        <div className="admin-product-editor-head"><h3>بيانات المنتج: {product.name||'منتج جديد'}</h3><button type="button" className="mini-action admin-product-copy-button" onClick={()=>copyProduct(product)}><Copy size={16}/> نسخ هذا المنتج</button></div>
+        {!product.isAvailable&&<p className="hint">هذا المنتج غير منشور على الموقع حاليًا. فعّل «المنتج متاح» عندما تنتهي من تعديل النسخة.</p>}
+        <p className="hint">عدد الطلبات المسجلة لهذا المنتج: <b>{ordersByProduct[product.id]||0}</b> (لا يشمل الطلبات الملغاة؛ يتم العد لكل طلب مرة واحدة).</p>
         <div className="admin-form-grid">
           <TextInput label="اسم المنتج" value={product.name} onChange={v=>modifyProduct({...product,name:v})}/>
           <label className="admin-field">القسم<select value={product.categoryId} onChange={e=>modifyProduct({...product,categoryId:e.target.value})}><option value="">اختر القسم</option>{draft.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
@@ -203,12 +241,50 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         {product.offerEnabled&&product.offerPrice!=null&&product.basePrice>product.offerPrice&&<div className="discount-preview"><del><RiyalPrice amount={product.basePrice}/></del><strong><RiyalPrice amount={product.offerPrice}/></strong><span>خصم {Math.round((1-product.offerPrice/product.basePrice)*100)}٪</span></div>}
         <button className="btn outline" onClick={()=>setProductId(null)}>إغلاق المحرر</button>
       </div>}
-      <TextInput label="بحث عن منتج" value={search} onChange={setSearch} placeholder="اسم المنتج"/>
-      <div className="admin-list">{draft.items.filter(p=>p.name.includes(search)).map(p=><div className="admin-list-row" key={p.id}>
-        {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}<div className="list-info"><strong>{p.name||'منتج جديد'}</strong><small>{draft.categories.find(c=>c.id===p.categoryId)?.name||'بدون قسم'} · <RiyalPrice amount={priceOf(p)}/> · عدد الطلبات: <b>{ordersByProduct[p.id]||0}</b> (للعرض: {orderDisplay(ordersByProduct[p.id]||0)})</small></div>
-        <button className="mini-action" onClick={()=>setProductId(p.id)}>تعديل</button>
-        <button className="icon-danger" aria-label="حذف المنتج" onClick={()=>{if(confirm('هل تريد حذف المنتج؟')){update('items',draft.items.filter(x=>x.id!==p.id));if(productId===p.id)setProductId(null);}}}><Trash2 size={17}/></button>
-      </div>)}</div></section>}
+      <div className="admin-product-filterbar">
+        <label className="admin-field">بحث عن منتج
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث باسم المنتج أو وصفه..."/>
+        </label>
+        <label className="admin-field">تصفية حسب القسم
+          <select value={productCategoryFilter} onChange={e=>setProductCategoryFilter(e.target.value)}>
+            <option value="all">جميع الأقسام</option>
+            {[...draft.categories].sort((a,b)=>a.displayOrder-b.displayOrder).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+            {draft.items.some(p=>!draft.categories.some(c=>c.id===p.categoryId))&&<option value="uncategorized">بدون قسم</option>}
+          </select>
+        </label>
+      </div>
+      <div className="admin-product-groups">
+        {productGroups.map(group=>{
+          const expanded=!!search.trim()||!collapsedProductGroups.includes(group.id);
+          return <section className="admin-product-group" key={group.id}>
+            <div className="admin-product-group-heading">
+              <button type="button" className="admin-product-group-toggle" aria-expanded={expanded} aria-controls={'products-'+group.id} onClick={()=>toggleProductGroup(group.id)}>
+                {expanded?<ChevronDown size={18}/>:<ChevronLeft size={18}/>}
+                <span>{group.title}</span><span className="admin-product-group-count">{group.products.length} منتج</span>
+              </button>
+              {group.knownCategory&&<button type="button" className="mini-action admin-add-to-group" onClick={()=>createProduct(group.id)}><Plus size={15}/> إضافة لهذا القسم</button>}
+            </div>
+            {expanded&&<div className="admin-list admin-product-group-list" id={'products-'+group.id}>
+              {group.products.map(p=><div className="admin-list-row admin-product-row" key={p.id}>
+                {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}
+                <div className="list-info">
+                  <strong>{p.name||'منتج جديد'}</strong>
+                  <small><RiyalPrice amount={priceOf(p)}/> · عدد الطلبات: <b>{ordersByProduct[p.id]||0}</b> (للعرض: {orderDisplay(ordersByProduct[p.id]||0)})</small>
+                  {!p.isAvailable&&<span className="admin-unpublished-label">غير منشور</span>}
+                </div>
+                <div className="admin-product-row-actions">
+                  <button type="button" className="mini-action" onClick={()=>setProductId(p.id)}>تعديل</button>
+                  <button type="button" className="mini-action admin-product-copy-button" aria-label={'نسخ المنتج '+p.name} onClick={()=>copyProduct(p)}><Copy size={15}/> نسخ</button>
+                  <button type="button" className="icon-danger" aria-label={'حذف المنتج '+p.name} onClick={()=>{if(confirm('هل تريد حذف المنتج؟')){update('items',draft.items.filter(x=>x.id!==p.id));if(productId===p.id)setProductId(null);}}}><Trash2 size={17}/></button>
+                </div>
+              </div>)}
+              {!group.products.length&&<p className="admin-empty-category">لا توجد منتجات في هذا القسم بعد.</p>}
+            </div>}
+          </section>;
+        })}
+        {!productGroups.length&&<div className="empty-state">لا توجد منتجات تطابق البحث أو القسم المحدد.</div>}
+      </div>
+    </section>}
     {tab==='categories'&&<section className="admin-panel"><div className="admin-section-title"><h2>أقسام القائمة</h2><button className="btn primary" onClick={()=>{const c=emptyCategory();modifyCategory(c);setCategoryId(c.id);}}><Plus size={17}/> إضافة قسم</button></div>
       {categoryId&&category&&<div className="editor-panel"><div className="admin-form-grid"><TextInput label="اسم القسم" value={category.name} onChange={v=>modifyCategory({...category,name:v})}/><TextInput label="ترتيب القسم" type="number" value={category.displayOrder} onChange={v=>modifyCategory({...category,displayOrder:Number(v)})}/></div>
         <label className="admin-field">وصف القسم<textarea rows={2} value={category.description||''} onChange={e=>modifyCategory({...category,description:e.target.value})}/></label><CheckInput label="القسم ظاهر" value={category.isActive} onChange={v=>modifyCategory({...category,isActive:v})}/>
