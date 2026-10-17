@@ -30,3 +30,5 @@ jobs:
         run: npx tsx scripts/verify-responsive-layout.ts
       - name: Test admin product grouping and duplication
         run: npx tsx scripts/verify-admin-products.ts
+      - name: Test optional variants and WhatsApp checkout
+        run: npx tsx scripts/verify-variants.ts
