@@ -216,6 +216,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173657274-055a9b9c4d6634d3.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "b5c4f64a-2dde-42e2-8fca-38212ab6ec49",
+      "name": "سفن اب 330 مل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 3,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792230992217-1df20f18f166efc2.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "1bc0e858-08b4-45e7-9e62-9d18e725cc36",
+      "name": "سفن اب 1 ل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 5,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231039465-5294c799471825e7.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "449dc362-6d1b-4334-80fd-5c1d96ba6606",
+      "name": "سفن اب 2 ل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231064781-410963e0e2ac7cb5.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
