@@ -26,3 +26,5 @@ jobs:
         run: npx tsx scripts/verify-reviews.ts
       - name: Test mobile product navigation and cached deep links
         run: npx tsx scripts/verify-product-navigation.ts
+      - name: Verify RTL mobile viewport and layout constraints
+        run: npx tsx scripts/verify-responsive-layout.ts
