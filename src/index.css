@@ -225,7 +225,22 @@ input:focus,textarea:focus,select:focus{border-color:#91adce}
 .review-form>label{display:grid;gap:8px;font-size:13px;font-weight:800}
 .review-form textarea{resize:vertical}
 .review-form>.btn{justify-self:start}
-.review-honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;pointer-events:none}
+/* Keep the anti-spam field visually hidden INSIDE the form.
+   Do not position it at left:-9999px: on RTL Android pages that expands
+   the scrollable document and causes the whole product page to zoom out. */
+.review-form{position:relative}
+.review-honeypot{
+  position:absolute;
+  inset-inline-start:0;
+  inset-block-start:0;
+  width:1px;height:1px;
+  padding:0;margin:0;border:0;
+  overflow:hidden;
+  clip-path:inset(50%);
+  clip:rect(0,0,0,0);
+  opacity:0;
+  pointer-events:none;
+}
 .reviews-stats{display:flex;gap:20px;flex-wrap:wrap;border-radius:12px;padding:14px;background:var(--pale);font-size:13px}
 .admin-reviews-list{display:grid;gap:14px}
 .admin-review-card{border:1px solid var(--line);border-radius:13px;padding:18px;background:white}
