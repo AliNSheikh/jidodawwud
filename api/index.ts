@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import {resolvedCartLine,productWithVariantName} from '../src/types/store';
 // Avoid a native Node ESM JSON import in Vercel's serverless runtime.
 const initialMenu = {
   restaurant: {
@@ -99,16 +100,18 @@ async function getMenu() {
   return remote || {value:initialMenu,sha:''};
 }
 const validNumber=(n:any)=> Number.isFinite(Number(n)) && Number(n)>=0 ? Number(n) : 0;
-function effectivePrice(p:any) {
-  const base=validNumber(p.basePrice), offer=Number(p.offerPrice);
-  return p.offerEnabled && p.offerPrice!==undefined && p.offerPrice!==null && Number.isFinite(offer) && offer>=0 && offer<base ? offer : base;
-}
 function calculate(menu:any, lines:any[], code:string, service:string) {
   const items=(Array.isArray(lines)?lines:[]).slice(0,60).map((line:any)=>{
     const product=menu.items.find((p:any)=>p.id===line.productId && p.isAvailable);
     const quantity=Math.floor(Number(line.quantity));
     if(!product||!Number.isFinite(quantity)||quantity<1||quantity>99)throw new Error('تحتوي السلة على منتج غير متاح أو كمية غير صالحة');
-    return {productId:product.id,name:product.name,quantity,unitPrice:effectivePrice(product),total:Math.round(quantity*effectivePrice(product)*100)/100};
+    const selected=resolvedCartLine(product,line.variantId);
+    return {
+      productId:product.id,
+      ...(selected.variantId?{variantId:selected.variantId,variantName:selected.variantName}:{}),
+      name:productWithVariantName(product.name,selected.variantName),quantity,
+      unitPrice:selected.price,total:Math.round(quantity*selected.price*100)/100
+    };
   });
   if(!items.length)throw new Error('السلة فارغة');
   const subtotal=Math.round(items.reduce((sum:number,l:any)=>sum+l.total,0)*100)/100;
