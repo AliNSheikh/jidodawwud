@@ -1,14 +1,16 @@
 import React,{useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, Facebook, Ghost, Instagram, MapPin, Menu as MenuIcon, MessageCircle, Minus, Music2, Phone, Plus, Search, Share2, ShoppingBag, Trash2, Truck, Wallet, CreditCard, Store, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
-import {priceOf,linkToCategory,linkToProduct,sortByPrice,orderDisplay,variantsOf,variantPriceInfo,displayVariantInfo,hasProductOffer,resolvedCartLine,cartLineKey,productWithVariantName} from './types/store';
-import type {ProductReview,RatingSummary,PriceOrder} from './types/store';
+import {priceOf,linkToCategory,linkToProduct,orderDisplay,variantsOf,variantPriceInfo,displayVariantInfo,hasProductOffer,resolvedCartLine,cartLineKey,productWithVariantName} from './types/store';
+import type {ProductReview,RatingSummary} from './types/store';
 import {RatingBadge,ReviewSection} from './components/ReviewWidgets';
 import {StoreAdmin} from './components/admin/StoreAdmin';
 import {googleMapsEmbedUrl} from './utils/googleMaps';
 import {RiyalPrice} from './components/RiyalPrice';
 import bundledMenu from '../data/menu.json';
 import {initialMenu,persistMenu,routeId,scrollToPageTop,validMenu} from './utils/productNavigation';
+import {orderedCategories,productsForMenu} from './utils/menuOrdering';
+import type {MenuSort} from './utils/menuOrdering';
 
 function App(){
   const [path,setPath]=useState(window.location.pathname);
@@ -21,7 +23,7 @@ function App(){
   const [loading,setLoading]=useState(true);
   const [loadError,setLoadError]=useState('');
   const [search,setSearch]=useState('');
-  const [priceOrder,setPriceOrder]=useState<PriceOrder>('asc');
+  const [priceOrder,setPriceOrder]=useState<MenuSort>('manual');
   const [reviews,setReviews]=useState<ProductReview[]>([]);
   const [ratingSummaries,setRatingSummaries]=useState<Record<string,RatingSummary>>({});
   const [orderCounts,setOrderCounts]=useState<Record<string,number>>({});
@@ -145,9 +147,9 @@ function App(){
   const deliveryFee=customer.service==='delivery'&&menu?.restaurant.deliveryEnabled&&net<(menu.restaurant.freeDeliveryMinimum||0) ?menu.restaurant.deliveryFee||0:0;
   const total=net+deliveryFee;
   const offers=menu?.items.filter(p=>p.isAvailable&&hasProductOffer(p))||[];
-  const allCategories=(menu?.categories.filter(c=>c.isActive).sort((a,b)=>a.displayOrder-b.displayOrder)||[]);
+  const allCategories=orderedCategories(menu?.categories.filter(c=>c.isActive)||[]);
   const hasOffers=offers.length>0;
-  const searchItems=(items:Product[])=>sortByPrice(items.filter(p=>p.isAvailable&&(!search||p.name.includes(search)||p.description?.includes(search))),priceOrder);
+  const searchItems=(items:Product[])=>productsForMenu(items.filter(p=>p.isAvailable&&(!search||p.name.includes(search)||p.description?.includes(search))),priceOrder);
   const send=async()=>{
     setOrderError('');setOrderSuccess('');
     if(!cartLines.length){setOrderError('السلة فارغة');return;}
@@ -210,9 +212,10 @@ function App(){
       </div>
     </article>;
   };
-  const Cards=({items}:{items:Product[]})=><div className="product-grid">{sortByPrice(items,priceOrder).map(p=><ProductCard p={p} key={p.id}/>)}</div>;
-  const SortControl=()=> <label className="sort-control">ترتيب السعر
-    <select value={priceOrder} aria-label="ترتيب الأصناف حسب السعر" onChange={e=>setPriceOrder(e.target.value as PriceOrder)}>
+  const Cards=({items}:{items:Product[]})=><div className="product-grid">{productsForMenu(items,priceOrder).map(p=><ProductCard p={p} key={p.id}/>)}</div>;
+  const SortControl=()=> <label className="sort-control">ترتيب المنتجات
+    <select value={priceOrder} aria-label="ترتيب الأصناف حسب السعر" onChange={e=>setPriceOrder(e.target.value as MenuSort)}>
+      <option value="manual">ترتيب القائمة</option>
       <option value="asc">من الأقل إلى الأعلى ↑</option>
       <option value="desc">من الأعلى إلى الأقل ↓</option>
     </select>
