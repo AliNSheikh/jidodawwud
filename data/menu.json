@@ -246,7 +246,8 @@
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231039465-5294c799471825e7.webp",
       "displayOrder": 0,
-      "isAvailable": true
+      "isAvailable": true,
+      "variants": []
     },
     {
       "id": "449dc362-6d1b-4334-80fd-5c1d96ba6606",
@@ -378,7 +379,33 @@
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233377992-dbd13a0bb9876df2.webp",
       "displayOrder": 2,
-      "isAvailable": true
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "0782738a-baa4-4a2c-8784-9b12e57112b3",
+          "name": "330 مل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792240999008-69ac977eb93652ee.webp",
+          "price": 3,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "a91e8937-56d4-4ce0-aba5-1a68ec2c86d0",
+          "name": "1 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241014212-d3b89ab1c870450b.webp",
+          "price": 5,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "796deaaa-8e3b-4d68-ad26-0ce6c9a47cf0",
+          "name": "2 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241032232-929558b81f0b8a6b.webp",
+          "price": 9,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     },
     {
       "id": "de1719b5-ae6f-4ac3-aec5-073a7ba2d4ad",
