@@ -324,6 +324,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232279973-330dc9f6924e95e1.webp",
       "displayOrder": 2,
       "isAvailable": true
+    },
+    {
+      "id": "1c91439d-46f0-478f-9ce8-b89319c4e54a",
+      "name": "ميرندا تفاح 330 مل ",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 3,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232812888-93d4f51a6d6d400d.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "a4d2b5a2-1191-4a30-a48d-64529953034b",
+      "name": "ميرندا تفاح 1 ل ",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 5,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232848110-ea73ee3215a20435.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "0aa90ddf-3dc1-4318-8185-e22f6c579f53",
+      "name": "ميرندا تفاح 2 ل ",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232876640-7fd12746d19be208.webp",
+      "displayOrder": 2,
+      "isAvailable": true
     }
   ],
   "promos": [],
