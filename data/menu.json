@@ -439,6 +439,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233840557-462f5af3c1f2e74b.webp",
       "displayOrder": 1,
       "isAvailable": true
+    },
+    {
+      "id": "28676504-e8a9-4e20-b42d-9ec0a50593ec",
+      "name": "بروستد عادي",
+      "description": "أربعة قطع دجاج بروستد مقرمشة بتتبيلة مطعم جدو داوود الخاصة، تقدم مع بطاطس مقلية، سلطة كول سلو، مخلل، صوص الثوم، وصوص الجبن.   ",
+      "categoryId": "668565b7-e13a-491c-a509-d11bee3376d3",
+      "basePrice": 19,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792234557080-7f761e733c0c156d.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "790d956f-c361-4210-975d-cd92108147f3",
+      "name": "بروستد حراق ",
+      "description": "أربعة قطع دجاج بروستد مقرمشة بتتبيلة حارة خاصة من مطعم جدو داوود، تقدم مع بطاطس مقلية، سلطة كول سلو، مخلل، صوص الثوم، وصوص الجبن.   ",
+      "categoryId": "668565b7-e13a-491c-a509-d11bee3376d3",
+      "basePrice": 19,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792234576794-9392bbef4bcb3320.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "cdd4a2fd-7edc-43c9-8398-84f859df0097",
+      "name": "كريسبي",
+      "description": "أربعة قطع من أصابع صدور الدجاج الكريسبي المقرمشة، تقدم مع بطاطس مقلية، سلطة كول سلو، مخلل، صوص الثوم، وصوص الجبن.   ",
+      "categoryId": "668565b7-e13a-491c-a509-d11bee3376d3",
+      "basePrice": 20,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792234709332-361f7d68231ded34.webp",
+      "displayOrder": 2,
+      "isAvailable": true
     }
   ],
   "promos": [],
