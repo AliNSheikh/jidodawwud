@@ -7,6 +7,8 @@ import {ReviewManagement} from './ReviewManagement';
 import {orderDisplay} from '../../types/store';
 import {googleMapsEmbedUrl} from '../../utils/googleMaps';
 import {groupProductsByCategory,duplicateProduct} from '../../utils/adminProducts';
+import {SortHandle} from './SortHandle';
+import {orderedCategories,reorderCategories,reorderWithinCategory} from '../../utils/menuOrdering';
 
 type Tab='overview'|'products'|'categories'|'orders'|'reviews'|'promos'|'slides'|'settings';
 const createId=()=>globalThis.crypto?.randomUUID?.()||'id-'+Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -99,12 +101,23 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     if(!confirm('هل تريد حذف هذا الخيار من المنتج؟'))return;
     modifyProduct({...product,variants:(product.variants||[]).filter(v=>v.id!==id)});
   }
+  function moveCategories(activeId:string,targetId:string){
+    if(!draft)return;
+    const next=reorderCategories(draft.categories,activeId,targetId);
+    if(next!==draft.categories)update('categories',next);
+  }
+  function moveProductInCategory(categoryId:string,activeId:string,targetId:string){
+    if(!draft||search.trim())return;
+    const next=reorderWithinCategory(draft.items,categoryId,activeId,targetId);
+    if(next!==draft.items)update('items',next);
+  }
   function createProduct(categoryId?:string){
     if(!draft)return;
     const p=emptyProduct();
     p.categoryId=categoryId&&categoryId!=='uncategorized'
       ? categoryId
       : (draft.categories.find(c=>c.id===productCategoryFilter)?.id||draft.categories[0]?.id||'');
+    p.displayOrder=Math.max(-1,...draft.items.filter(item=>item.categoryId===p.categoryId).map(item=>Number.isFinite(item.displayOrder)?item.displayOrder:0))+1;
     modifyProduct(p);
     setProductId(p.id);
     setCollapsedProductGroups(previous=>previous.filter(id=>id!==p.categoryId));
@@ -112,6 +125,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   function copyProduct(source:Product) {
     if(!draft)return;
     const copy=duplicateProduct(source,createId());
+    copy.displayOrder=Math.max(-1,...draft.items.filter(item=>item.categoryId===source.categoryId).map(item=>Number.isFinite(item.displayOrder)?item.displayOrder:0))+1;
     modifyProduct(copy);
     setProductCategoryFilter('all');
     setSearch('');
@@ -238,7 +252,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     {tab==='overview'&&<><div className="stats-grid">
       {[['المنتجات',draft.items.length,Package],['الأقسام',draft.categories.length,MenuIcon],['الطلبات الجديدة',orders.filter(o=>o.status==='pending').length,ShoppingBag],['العروض النشطة',draft.items.filter(p=>p.offerEnabled).length,BadgePercent]].map(([name,value,Icon]:any)=><div className="stat-card" key={name}><Icon size={22}/><span>{name}</span><strong>{value}</strong></div>)}
     </div><section className="admin-panel"><h2>حالة التكامل</h2><p>الربط مع GitHub: {configured?.githubAccess===true?'اتصال ناجح بالقائمة على GitHub':configured?.githubAccess===false?'يوجد خطأ في الاتصال أو الصلاحيات':configured?.githubConfigured?'تم إدخال الرمز، جارٍ التحقق':'يحتاج إعداد GITHUB_TOKEN على Vercel'}</p>{configured?.githubError&&<p className="form-error">{configured.githubError}</p>}<p>حفظ الطلبات المشفّر: {configured?.ordersEncrypted?'مفعّل':'يحتاج إعداد ORDERS_ENCRYPTION_KEY'}</p><p>يتم حفظ منتجات المطعم والأقسام والإعدادات في مستودع GitHub وتحديثها على الموقع. تُشفّر بيانات الطلبات قبل إرسالها للمستودع.</p><button className="btn outline" onClick={getOrders}>تحديث الطلبات</button></section></>}
-    {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><div><h2>إدارة المنتجات حسب القسم</h2><p className="hint">اختر قسمًا لعرض منتجاته، أو انسخ أي منتج لتعديل بيانات النسخة بشكل مستقل.</p></div><button type="button" className="btn primary" disabled={!draft.categories.length} onClick={()=>createProduct()}><Plus size={17}/> إضافة منتج</button></div>
+    {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><div><h2>إدارة المنتجات حسب القسم</h2><p className="hint">اسحب أيقونة الترتيب لترتيب الأقسام والمنتجات داخل كل قسم، ثم اضغط «حفظ التغييرات». يمكنك أيضًا نسخ المنتجات وتعديلها.</p></div><button type="button" className="btn primary" disabled={!draft.categories.length} onClick={()=>createProduct()}><Plus size={17}/> إضافة منتج</button></div>
       {!draft.categories.length&&<p className="form-error">أنشئ قسمًا في صفحة الأقسام قبل إضافة المنتجات.</p>}
       {productId&&product&&<div className="editor-panel" ref={productEditorRef}>
         <div className="admin-product-editor-head"><h3>بيانات المنتج: {product.name||'منتج جديد'}</h3><button type="button" className="mini-action admin-product-copy-button" onClick={()=>copyProduct(product)}><Copy size={16}/> نسخ هذا المنتج</button></div>
@@ -249,7 +263,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
           <label className="admin-field">القسم<select value={product.categoryId} onChange={e=>modifyProduct({...product,categoryId:e.target.value})}><option value="">اختر القسم</option>{draft.categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select></label>
           <TextInput label="السعر الأصلي (ر.س)" type="number" value={product.basePrice} onChange={v=>modifyProduct({...product,basePrice:Number(v)})}/>
           <TextInput label="السعر بعد الخصم (ر.س)" type="number" value={product.offerPrice??0} onChange={v=>modifyProduct({...product,offerPrice:Number(v)})}/>
-          <TextInput label="ترتيب الظهور" type="number" value={product.displayOrder} onChange={v=>modifyProduct({...product,displayOrder:Number(v)})}/>
+          <div className="admin-field"><span>ترتيب الظهور</span><small className="hint">غيّر ترتيب هذا المنتج عبر سحبه من القائمة أسفل المحرر.</small></div>
           <div className="admin-field"><span>الصورة (1024 × 1024)</span><Upload id={'product-'+product.id} onPick={file=>imageUpload(file,url=>modifyProduct({...product,imageUrl:url}),'product-'+product.id)}/><small className="hint">سيتم تجهيز صورة المنتج تلقائيًا بمقاس 1024 × 1024 بكسل عند الرفع دون قص الطعام.</small></div>
         </div>
         {product.imageUrl&&<img className="admin-image-preview" src={product.imageUrl} alt="معاينة المنتج"/>}
@@ -289,16 +303,23 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         <label className="admin-field">تصفية حسب القسم
           <select value={productCategoryFilter} onChange={e=>setProductCategoryFilter(e.target.value)}>
             <option value="all">جميع الأقسام</option>
-            {[...draft.categories].sort((a,b)=>a.displayOrder-b.displayOrder).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+            {orderedCategories(draft.categories).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
             {draft.items.some(p=>!draft.categories.some(c=>c.id===p.categoryId))&&<option value="uncategorized">بدون قسم</option>}
           </select>
         </label>
       </div>
+      {!!search.trim()&&<p className="hint admin-sort-message">امسح البحث لإعادة ترتيب العناصر بالسحب؛ الترتيب معطّل أثناء عرض نتائج البحث.</p>}
       <div className="admin-product-groups">
         {productGroups.map(group=>{
           const expanded=!!search.trim()||!collapsedProductGroups.includes(group.id);
-          return <section className="admin-product-group" key={group.id}>
+          return <section className="admin-product-group" key={group.id}
+            data-sort-scope="admin-sections" data-sort-id={group.id}>
             <div className="admin-product-group-heading">
+              {group.knownCategory&&<SortHandle id={group.id} scope="admin-sections"
+                ids={productGroups.filter(g=>g.knownCategory).map(g=>g.id)}
+                onMove={moveCategories}
+                disabled={productCategoryFilter!=='all'||!!search.trim()}
+                label={'قسم '+group.title}/>}
               <button type="button" className="admin-product-group-toggle" aria-expanded={expanded} aria-controls={'products-'+group.id} onClick={()=>toggleProductGroup(group.id)}>
                 {expanded?<ChevronDown size={18}/>:<ChevronLeft size={18}/>}
                 <span>{group.title}</span><span className="admin-product-group-count">{group.products.length} منتج</span>
@@ -306,7 +327,12 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
               {group.knownCategory&&<button type="button" className="mini-action admin-add-to-group" onClick={()=>createProduct(group.id)}><Plus size={15}/> إضافة لهذا القسم</button>}
             </div>
             {expanded&&<div className="admin-list admin-product-group-list" id={'products-'+group.id}>
-              {group.products.map(p=><div className="admin-list-row admin-product-row" key={p.id}>
+              {group.products.map(p=><div className="admin-list-row admin-product-row" key={p.id}
+                data-sort-scope={'admin-products-'+group.id} data-sort-id={p.id}>
+                <SortHandle id={p.id} scope={'admin-products-'+group.id} ids={group.products.map(x=>x.id)}
+                  onMove={(active,target)=>moveProductInCategory(group.id,active,target)}
+                  disabled={!!search.trim()}
+                  label={'منتج '+(p.name||'جديد')}/>
                 {p.imageUrl?<img src={p.imageUrl} alt=""/>:<Package/>}
                 <div className="list-info">
                   <strong>{p.name||'منتج جديد'}</strong>
@@ -326,11 +352,18 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
         {!productGroups.length&&<div className="empty-state">لا توجد منتجات تطابق البحث أو القسم المحدد.</div>}
       </div>
     </section>}
-    {tab==='categories'&&<section className="admin-panel"><div className="admin-section-title"><h2>أقسام القائمة</h2><button className="btn primary" onClick={()=>{const c=emptyCategory();modifyCategory(c);setCategoryId(c.id);}}><Plus size={17}/> إضافة قسم</button></div>
-      {categoryId&&category&&<div className="editor-panel"><div className="admin-form-grid"><TextInput label="اسم القسم" value={category.name} onChange={v=>modifyCategory({...category,name:v})}/><TextInput label="ترتيب القسم" type="number" value={category.displayOrder} onChange={v=>modifyCategory({...category,displayOrder:Number(v)})}/></div>
+    {tab==='categories'&&<section className="admin-panel"><div className="admin-section-title"><h2>أقسام القائمة</h2><button className="btn primary" onClick={()=>{
+          const c=emptyCategory();
+          c.displayOrder=Math.max(-1,...draft.categories.map(x=>Number.isFinite(x.displayOrder)?x.displayOrder:0))+1;
+          modifyCategory(c);setCategoryId(c.id);
+        }}><Plus size={17}/> إضافة قسم</button></div>
+      <p className="hint admin-sort-message">اسحب المقبض بجانب كل قسم لتغيير ترتيبه في الصفحة الرئيسية، ثم اضغط «حفظ التغييرات». في الهاتف اسحب بإصبعك؛ ويمكن استخدام أسهم لوحة المفاتيح.</p>
+      {categoryId&&category&&<div className="editor-panel"><div className="admin-form-grid"><TextInput label="اسم القسم" value={category.name} onChange={v=>modifyCategory({...category,name:v})}/><div className="admin-field"><span>ترتيب القسم</span><small className="hint">يُعدّل بالسحب من القائمة أسفل المحرر.</small></div></div>
         <label className="admin-field">وصف القسم<textarea rows={2} value={category.description||''} onChange={e=>modifyCategory({...category,description:e.target.value})}/></label><CheckInput label="القسم ظاهر" value={category.isActive} onChange={v=>modifyCategory({...category,isActive:v})}/>
         <button className="btn outline" onClick={()=>setCategoryId(null)}>إغلاق المحرر</button></div>}
-      <div className="admin-list">{draft.categories.map(c=><div className="admin-list-row" key={c.id}><Tag/><div className="list-info"><strong>{c.name||'قسم جديد'}</strong><small>{draft.items.filter(p=>p.categoryId===c.id).length} منتج · /category/{c.id}</small></div><button className="mini-action" onClick={()=>setCategoryId(c.id)}>تعديل</button><button className="icon-danger" onClick={()=>{if(draft.items.some(p=>p.categoryId===c.id)){alert('انقل منتجات هذا القسم أولًا قبل حذفه');return;}if(confirm('حذف القسم؟')){update('categories',draft.categories.filter(x=>x.id!==c.id));if(categoryId===c.id)setCategoryId(null);}}}><Trash2 size={17}/></button></div>)}</div>
+      <div className="admin-list">{orderedCategories(draft.categories).map(c=><div className="admin-list-row" key={c.id} data-sort-scope="category-editor" data-sort-id={c.id}>
+        <SortHandle id={c.id} scope="category-editor" ids={orderedCategories(draft.categories).map(x=>x.id)} onMove={moveCategories} label={'قسم '+(c.name||'جديد')}/>
+        <Tag/><div className="list-info"><strong>{c.name||'قسم جديد'}</strong><small>{draft.items.filter(p=>p.categoryId===c.id).length} منتج · /category/{c.id}</small></div><button className="mini-action" onClick={()=>setCategoryId(c.id)}>تعديل</button><button className="icon-danger" onClick={()=>{if(draft.items.some(p=>p.categoryId===c.id)){alert('انقل منتجات هذا القسم أولًا قبل حذفه');return;}if(confirm('حذف القسم؟')){update('categories',draft.categories.filter(x=>x.id!==c.id));if(categoryId===c.id)setCategoryId(null);}}}><Trash2 size={17}/></button></div>)}</div>
       <p className="hint">قسم «العروض» يظهر تلقائيًا أولًا إذا كان هناك منتج مفعّل له عرض.</p></section>}
     {tab==='promos'&&<section className="admin-panel"><div className="admin-section-title"><h2>أكواد الخصم</h2><button className="btn primary" onClick={()=>{const p=emptyPromo();modifyPromo(p);setPromoId(p.id);}}><Plus size={17}/> إضافة كود</button></div>
       {promoId&&promo&&<div className="editor-panel"><div className="admin-form-grid">
