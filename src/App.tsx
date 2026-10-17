@@ -188,7 +188,7 @@ function App(){
     return <article className="product-card">
       <div className="product-media">
         <a className="product-image-button" aria-label={'عرض '+p.name} href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))}>
-          {p.imageUrl?<img loading="lazy" decoding="async" className="product-image" src={p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
+          {(info.variant?.imageUrl||p.imageUrl)?<img loading="lazy" decoding="async" className="product-image" src={info.variant?.imageUrl||p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
           {offered&&<span className="offer-badge">{pct>0?'خصم '+pct+'٪':'عروض متاحة'}</span>}
         </a>
         <button className="add-circle" onClick={()=>addToCart(p)} aria-label={variantsOf(p).length?'اختر خيار '+p.name:'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
@@ -196,6 +196,7 @@ function App(){
       <div className="product-meta">
         <div className="product-rating-strip"><RatingBadge summary={ratingSummaries[p.id]}/></div>
         <a className="product-name" href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))}>{p.name}</a>
+        {info.variant&&<small className="product-highlighted-variant">السعر لخيار: {info.variant.name}</small>}
         {path==='/'&&p.description?.trim()&&<a className="product-excerpt" href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))} aria-label={'تفاصيل '+p.name}>
           {p.description.trim().slice(0,85).trimEnd()}...
         </a>}
