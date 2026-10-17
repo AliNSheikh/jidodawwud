@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X, Star, ChevronDown, ChevronLeft} from 'lucide-react';
-import type {StoreData,Product,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
-import {priceOf,linkToProduct,linkToCategory} from '../../types/store';
+import type {StoreData,Product,ProductVariant,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
+import {priceOf,linkToProduct,linkToCategory,variantPriceInfo} from '../../types/store';
 import {RiyalPrice} from '../RiyalPrice';
 import {ReviewManagement} from './ReviewManagement';
 import {orderDisplay} from '../../types/store';
@@ -88,6 +88,17 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   function change(next:StoreData){setDraft(next);setDirty(true);setMessage('');}
   function update<K extends keyof StoreData>(key:K,value:StoreData[K]){if(draft)change({...draft,[key]:value});}
   function modifyProduct(product:Product){if(draft)update('items',draft.items.some(p=>p.id===product.id)?draft.items.map(p=>p.id===product.id?product:p):[...draft.items,product]);}
+  function modifyVariant(product:Product,variant:ProductVariant){
+    modifyProduct({...product,variants:(product.variants||[]).map(v=>v.id===variant.id?variant:v)});
+  }
+  function addVariant(product:Product){
+    const next:ProductVariant={id:createId(),name:'',imageUrl:'',price:null,offerEnabled:false,offerPrice:null};
+    modifyProduct({...product,variants:[...(product.variants||[]),next]});
+  }
+  function removeVariant(product:Product,id:string){
+    if(!confirm('هل تريد حذف هذا الخيار من المنتج؟'))return;
+    modifyProduct({...product,variants:(product.variants||[]).filter(v=>v.id!==id)});
+  }
   function createProduct(categoryId?:string){
     if(!draft)return;
     const p=emptyProduct();
@@ -129,6 +140,12 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     if(!draft||saving)return;
     if(draft.items.some(p=>!p.name.trim()||!p.categoryId||!Number.isFinite(p.basePrice)||p.basePrice<0))return setMessage('تحقق من أسماء المنتجات وأسعارها والأقسام المرتبطة بها');
     if(draft.items.some(p=>p.offerEnabled&&(!Number.isFinite(p.offerPrice)||Number(p.offerPrice)<0||Number(p.offerPrice)>=p.basePrice)))return setMessage('سعر العرض يجب أن يكون غير سالب وأقل من السعر الأصلي');
+    if(draft.items.some(p=>(p.variants||[]).some(v=>!v.name.trim()||
+      (v.price!=null&&(!Number.isFinite(v.price)||v.price<0))||
+      (v.offerEnabled&&(!Number.isFinite(v.offerPrice)||v.offerPrice==null||v.offerPrice<0||v.offerPrice>=(v.price??p.basePrice))))))
+      return setMessage('تحقق من أسماء الخيارات وأسعارها وتخفيضاتها قبل الحفظ');
+    if(draft.items.some(p=>new Set((p.variants||[]).map(v=>v.id)).size!==(p.variants||[]).length))
+      return setMessage('معرف الخيار مكرر، يرجى إعادة إضافة الخيار');
     if(draft.restaurant.deliveryFee<0||draft.restaurant.freeDeliveryMinimum<0)return setMessage('قيم التوصيل يجب أن تكون موجبة');
     setSaving(true);setMessage('');
     try{
@@ -236,6 +253,30 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
           <div className="admin-field"><span>الصورة (1024 × 1024)</span><Upload id={'product-'+product.id} onPick={file=>imageUpload(file,url=>modifyProduct({...product,imageUrl:url}),'product-'+product.id)}/><small className="hint">سيتم تجهيز صورة المنتج تلقائيًا بمقاس 1024 × 1024 بكسل عند الرفع دون قص الطعام.</small></div>
         </div>
         {product.imageUrl&&<img className="admin-image-preview" src={product.imageUrl} alt="معاينة المنتج"/>}
+        <div className="admin-variants-section">
+          <div className="admin-section-title"><div><h3>خيارات المنتج (اختيارية)</h3><p className="hint">يمكن للمنتج أن يبقى دون خيارات. إذا أضفت خيارات فسيختار الزبون واحدًا منها قبل إضافته للسلة. السعر الفارغ يعني استخدام سعر المنتج الأصلي.</p></div>
+            <button type="button" className="btn outline" onClick={()=>addVariant(product)}><Plus size={16}/> إضافة خيار</button>
+          </div>
+          {(product.variants||[]).map((v,index)=><div className="admin-variant-editor" key={v.id}>
+            <div className="admin-variant-editor-head"><strong>الخيار {index+1}{v.name?' — '+v.name:''}</strong><button type="button" className="icon-danger" aria-label={'حذف الخيار '+(v.name||index+1)} onClick={()=>removeVariant(product,v.id)}><Trash2 size={17}/></button></div>
+            <div className="admin-form-grid">
+              <TextInput label="اسم الخيار" value={v.name} placeholder="مثلاً: حجم كبير أو حار" onChange={name=>modifyVariant(product,{...v,name})}/>
+              <label className="admin-field">سعر الخيار (ر.س) — اتركه فارغًا لاستخدام السعر الأساسي
+                <input type="number" min="0" step=".01" value={v.price??''} placeholder={String(product.basePrice)}
+                  onChange={e=>modifyVariant(product,{...v,price:e.target.value===''?null:Number(e.target.value)})}/>
+              </label>
+              <div className="admin-field"><span>صورة الخيار (اختيارية)</span>
+                <Upload id={'product-'+product.id+'-variant-'+v.id} onPick={file=>imageUpload(file,url=>modifyVariant(product,{...v,imageUrl:url}),'product-'+product.id+'-variant-'+v.id)}/>
+                {v.imageUrl&&<div className="admin-variant-preview"><img src={v.imageUrl} alt={v.name||'صورة الخيار'}/><button type="button" className="mini-action" onClick={()=>modifyVariant(product,{...v,imageUrl:''})}>إزالة صورة الخيار</button></div>}
+              </div>
+              <label className="admin-check admin-variant-offer-toggle"><input type="checkbox" checked={!!v.offerEnabled} onChange={e=>modifyVariant(product,{...v,offerEnabled:e.target.checked})}/>تفعيل خصم خاص لهذا الخيار</label>
+              {v.offerEnabled&&<TextInput label="السعر بعد خصم الخيار (ر.س)" type="number" value={v.offerPrice??''} onChange={value=>modifyVariant(product,{...v,offerPrice:value===''?null:Number(value)})}/>}
+            </div>
+            {v.name.trim()&&<div className="admin-variant-price-preview">السعر النهائي: <RiyalPrice amount={variantPriceInfo(product,v).price}/>
+              {variantPriceInfo(product,v).discounted&&<span className="admin-variant-sale">بعد الخصم</span>}</div>}
+          </div>)}
+          {!product.variants?.length&&<p className="hint">لا توجد خيارات لهذا المنتج، وسيُضاف للسلة مباشرة كما هو.</p>}
+        </div>
         <label className="admin-field">الوصف<textarea rows={3} value={product.description} onChange={e=>modifyProduct({...product,description:e.target.value})}/></label>
         <div className="admin-check-row"><CheckInput label="المنتج متاح" value={product.isAvailable} onChange={v=>modifyProduct({...product,isAvailable:v})}/><CheckInput label="تفعيل العرض الخاص" value={!!product.offerEnabled} onChange={v=>modifyProduct({...product,offerEnabled:v})}/></div>
         {product.offerEnabled&&product.offerPrice!=null&&product.basePrice>product.offerPrice&&<div className="discount-preview"><del><RiyalPrice amount={product.basePrice}/></del><strong><RiyalPrice amount={product.offerPrice}/></strong><span>خصم {Math.round((1-product.offerPrice/product.basePrice)*100)}٪</span></div>}
