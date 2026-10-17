@@ -174,6 +174,10 @@ function App(){
   const currentCategory=allCategories.find(c=>c.id===categoryId);
   const productId=routeId(path,'/product/');
   const product=menu.items.find(p=>p.id===productId&&p.isAvailable);
+  const promptProduct=menu.items.find(p=>p.id===variantPromptId&&p.isAvailable);
+  const selectedDetailVariant=product&&variantsOf(product).find(v=>v.id===detailVariantId);
+  const detailInfo=product?(selectedDetailVariant?variantPriceInfo(product,selectedDetailVariant):displayVariantInfo(product)):null;
+  const detailPhoto=selectedDetailVariant?.imageUrl||product?.imageUrl;
   const page=path.startsWith('/category/')?'category':path.startsWith('/product/')?'product':path==='/categories'?'categories':path==='/cart'?'cart':path==='/contact'?'contact':'home';
   const pageTitle=page==='category'?currentCategory?.name:page==='product'?product?.name:page==='cart'?'سلة الطلبات':page==='contact'?'تواصل معنا':page==='categories'?'الأقسام':'قائمة الطعام';
   document.title=(pageTitle||'قائمة الطعام')+' | '+restaurant.name;
@@ -276,22 +280,38 @@ function App(){
         {(path==='/category/offers'&&hasOffers)?<><div className="page-heading"><h1>العروض المميزة</h1></div><Cards items={offers}/></>:currentCategory?<><div className="page-heading"><h1>{currentCategory.name}</h1><p>{currentCategory.description}</p></div><Cards items={searchItems(menu.items.filter(p=>p.categoryId===currentCategory.id))}/></>:<div className="empty-state">القسم غير موجود</div>}
       </div>}
       {page==='product'&&<div className="container page-container"><button className="back-link" onClick={()=>go('/')}><ArrowRight size={16}/> العودة إلى القائمة</button>
-        {product?<div className="product-detail"><div className="detail-media">{product.imageUrl?<img loading="eager" fetchPriority="high" decoding="async" src={product.imageUrl} alt={product.name} onError={event=>{const img=event.currentTarget;if(!img.src.endsWith('/logo.webp'))img.src='/logo.webp';}}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
+        {product?<div className="product-detail"><div className="detail-media">{detailPhoto?<img loading="eager" fetchPriority="high" decoding="async" src={detailPhoto} alt={product.name+(selectedDetailVariant?' '+selectedDetailVariant.name:'')} onError={event=>{const img=event.currentTarget;if(!img.src.endsWith('/logo.webp'))img.src='/logo.webp';}}/>:<div className="product-placeholder"><ShoppingBag size={45}/></div>}</div>
           <div className="detail-info"><span className="eyebrow">{allCategories.find(c=>c.id===product.categoryId)?.name||'قائمة الطعام'}</span><h1>{product.name}</h1><div className="detail-product-meta"><RatingBadge summary={ratingSummaries[product.id]}/><small>تم الطلب: {orderDisplay(orderCounts[product.id]||0)}</small></div>{product.description&&<p>{product.description}</p>}
-            <div className={'detail-prices'+(product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice?' has-offer':'')}>
-              {product.offerEnabled&&product.offerPrice!=null&&product.offerPrice<product.basePrice&&<del><RiyalPrice amount={product.basePrice}/></del>}
-              <strong className="detail-price"><RiyalPrice amount={priceOf(product)}/></strong>
-            </div><div className="detail-actions"><button className="btn primary" onClick={()=>add(product)}><Plus size={19}/> أضف للسلة</button><button className="btn outline" onClick={share}><Share2 size={18}/> مشاركة المنتج</button></div>
+            {!!variantsOf(product).length&&<div className="detail-variants">
+              <h2>اختر نوع المنتج</h2><p className="hint">حدد الخيار المطلوب قبل إضافته إلى السلة.</p>
+              <div className="variant-choices">
+                {variantsOf(product).map(v=>{
+                  const info=variantPriceInfo(product,v);
+                  return <button type="button" key={v.id} className={'variant-choice'+(detailVariantId===v.id?' selected':'')} aria-pressed={detailVariantId===v.id} onClick={()=>{setDetailVariantId(v.id);setVariantError('');}}>
+                    {v.imageUrl&&<img src={v.imageUrl} alt="" loading="lazy"/>}
+                    <span className="variant-choice-name">{v.name}</span>
+                    <span className="variant-choice-prices">{info.discounted&&<del><RiyalPrice amount={info.original}/></del>}<strong><RiyalPrice amount={info.price}/></strong></span>
+                    {detailVariantId===v.id&&<Check size={17}/>}
+                  </button>;
+                })}
+              </div>
+            </div>}
+            <div className={'detail-prices'+(detailInfo?.discounted?' has-offer':'')}>
+              {detailInfo?.discounted&&<del><RiyalPrice amount={detailInfo.original}/></del>}
+              <strong className="detail-price"><RiyalPrice amount={detailInfo?.price??priceOf(product)}/></strong>
+            </div>
+            <div className="detail-actions"><button className="btn primary" onClick={()=>addToCart(product,detailVariantId||undefined)}><Plus size={19}/> أضف للسلة</button><button className="btn outline" onClick={share}><Share2 size={18}/> مشاركة المنتج</button></div>
+            {variantError&&<p role="alert" className="form-error">{variantError}</p>}
           </div></div>:<div className="empty-state">هذا المنتج غير متاح</div>}
         {product&&<ReviewSection key={product.id} productId={product.id} reviews={reviews} onSubmitted={loadReviews}/>}
       </div>}
       {page==='cart'&&<div className="container page-container"><div className="page-heading"><span className="eyebrow">خطوة واحدة تفصلك عن طلبك</span><h1>سلة الطلبات <span className="count-pill">{cartCount}</span></h1></div>
         {!cartLines.length?<div className="empty-state"><ShoppingBag size={42}/><h3>سلتك فارغة حاليًا</h3><button className="btn primary" onClick={()=>go('/')}>تصفح الطعام</button></div>:
         <div className="checkout-layout"><div className="checkout-main">
-          <section className="white-panel"><h2>المنتجات المختارة</h2>{cartLines.map(({line,product:p})=><div key={p.id} className="cart-row">
-            {p.imageUrl?<img src={p.imageUrl} alt={p.name}/>:<div className="cart-placeholder"><ShoppingBag/></div>}
-            <div className="cart-row-content"><strong>{p.name}</strong><span><RiyalPrice amount={priceOf(p)}/></span><div className="quantity"><button onClick={()=>adjust(p.id,-1)} aria-label="تقليل"><Minus size={14}/></button><span>{line.quantity}</span><button onClick={()=>adjust(p.id,1)} aria-label="زيادة"><Plus size={14}/></button></div></div>
-            <button className="delete-product" onClick={()=>adjust(p.id,-line.quantity)} aria-label="حذف"><Trash2 size={18}/></button>
+          <section className="white-panel"><h2>المنتجات المختارة</h2>{cartLines.map(({line,product:p,selection})=><div key={cartLineKey(line)} className="cart-row">
+            {selection.imageUrl?<img src={selection.imageUrl} alt={p.name}/>:<div className="cart-placeholder"><ShoppingBag/></div>}
+            <div className="cart-row-content"><strong>{productWithVariantName(p.name,selection.variantName)}</strong><span><RiyalPrice amount={selection.price}/></span><div className="quantity"><button onClick={()=>adjust(cartLineKey(line),-1)} aria-label="تقليل"><Minus size={14}/></button><span>{line.quantity}</span><button onClick={()=>adjust(cartLineKey(line),1)} aria-label="زيادة"><Plus size={14}/></button></div></div>
+            <button className="delete-product" onClick={()=>adjust(cartLineKey(line),-line.quantity)} aria-label="حذف"><Trash2 size={18}/></button>
           </div>)}</section>
           <section className="white-panel"><h2>بيانات الطلب</h2><div className="form-grid"><label>الاسم الكامل <input required value={customer.customerName} onChange={e=>setCustomer({...customer,customerName:e.target.value})} placeholder="الاسم"/></label><label>رقم الجوال <input required type="tel" dir="ltr" value={customer.phone} onChange={e=>setCustomer({...customer,phone:e.target.value})} placeholder="05xxxxxxxx"/></label></div>
             <h3 className="form-subheading">طريقة الاستلام</h3><div className="choice-grid">
@@ -322,6 +342,24 @@ function App(){
       {page==='contact'&&<div className="container page-container"><Contact/></div>}
     </main>
     <footer className="site-footer"><div className="container footer-inner"><div className="footer-brand"><img src={restaurant.logoUrl||'/logo.webp'} alt="الشعار"/><span>{restaurant.name}</span></div><p>نعتز بوجودكم معنا، ونتشرف بخدمتكم دائمًا.</p><p>© {new Date().getFullYear()} {restaurant.name} — جميع الحقوق محفوظة</p></div></footer>
+    {promptProduct&&variantsOf(promptProduct).length>0&&<div className="variant-modal-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setVariantPromptId(null);}}>
+      <div role="dialog" aria-modal="true" aria-label={'اختر خيار '+promptProduct.name} className="variant-modal" dir="rtl">
+        <div className="variant-modal-head"><div><h2>اختر الخيار المناسب</h2><p>{promptProduct.name}</p></div><button type="button" className="variant-modal-close" aria-label="إغلاق" onClick={()=>setVariantPromptId(null)}><X size={22}/></button></div>
+        <div className="variant-choices">
+          {variantsOf(promptProduct).map(v=>{
+            const info=variantPriceInfo(promptProduct,v);
+            return <button key={v.id} type="button" className={'variant-choice'+(promptVariantId===v.id?' selected':'')} aria-pressed={promptVariantId===v.id} onClick={()=>{setPromptVariantId(v.id);setVariantError('');}}>
+              {v.imageUrl&&<img src={v.imageUrl} alt="" loading="lazy"/>}
+              <span className="variant-choice-name">{v.name}</span>
+              <span className="variant-choice-prices">{info.discounted&&<del><RiyalPrice amount={info.original}/></del>}<strong><RiyalPrice amount={info.price}/></strong></span>
+              {promptVariantId===v.id&&<Check size={17}/>}
+            </button>;
+          })}
+        </div>
+        {variantError&&<p role="alert" className="form-error">{variantError}</p>}
+        <button type="button" className="btn primary variant-confirm" disabled={!promptVariantId} onClick={()=>addToCart(promptProduct,promptVariantId||undefined)}><ShoppingBag size={19}/> تأكيد وإضافة للسلة</button>
+      </div>
+    </div>}
     {cartCount>0&&page!=='cart'&&<button className="floating-cart" onClick={()=>go('/cart')}><span><ShoppingBag size={20}/> عرض السلة ({cartCount})</span><strong><RiyalPrice amount={subtotal}/></strong><ArrowLeft size={18}/></button>}
   </div>;
 }
