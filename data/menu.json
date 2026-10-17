@@ -408,30 +408,6 @@
       ]
     },
     {
-      "id": "de1719b5-ae6f-4ac3-aec5-073a7ba2d4ad",
-      "name": "ميرندا برتقال 1 ل",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 5,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233399916-e82a785fdc89ff94.webp",
-      "displayOrder": 2,
-      "isAvailable": true
-    },
-    {
-      "id": "a3379958-d914-4b29-9ab4-8916829394c3",
-      "name": "ميرندا برتقال 2 ل ",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 9,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233434189-710639842b8b3611.webp",
-      "displayOrder": 3,
-      "isAvailable": true
-    },
-    {
       "id": "a571a15f-b92a-4037-b720-67e787437146",
       "name": "ماونتن ديو 330 مل ",
       "description": "",
