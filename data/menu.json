@@ -263,42 +263,6 @@
       ]
     },
     {
-      "id": "a1602719-4075-4fb2-acf4-0049dce16846",
-      "name": "بيبسي دايت 330 مل",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 3,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232221328-666474ef79b7d5ba.webp",
-      "displayOrder": 2,
-      "isAvailable": true
-    },
-    {
-      "id": "b4839122-a06e-42c1-a3bc-01470d9d28be",
-      "name": "بيبسي دايت 1 ل",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 5,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233963486-7db5efc465439788.webp",
-      "displayOrder": 2,
-      "isAvailable": true
-    },
-    {
-      "id": "99b9bf24-989d-4716-ba09-7ffba65d3f9a",
-      "name": "بيبسي دايت 2 ل ",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 9,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232279973-330dc9f6924e95e1.webp",
-      "displayOrder": 2,
-      "isAvailable": true
-    },
-    {
       "id": "89742451-1c1a-402d-a2d7-fbf6b9b0e5f0",
       "name": "ميرندا برتقال ",
       "description": "",
@@ -481,6 +445,44 @@
           "name": "2 ل",
           "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792242025584-56c013b5d61f3cb8.webp",
           "price": 9,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
+    },
+    {
+      "id": "e72333c7-54c1-4b2d-a0a7-e10863853634",
+      "name": "بيبسي دايت",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792242115243-feb6cc73c7196c8b.webp",
+      "displayOrder": 2,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "dbbb3b22-b5b7-4ee7-8d12-04dd78cc4bb6",
+          "name": "330 مل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792242120612-2cadd9e1c7908623.webp",
+          "price": 3,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "0d3228c9-1c3b-4eac-bcac-c5cb4221a62f",
+          "name": "1 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792242125013-ee672954df30e87a.webp",
+          "price": 5,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "182a641f-1089-492a-9c8b-9400dcad74e0",
+          "name": "2 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792242128957-418c6f453b0b621a.webp",
+          "price": null,
           "offerEnabled": false,
           "offerPrice": null
         }
