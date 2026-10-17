@@ -360,6 +360,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792232968394-9070be1d09ccdc1a.webp",
       "displayOrder": 2,
       "isAvailable": true
+    },
+    {
+      "id": "89742451-1c1a-402d-a2d7-fbf6b9b0e5f0",
+      "name": "ميرندا برتقال 330 مل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 3,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233377992-dbd13a0bb9876df2.webp",
+      "displayOrder": 2,
+      "isAvailable": true
+    },
+    {
+      "id": "de1719b5-ae6f-4ac3-aec5-073a7ba2d4ad",
+      "name": "ميرندا برتقال 1 ل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 5,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233399916-e82a785fdc89ff94.webp",
+      "displayOrder": 2,
+      "isAvailable": true
+    },
+    {
+      "id": "a3379958-d914-4b29-9ab4-8916829394c3",
+      "name": "ميرندا برتقال 2 ل ",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233434189-710639842b8b3611.webp",
+      "displayOrder": 3,
+      "isAvailable": true
     }
   ],
   "promos": [],
