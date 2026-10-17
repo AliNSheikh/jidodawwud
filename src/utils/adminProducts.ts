@@ -51,6 +51,7 @@ export function duplicateProduct(source:Product,newId:string):Product {
   return {
     ...source,
     id:newId,
+    variants:source.variants?.map(v=>({...v,id:globalThis.crypto?.randomUUID?.()||'variant-'+newId+'-'+Math.random().toString(36).slice(2)})),
     name:(source.name.trim()||'منتج')+' (نسخة)',
     isAvailable:false,
     displayOrder:(Number.isFinite(source.displayOrder)?source.displayOrder:0)+1
