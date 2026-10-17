@@ -1,7 +1,7 @@
 import React,{useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {ArrowLeft, ArrowRight, BadgePercent, Check, ChevronLeft, ChevronRight, Facebook, Ghost, Instagram, MapPin, Menu as MenuIcon, MessageCircle, Minus, Music2, Phone, Plus, Search, Share2, ShoppingBag, Trash2, Truck, Wallet, CreditCard, Store, X} from 'lucide-react';
 import type {StoreData,Product,ProductCategory,CartLine} from './types/store';
-import {priceOf,linkToCategory,linkToProduct,sortByPrice,orderDisplay} from './types/store';
+import {priceOf,linkToCategory,linkToProduct,sortByPrice,orderDisplay,variantsOf,variantPriceInfo,displayVariantInfo,hasProductOffer,resolvedCartLine,cartLineKey,productWithVariantName} from './types/store';
 import type {ProductReview,RatingSummary,PriceOrder} from './types/store';
 import {RatingBadge,ReviewSection} from './components/ReviewWidgets';
 import {StoreAdmin} from './components/admin/StoreAdmin';
@@ -28,6 +28,10 @@ function App(){
   const [activeSlide,setActiveSlide]=useState(0);
   const categoriesScroller=useRef<HTMLDivElement>(null);
   const [navOpen,setNavOpen]=useState(false);
+  const [variantPromptId,setVariantPromptId]=useState<string|null>(null);
+  const [promptVariantId,setPromptVariantId]=useState<string|null>(null);
+  const [detailVariantId,setDetailVariantId]=useState<string|null>(null);
+  const [variantError,setVariantError]=useState('');
   const [cart,setCart]=useState<CartLine[]>(()=>{
     try{return JSON.parse(localStorage.getItem('jido-cart')||'[]');}catch{return [];}
   });
@@ -73,7 +77,15 @@ function App(){
     window.addEventListener('popstate',onPop);return()=>window.removeEventListener('popstate',onPop);
   },[]);
   // Reset after the new page is committed too, to avoid mobile browser scroll anchoring.
-  useLayoutEffect(()=>{scrollToPageTop();},[path]);
+  useLayoutEffect(()=>{scrollToPageTop();setVariantPromptId(null);setPromptVariantId(null);setDetailVariantId(null);setVariantError('');},[path]);
+  useEffect(()=>{
+    if(!variantPromptId)return;
+    const previous=document.body.style.overflow;
+    document.body.style.overflow='hidden';
+    const escape=(e:KeyboardEvent)=>{if(e.key==='Escape')setVariantPromptId(null);};
+    window.addEventListener('keydown',escape);
+    return()=>{document.body.style.overflow=previous;window.removeEventListener('keydown',escape);};
+  },[variantPromptId]);
   useEffect(()=>{
     if(!menu?.restaurant.googleFontUrl)return;
     const url=menu.restaurant.googleFontUrl;
@@ -99,22 +111,40 @@ function App(){
     if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.defaultPrevented)return;
     event.preventDefault();go(to);
   };
-  const add=(product:Product)=>{
+  const addToCart=(product:Product,variantId?:string)=>{
+    // Never auto-add a product with variants: selection must be explicit.
+    if(variantsOf(product).length&&!variantId){
+      setVariantPromptId(product.id);setPromptVariantId(null);setVariantError('');return;
+    }
+    let resolved;
+    try {resolved=resolvedCartLine(product,variantId);}
+    catch(e:any){setVariantError(e.message);return;}
+    const chosen:CartLine={productId:product.id,...(resolved.variantId?{variantId:resolved.variantId}:{}),quantity:1};
+    const key=cartLineKey(chosen);
     setCart(old=>{
-      const exists=old.find(x=>x.productId===product.id);
-      return exists?old.map(x=>x.productId===product.id?{...x,quantity:Math.min(x.quantity+1,99)}:x):[...old,{productId:product.id,quantity:1}];
+      const found=old.some(x=>cartLineKey(x)===key);
+      return found?old.map(x=>cartLineKey(x)===key?{...x,quantity:Math.min(x.quantity+1,99)}:x):[...old,chosen];
     });
+    setVariantPromptId(null);setPromptVariantId(null);setVariantError('');
   };
-  const adjust=(id:string,delta:number)=>setCart(old=>old.map(x=>x.productId===id?{...x,quantity:x.quantity+delta}:x).filter(x=>x.quantity>0));
-  const cartLines=useMemo(()=>cart.map(line=>({line,product:menu?.items.find(p=>p.id===line.productId)})).filter((v):v is {line:CartLine,product:Product}=>Boolean(v.product&&v.product.isAvailable)),[menu,cart]);
+  const adjust=(key:string,delta:number)=>setCart(old=>old.map(x=>cartLineKey(x)===key?{...x,quantity:x.quantity+delta}:x).filter(x=>x.quantity>0));
+  const cartLines=useMemo(()=>{
+    if(!menu)return [];
+    return cart.flatMap(line=>{
+      const product=menu.items.find(p=>p.id===line.productId&&p.isAvailable);
+      if(!product||!Number.isFinite(line.quantity)||line.quantity<1)return [];
+      try {return [{line,product,selection:resolvedCartLine(product,line.variantId)}];}
+      catch{return [];} // Deleted variants must never be charged as a base product.
+    });
+  },[menu,cart]);
   const cartCount=cartLines.reduce((sum,v)=>sum+v.line.quantity,0);
-  const subtotal=cartLines.reduce((sum,v)=>sum+priceOf(v.product)*v.line.quantity,0);
+  const subtotal=cartLines.reduce((sum,v)=>sum+v.selection.price*v.line.quantity,0);
   const selectedPromo=menu?.promos.find(p=>p.enabled&&p.code.toLowerCase()===customer.promo.trim().toLowerCase());
   const discount=selectedPromo?Math.min(subtotal,selectedPromo.type==='percent'?subtotal*selectedPromo.value/100:selectedPromo.value):0;
   const net=subtotal-discount;
   const deliveryFee=customer.service==='delivery'&&menu?.restaurant.deliveryEnabled&&net<(menu.restaurant.freeDeliveryMinimum||0) ?menu.restaurant.deliveryFee||0:0;
   const total=net+deliveryFee;
-  const offers=menu?.items.filter(p=>p.isAvailable&&p.offerEnabled&&p.offerPrice!=null&&p.offerPrice<p.basePrice)||[];
+  const offers=menu?.items.filter(p=>p.isAvailable&&hasProductOffer(p))||[];
   const allCategories=(menu?.categories.filter(c=>c.isActive).sort((a,b)=>a.displayOrder-b.displayOrder)||[]);
   const hasOffers=offers.length>0;
   const searchItems=(items:Product[])=>sortByPrice(items.filter(p=>p.isAvailable&&(!search||p.name.includes(search)||p.description?.includes(search))),priceOrder);
@@ -148,15 +178,16 @@ function App(){
   const pageTitle=page==='category'?currentCategory?.name:page==='product'?product?.name:page==='cart'?'سلة الطلبات':page==='contact'?'تواصل معنا':page==='categories'?'الأقسام':'قائمة الطعام';
   document.title=(pageTitle||'قائمة الطعام')+' | '+restaurant.name;
   const ProductCard=({p}:{p:Product})=>{
-    const offered=p.offerEnabled && p.offerPrice!=null&&p.offerPrice<p.basePrice;
-    const pct=offered?Math.round((1-Number(p.offerPrice)/p.basePrice)*100):0;
+    const info=displayVariantInfo(p);
+    const offered=hasProductOffer(p);
+    const pct=info.discounted&&info.original>0?Math.round((1-info.price/info.original)*100):0;
     return <article className="product-card">
       <div className="product-media">
         <a className="product-image-button" aria-label={'عرض '+p.name} href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))}>
           {p.imageUrl?<img loading="lazy" decoding="async" className="product-image" src={p.imageUrl} alt={p.name} width={1024} height={1024}/>:<div className="product-placeholder"><ShoppingBag size={36}/></div>}
-          {offered&&<span className="offer-badge">خصم {pct}٪</span>}
+          {offered&&<span className="offer-badge">{pct>0?'خصم '+pct+'٪':'عروض متاحة'}</span>}
         </a>
-        <button className="add-circle" onClick={()=>add(p)} aria-label={'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
+        <button className="add-circle" onClick={()=>addToCart(p)} aria-label={variantsOf(p).length?'اختر خيار '+p.name:'أضف '+p.name+' للسلة'}><Plus size={21}/></button>
       </div>
       <div className="product-meta">
         <div className="product-rating-strip"><RatingBadge summary={ratingSummaries[p.id]}/></div>
@@ -166,9 +197,9 @@ function App(){
         </a>}
         <small className="product-order-count">تم الطلب: {orderDisplay(orderCounts[p.id]||0)}</small>
         <div className="card-bottom">
-          <div className={'prices'+(offered?' has-offer':'')}>
-            {offered&&<del><RiyalPrice amount={p.basePrice}/></del>}
-            <strong><RiyalPrice amount={priceOf(p)}/></strong>
+          <div className={'prices'+(info.discounted?' has-offer':'')}>
+            {info.discounted&&<del><RiyalPrice amount={info.original}/></del>}
+            <strong><RiyalPrice amount={info.price}/></strong>
           </div>
         </div>
       </div>
