@@ -251,7 +251,7 @@
     },
     {
       "id": "449dc362-6d1b-4334-80fd-5c1d96ba6606",
-      "name": "سفن اب 2 ل",
+      "name": "سفن اب",
       "description": "",
       "categoryId": "drinks",
       "basePrice": 9,
@@ -259,7 +259,33 @@
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231064781-410963e0e2ac7cb5.webp",
       "displayOrder": 0,
-      "isAvailable": true
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "420f194c-7d5c-4861-9628-acb6d1786e8c",
+          "name": "330 مل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241480146-f31ded7f070bf208.webp",
+          "price": 3,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "096c0d5c-bba6-46f9-a273-ef4d7a3ca507",
+          "name": "1 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241499741-8bebb28045365f76.webp",
+          "price": 5,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "0481b54a-1aa5-400d-8ac3-6b5ba702df4e",
+          "name": "2 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241513261-1796d7d8c53b7611.webp",
+          "price": null,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     },
     {
       "id": "5bd93466-fb37-458c-ac87-f90698278196",
