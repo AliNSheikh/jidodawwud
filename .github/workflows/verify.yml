@@ -32,3 +32,5 @@ jobs:
         run: npx tsx scripts/verify-admin-products.ts
       - name: Test optional variants and WhatsApp checkout
         run: npx tsx scripts/verify-variants.ts
+      - name: Test dashboard drag order and homepage menu order
+        run: npx tsx scripts/verify-menu-ordering.ts
