@@ -371,13 +371,13 @@
     },
     {
       "id": "89742451-1c1a-402d-a2d7-fbf6b9b0e5f0",
-      "name": "ميرندا برتقال 330 مل",
+      "name": "ميرندا برتقال ",
       "description": "",
       "categoryId": "drinks",
       "basePrice": 3,
       "offerPrice": 0,
       "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233377992-dbd13a0bb9876df2.webp",
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241168098-4dea6761461e7bba.webp",
       "displayOrder": 2,
       "isAvailable": true,
       "variants": [
