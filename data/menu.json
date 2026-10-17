@@ -252,6 +252,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231064781-410963e0e2ac7cb5.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "5bd93466-fb37-458c-ac87-f90698278196",
+      "name": "بيبسي 330 مل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 3,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231845616-a5ade76abe4eb86c.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "f4274957-ad93-4ca8-8997-6c57e2c3d1f9",
+      "name": "بيبسي 1 ل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 5,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231884861-c948ace129363b25.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "40d77569-778a-4162-9e8b-961d540062f7",
+      "name": "بيبسي 2 ل",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231918828-d0a5e8d34797d3be.webp",
+      "displayOrder": 1,
+      "isAvailable": true
     }
   ],
   "promos": [],
