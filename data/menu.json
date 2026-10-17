@@ -373,42 +373,6 @@
       ]
     },
     {
-      "id": "a571a15f-b92a-4037-b720-67e787437146",
-      "name": "ماونتن ديو 330 مل ",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 3,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233797501-875a81885d02e01a.webp",
-      "displayOrder": 3,
-      "isAvailable": true
-    },
-    {
-      "id": "fc4de458-2cf5-4098-92fa-89a874a9f05c",
-      "name": "ماونتن ديو1 ل ",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 5,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233823086-437beefa3c7d93bb.webp",
-      "displayOrder": 1,
-      "isAvailable": true
-    },
-    {
-      "id": "c4866ba2-72b9-48e1-a691-c8cfc06c59bc",
-      "name": "ماونتن ديو 2 ل",
-      "description": "",
-      "categoryId": "drinks",
-      "basePrice": 9,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792233840557-462f5af3c1f2e74b.webp",
-      "displayOrder": 1,
-      "isAvailable": true
-    },
-    {
       "id": "28676504-e8a9-4e20-b42d-9ec0a50593ec",
       "name": "بروستد عادي",
       "description": "أربعة قطع دجاج بروستد مقرمشة بتتبيلة مطعم جدو داوود الخاصة، تقدم مع بطاطس مقلية، سلطة كول سلو، مخلل، صوص الثوم، وصوص الجبن.   ",
@@ -476,6 +440,44 @@
           "id": "29fd1ccc-8433-4cfa-82d8-fe43d0f1c42f",
           "name": "2 ل",
           "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241676403-c88aeb9b6d890e5e.webp",
+          "price": null,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
+    },
+    {
+      "id": "5e94ec9e-325d-4265-be22-aaaf763fe051",
+      "name": "ماونتن ديو",
+      "description": "",
+      "categoryId": "drinks",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241866275-6c417a5f234b2d78.webp",
+      "displayOrder": 2,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "a7744014-8525-4e43-b297-c3dce479ff2b",
+          "name": "330 مل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241873691-c72202d397df2efa.webp",
+          "price": 3,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "fafcbb1c-7a5b-4dca-9582-e76b524c1f4d",
+          "name": "1 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241877387-61b5cc5be9129be0.webp",
+          "price": 5,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "8feae2b3-2222-4dc4-8ca3-aad791303722",
+          "name": "2 ل",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792241881317-7b06985f53f72e46.webp",
           "price": null,
           "offerEnabled": false,
           "offerPrice": null
