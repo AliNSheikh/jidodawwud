@@ -288,7 +288,7 @@
     },
     {
       "id": "40d77569-778a-4162-9e8b-961d540062f7",
-      "name": "بيبسي 2 ل",
+      "name": "بيبسي ",
       "description": "",
       "categoryId": "drinks",
       "basePrice": 9,
@@ -296,7 +296,8 @@
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792231918828-d0a5e8d34797d3be.webp",
       "displayOrder": 1,
-      "isAvailable": true
+      "isAvailable": true,
+      "variants": []
     },
     {
       "id": "a1602719-4075-4fb2-acf4-0049dce16846",
