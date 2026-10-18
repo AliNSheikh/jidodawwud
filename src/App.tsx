@@ -198,6 +198,9 @@ function App(){
       <div className="product-meta">
         <div className="product-rating-strip"><RatingBadge summary={ratingSummaries[p.id]}/></div>
         <a className="product-name" href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))}>{p.name}</a>
+        {path==='/'&&variantsOf(p).some(v=>v.name.trim())&&<small className="product-variant-options">
+          ({variantsOf(p).map(v=>v.name.trim()).filter(Boolean).join('، ')})
+        </small>}
         {info.variant&&<small className="product-highlighted-variant">السعر لخيار: {info.variant.name}</small>}
         {path==='/'&&p.description?.trim()&&<a className="product-excerpt" href={linkToProduct(p)} onClick={e=>followLink(e,linkToProduct(p))} aria-label={'تفاصيل '+p.name}>
           {p.description.trim().slice(0,85).trimEnd()}...
