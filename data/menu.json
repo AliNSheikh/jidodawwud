@@ -626,6 +626,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792340971216-671106ab0630bc32.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "ec09fa85-5aa1-45b6-9544-38a97a4466c3",
+      "name": "بيتزا رانش",
+      "description": "بيتزا رانش غنية بالنكهات، محضرة من عجينة طازجة ومقرمشة، ومغطاة بطبقة سخية من صلصة الرانش الكريمية الشهيرة. تعلوها قطع الدجاج المشوي المتبل بعناية، مع شرائح البصل الأحمر الحلو، وحلقات الهالبينو الحارة، وتكتمل بمزيج من جبن الموتزاريلا والشيدر الذائب، لتمنحك تجربة طعم لا تُنسى.",
+      "categoryId": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
+      "basePrice": 19,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792341133743-7d1b5619db3e28fd.webp",
+      "displayOrder": 1,
+      "isAvailable": true
     }
   ],
   "promos": [],
