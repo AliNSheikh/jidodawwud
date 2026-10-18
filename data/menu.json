@@ -563,6 +563,44 @@
           "offerPrice": null
         }
       ]
+    },
+    {
+      "id": "ec595b82-f037-4b5e-8daa-828079efb485",
+      "name": "صفيحة شامية لحم غنم (خضار)",
+      "description": "صفيحة شامية بعجينة طرية ومحشوة بلحم الغنم الطازج المخلوط بتشكيلة غنية من الخضار الطازجة والبهارات الأصيلة، محضرة بعناية لتمنحكم نكهة متوازنة ومميزة. متوفرة بأحجام تناسب جميع تجمعاتكم وضيافتكم: (1 كغ، 1/2 كغ، 1/4 كغ).",
+      "categoryId": "main",
+      "basePrice": 90,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792339602313-f6c05472fcbaa5fa.webp",
+      "displayOrder": 2,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "0611cfb0-0cf1-4f7d-9b5f-0f2f73390833",
+          "name": "250 غرام",
+          "imageUrl": "",
+          "price": 23,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "6e58c181-035e-4ddf-b345-196cc02498af",
+          "name": "500 غرام",
+          "imageUrl": "",
+          "price": 45,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "2d16a31d-05a9-4ab0-9642-86f0e42fc536",
+          "name": "1 كغ",
+          "imageUrl": "",
+          "price": 90,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     }
   ],
   "promos": [],
