@@ -624,7 +624,7 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792340971216-671106ab0630bc32.webp",
-      "displayOrder": 0,
+      "displayOrder": 1,
       "isAvailable": true
     },
     {
@@ -636,7 +636,7 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792341133743-7d1b5619db3e28fd.webp",
-      "displayOrder": 1,
+      "displayOrder": 0,
       "isAvailable": true
     },
     {
