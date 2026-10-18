@@ -668,6 +668,18 @@
           "offerPrice": null
         }
       ]
+    },
+    {
+      "id": "29370a63-fbce-4ff0-8864-2612bd8b563c",
+      "name": "بيتزا دجاج",
+      "description": "بيتزا دجاج غنية بالمذاق الشهي، محضرة من عجينة طازجة ومقرمشة، ومغطاة بطبقة وفيرة من صلصة الطماطم وجبن الموتزاريلا الفاخر المذاب، وتزين بقطع طرية من الدجاج المتبل بعناية لتقدم لك تجربة لذيذة ومتكاملة في كل قطمة.",
+      "categoryId": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
+      "basePrice": 17,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792343180551-9fb67c3b70515b91.webp",
+      "displayOrder": 2,
+      "isAvailable": true
     }
   ],
   "promos": [],
