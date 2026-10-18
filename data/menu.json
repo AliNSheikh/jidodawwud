@@ -39,31 +39,38 @@
       "isActive": true
     },
     {
+      "id": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
+      "name": "البيتزا",
+      "description": "",
+      "displayOrder": 2,
+      "isActive": true
+    },
+    {
       "id": "starters",
       "name": "المقبلات",
       "description": "",
-      "displayOrder": 2,
+      "displayOrder": 3,
       "isActive": true
     },
     {
       "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
       "name": "السلطات",
       "description": "",
-      "displayOrder": 3,
+      "displayOrder": 4,
       "isActive": true
     },
     {
       "id": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
       "name": "صوصات",
       "description": "",
-      "displayOrder": 4,
+      "displayOrder": 5,
       "isActive": true
     },
     {
       "id": "drinks",
       "name": "المشروبات",
       "description": "",
-      "displayOrder": 5,
+      "displayOrder": 6,
       "isActive": true
     }
   ],
@@ -607,6 +614,18 @@
           "offerPrice": null
         }
       ]
+    },
+    {
+      "id": "7836b974-5ae1-4bec-b53e-7b358c96b15d",
+      "name": "بيتزا بيبروني",
+      "description": "بيتزا بيبروني شهية تحضر من العجين الطازج والمقرمش، وتغطى بطبقة غنية من صلصة الطماطم الغنية بالاعشاب، وجبن الموتزاريلا الفاخر الذائب، وتزين بشرائح البيبروني الطازجة والمتبلة بعناية لتقدم لك طعماً لا يقاوم في كل قضمّة.",
+      "categoryId": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
+      "basePrice": 17,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792340971216-671106ab0630bc32.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
