@@ -28,6 +28,13 @@
       "id": "main",
       "name": "المضيفة",
       "description": "",
+      "displayOrder": 0,
+      "isActive": true
+    },
+    {
+      "id": "668565b7-e13a-491c-a509-d11bee3376d3",
+      "name": "البروستد",
+      "description": "",
       "displayOrder": 1,
       "isActive": true
     },
@@ -39,10 +46,10 @@
       "isActive": true
     },
     {
-      "id": "drinks",
-      "name": "المشروبات",
+      "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
+      "name": "السلطات",
       "description": "",
-      "displayOrder": 4,
+      "displayOrder": 3,
       "isActive": true
     },
     {
@@ -53,17 +60,10 @@
       "isActive": true
     },
     {
-      "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
-      "name": "السلطات",
+      "id": "drinks",
+      "name": "المشروبات",
       "description": "",
-      "displayOrder": 3,
-      "isActive": true
-    },
-    {
-      "id": "668565b7-e13a-491c-a509-d11bee3376d3",
-      "name": "البروستد",
-      "description": "",
-      "displayOrder": 2,
+      "displayOrder": 5,
       "isActive": true
     }
   ],
