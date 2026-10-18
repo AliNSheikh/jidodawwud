@@ -617,3 +617,21 @@ html,body,#root{
   .admin-product-row>img{width:47px}
   .admin-product-row-actions{grid-column:1 / -1}
 }
+
+/* Homepage product options, beneath the name and readable on narrow phones. */
+.product-variant-options{
+  display:block;
+  width:100%;
+  margin:3px 0 4px;
+  color:#718099;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.65;
+  text-align:right;
+  overflow-wrap:anywhere;
+  white-space:normal;
+  unicode-bidi:plaintext;
+}
+@media(max-width:720px){
+  .product-variant-options{font-size:10px;line-height:1.6;margin:2px 0 4px}
+}
