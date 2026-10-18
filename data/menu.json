@@ -70,7 +70,7 @@
   "items": [
     {
       "id": "b08fc0c7-4ee3-449f-bf5d-b2da883ecddd",
-      "name": "صحن بطاطا كبير",
+      "name": "صحن بطاطا",
       "description": "حصص وفيرة من أصابع البطاطا الطازجة والمقرمشة، مذهبة بعناية لتمنحك القوام الخارجي المقرمش واللب الداخلي الطري. تقدم ساخنة في طبق كبير مع علبة صلصة الكاتشب الغنية، لتكون الإضافة المثالية والمقرمشة التي تكمل متعة وجبتك.",
       "categoryId": "starters",
       "basePrice": 11,
@@ -78,7 +78,25 @@
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792165349537-1158614390374389.webp",
       "displayOrder": 0,
-      "isAvailable": true
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "f501c93d-0b1b-44d4-ae4e-bca04af1ed3a",
+          "name": "كبير",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792339735530-e4aafd9db07707f7.webp",
+          "price": 11,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "1508ddea-24ec-4f0d-b45c-b88a0d7ac69e",
+          "name": "صغير",
+          "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792339769323-0313b03adcad5f38.webp",
+          "price": 7,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     },
     {
       "id": "f622ab7b-6c49-4fe2-90c8-bb0f3cbd6a04",
@@ -161,18 +179,6 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792170489555-d45b1764997077de.webp",
-      "displayOrder": 0,
-      "isAvailable": true
-    },
-    {
-      "id": "a8d72779-d941-4c1f-9de9-bc806753ff54",
-      "name": "صحن بطاطا صغير",
-      "description": "أصابع البطاطا الطازجة والمقرمشة، المقلية بعناية لتمنحك قواماً ذهبياً مقرمشاً من الخارج وقلباً طرياً من الداخل. تقدم ساخنة في طبق مناسب مع علبة صلصة الكاتشب الشهية، لتكون رفيقاً مثالياً ومقرمشاً يكمل وجبتك بكل لذة. ",
-      "categoryId": "starters",
-      "basePrice": 7,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792173334637-d6578cbb1430525e.webp",
       "displayOrder": 0,
       "isAvailable": true
     },
