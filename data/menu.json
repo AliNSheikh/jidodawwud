@@ -525,6 +525,44 @@
           "offerPrice": null
         }
       ]
+    },
+    {
+      "id": "4eb1c53e-f6a3-49bf-91b9-0cdf6deee969",
+      "name": "صفيحة شامية لحم غنم (دبس رمان)",
+      "description": "صفيحة شامية بلحم الغنم الطازج ولمسة فاخرة من دبس الرمان الأصلي، محضرة بعناية فائقة ومخبوزة حتى الكمال. متوفرة بأحجام تناسب جميع تجمعاتكم وضيافتكم: (1 كغ، 1/2 كغ، 1/4 كغ).",
+      "categoryId": "main",
+      "basePrice": 90,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792338244692-672ce0f6a2f0acfc.webp",
+      "displayOrder": 1,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "0d0ad8b4-85ac-4406-aaef-fd6d8a58f2ea",
+          "name": "250 غرام",
+          "imageUrl": "",
+          "price": 23,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "8199ae29-933a-47ac-858b-83753d434b98",
+          "name": "500 غرام",
+          "imageUrl": "",
+          "price": 45,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "29e5c2de-ca9a-4d41-8ec7-1c7d378c1178",
+          "name": "1 كغ",
+          "imageUrl": "",
+          "price": 90,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     }
   ],
   "promos": [],
