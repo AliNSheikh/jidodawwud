@@ -487,6 +487,44 @@
           "offerPrice": null
         }
       ]
+    },
+    {
+      "id": "c991a68f-4bc4-4992-8fd2-7af37f914825",
+      "name": "صفيحة شامية لحم حاشي",
+      "description": "صفيحة شامية لحم حاشي أصيلة ومحضرة بعناية فائقة، مغطاة بلحم الحاشي الطازج والتوابل المختارة ومخبوزة حتى الكمال. متوفرة بأحجام تناسب جميع تجمعاتكم وضيافتكم: (1 كغ، 1/2 كغ، 1/4 كغ).",
+      "categoryId": "main",
+      "basePrice": 90,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792337720149-4902bcdfd834ea2a.webp",
+      "displayOrder": 0,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "894dc95a-e577-4d31-acca-419bdc461ff9",
+          "name": "250 غرام",
+          "imageUrl": "",
+          "price": 23,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "642f4251-0a44-4907-b232-089fcd3e8da6",
+          "name": "500 غرام",
+          "imageUrl": "",
+          "price": 45,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "8d5c855a-8148-4caa-9f6e-14994ed9fb2c",
+          "name": "1 كغ",
+          "imageUrl": "",
+          "price": 90,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     }
   ],
   "promos": [],
