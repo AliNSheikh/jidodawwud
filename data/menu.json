@@ -680,6 +680,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792343180551-9fb67c3b70515b91.webp",
       "displayOrder": 2,
       "isAvailable": true
+    },
+    {
+      "id": "6ad2f94e-bdfb-43d1-904b-e0624c506d66",
+      "name": "بيتزا خضار",
+      "description": "بيتزا خضار طازجة ومقرمشة، محضرة بعناية من العجين الطازج ومغطاة بطبقة غنية من صلصة الطماطم وجبن الموتزاريلا الفاخر، ومزينة بتشكيلة طازجة ومميزة من الخضروات المقرمشة (الفلفل الملون، الزيتون الأسود، والطماطم) لتقدم لك مذاقاً خفيفاً ولذيذاً يرضي جميع الأذواق.",
+      "categoryId": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
+      "basePrice": 15,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792343652811-d90e0148b18ce33b.webp",
+      "displayOrder": 3,
+      "isAvailable": true
     }
   ],
   "promos": [],
