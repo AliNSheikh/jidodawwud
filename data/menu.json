@@ -624,7 +624,7 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792340971216-671106ab0630bc32.webp",
-      "displayOrder": 1,
+      "displayOrder": 2,
       "isAvailable": true
     },
     {
@@ -636,7 +636,7 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792341133743-7d1b5619db3e28fd.webp",
-      "displayOrder": 0,
+      "displayOrder": 1,
       "isAvailable": true
     },
     {
@@ -678,7 +678,7 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792343180551-9fb67c3b70515b91.webp",
-      "displayOrder": 2,
+      "displayOrder": 3,
       "isAvailable": true
     },
     {
@@ -690,7 +690,19 @@
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792343652811-d90e0148b18ce33b.webp",
-      "displayOrder": 3,
+      "displayOrder": 4,
+      "isAvailable": true
+    },
+    {
+      "id": "e2286b9f-164e-44f7-9014-bf5b37c18640",
+      "name": "بيتزا عش البلبل",
+      "description": "بيتزا عش البلبل الشهية، محضرة بطريقة مميزة من العجين الطازج والمقرمش، ومغطاة بطبقة غنية وفاخرة من الأجبان الذائبة (الموتزاريلا والقشقوان) مع لمسة رائعة من العسل أو اللبنة أو الزعتر حسب الطلب، لتقدم لك مزيجاً فريداً ومبدعاً يجمع بين حلاوة الطعم وغنى الجبن في كل لقمة.",
+      "categoryId": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
+      "basePrice": 20,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792344181418-9e63248528d5ceee.webp",
+      "displayOrder": 0,
       "isAvailable": true
     }
   ],
