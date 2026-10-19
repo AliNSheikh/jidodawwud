@@ -32,52 +32,59 @@
       "isActive": true
     },
     {
+      "id": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "name": "الشاورما",
+      "description": "",
+      "displayOrder": 1,
+      "isActive": true
+    },
+    {
       "id": "668565b7-e13a-491c-a509-d11bee3376d3",
       "name": "البروستد",
       "description": "",
-      "displayOrder": 1,
+      "displayOrder": 2,
       "isActive": true
     },
     {
       "id": "ec0377b6-899c-4878-b936-e982166e7f39",
       "name": "الفخارة",
       "description": "",
-      "displayOrder": 2,
+      "displayOrder": 3,
       "isActive": true
     },
     {
       "id": "a5d18006-f7af-4aa1-86f9-04ebb5f7cbe5",
       "name": "البيتزا",
       "description": "",
-      "displayOrder": 3,
+      "displayOrder": 4,
       "isActive": true
     },
     {
       "id": "starters",
       "name": "المقبلات",
       "description": "",
-      "displayOrder": 4,
+      "displayOrder": 5,
       "isActive": true
     },
     {
       "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
       "name": "السلطات",
       "description": "",
-      "displayOrder": 5,
+      "displayOrder": 6,
       "isActive": true
     },
     {
       "id": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
       "name": "صوصات",
       "description": "",
-      "displayOrder": 6,
+      "displayOrder": 7,
       "isActive": true
     },
     {
       "id": "drinks",
       "name": "المشروبات",
       "description": "",
-      "displayOrder": 7,
+      "displayOrder": 8,
       "isActive": true
     }
   ],
