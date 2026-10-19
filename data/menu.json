@@ -711,6 +711,30 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792344181418-9e63248528d5ceee.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "5e5dc2b1-0164-4bf4-ac95-3c3eccd508b2",
+      "name": "فخارة كفتة لحم غنم بالخضار",
+      "description": "فخارة كفتة لحم غنم بالخضار الطازجة، محضرة على الطريقة التقليدية الأصيلة في فخار مطعم جدو داوود، حيث تمتزج قطع الكفتة المصنوعة من لحم الغنم الطازج مع تشكيلة غنية من الخضروات المتبلة بعناية وتُخبز ببطء لتتشبع بالنكهات العميقة وتقدم ساخنة ومميزة مع الخبز الطازج.",
+      "categoryId": "ec0377b6-899c-4878-b936-e982166e7f39",
+      "basePrice": 21,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792414956448-eb9e845b4055c8f0.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "c8d94830-f05a-4bd6-a224-87b762f26dd5",
+      "name": "فخارة كفتة لحم غنم بالطحينة",
+      "description": "فخارة كفتة لحم غنم بالطحينة الغنية، محضرة بعناية على الطريقة التقليدية في مطعم جدو داوود. تتكون من كفتة لحم الغنم الطازجة والمتبلة، المخبوزة في الفخار مع صوص الطحينة الكريمي الفاخر وتزين بالمكسرات المحمصة، لتقدم لك مزيجاً فريداً من النكهات الأصيلة والدافئة.",
+      "categoryId": "ec0377b6-899c-4878-b936-e982166e7f39",
+      "basePrice": 21,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792415025727-3eb3a222b09ebf97.webp",
+      "displayOrder": 1,
+      "isAvailable": true
     }
   ],
   "promos": [],
