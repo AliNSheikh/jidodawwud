@@ -30,8 +30,8 @@ jobs:
         run: npx tsx scripts/verify-responsive-layout.ts
       - name: Test admin product grouping and duplication
         run: npx tsx scripts/verify-admin-products.ts
-      - name: Test Excel product import and validation
-        run: npx tsx scripts/verify-product-excel.ts
+      - name: Test Excel product downloads and embedded images
+        run: npx tsx scripts/verify-export-products-excel.ts
       - name: Test optional variants and WhatsApp checkout
         run: npx tsx scripts/verify-variants.ts
       - name: Test independent orders and checkout API routes
