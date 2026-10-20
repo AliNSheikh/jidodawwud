@@ -156,7 +156,16 @@ function App(){
     setPlacing(true);
     try{
       const r=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...customer,items:cartLines.map(v=>v.line)})});
-      const d=await r.json();if(!r.ok)throw new Error(d.error||'تعذر تسجيل الطلب');
+      // Vercel can return an HTML/text error when a function fails before JSON.
+      // Never show the raw "Unexpected token" parse exception to the customer.
+      const raw=await r.text();
+      let d:any=null;
+      try{d=JSON.parse(raw);}catch{
+        throw new Error('تعذر الاتصال بخدمة الطلبات حاليًا (HTTP '+r.status+'). لم يتم تأكيد الطلب؛ يرجى المحاولة لاحقًا.');
+      }
+      if(!r.ok)throw new Error(typeof d?.error==='string'?d.error:'تعذر تسجيل الطلب (HTTP '+r.status+'). يرجى المحاولة لاحقًا.');
+      if(!d?.success||!d.orderId||typeof d.whatsappUrl!=='string'||!d.whatsappUrl.startsWith('https://wa.me/'))
+        throw new Error('استجابة حفظ الطلب غير مكتملة. يرجى التواصل مع المطعم.');
       setOrderSuccess('تم حفظ الطلب رقم '+d.orderId+'، جارٍ الانتقال إلى واتساب لإرساله للمطعم.');
       setCart([]);
       window.location.assign(d.whatsappUrl);
