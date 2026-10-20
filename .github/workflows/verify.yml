@@ -36,3 +36,7 @@ jobs:
         run: npx tsx scripts/verify-orders-routes.ts
       - name: Test dashboard drag order and homepage menu order
         run: npx tsx scripts/verify-menu-ordering.ts
+
+      - name: Probe production order API (no order placed)
+        if: github.ref == 'refs/heads/main'
+        run: node scripts/verify-live-order-endpoints.mjs
