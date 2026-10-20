@@ -816,6 +816,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792492996392-35bf92a96986edef.webp",
       "displayOrder": 2,
       "isAvailable": true
+    },
+    {
+      "id": "d59d9aa6-399e-484a-824d-6b5c1be7ca9f",
+      "name": "فتة شاورما جدو داوود",
+      "description": "",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "basePrice": 17,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493102822-8a2d921ad7759aaf.webp",
+      "displayOrder": 3,
+      "isAvailable": true
+    },
+    {
+      "id": "415f93f5-fc37-494b-82da-777bdad35f9e",
+      "name": "وجبة عربي",
+      "description": "",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "basePrice": 18,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493136256-53c6ffdaff654182.webp",
+      "displayOrder": 4,
+      "isAvailable": true
+    },
+    {
+      "id": "58561a81-beff-42e4-9283-dd8d1e165540",
+      "name": "وجبة عربي دبل",
+      "description": "",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "basePrice": 30,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493156433-2f3169f16fbad9db.webp",
+      "displayOrder": 5,
+      "isAvailable": true
     }
   ],
   "promos": [],
