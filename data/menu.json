@@ -1036,6 +1036,18 @@
       "displayOrder": 5,
       "isAvailable": true,
       "variants": []
+    },
+    {
+      "id": "3865d878-78df-44f5-a491-51ce3ce50dca",
+      "name": "توشكا ",
+      "description": "",
+      "categoryId": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "basePrice": 8,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509721892-0f14a3e6e4c2a23b.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
