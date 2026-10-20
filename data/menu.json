@@ -882,6 +882,18 @@
           "offerPrice": null
         }
       ]
+    },
+    {
+      "id": "4e049c40-bf1d-43cc-ac43-320e43e99253",
+      "name": "شاورما لغوصة",
+      "description": "",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "basePrice": 19,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493266286-421f81a3fe77ef1e.webp",
+      "displayOrder": 7,
+      "isAvailable": true
     }
   ],
   "promos": [],
