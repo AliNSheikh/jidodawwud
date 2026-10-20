@@ -637,37 +637,10 @@ html,body,#root{
 }
 
 
-/* Excel bulk-import, safely scoped to dashboard without changing storefront. */
-.admin-product-import-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
-.admin-excel-import{background:#f8fafd;border:1px solid #cbd8e9;border-radius:15px;padding:21px;margin:18px 0 25px;min-width:0;box-sizing:border-box}
-.admin-excel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:15px}
-.admin-excel-head h3{display:flex;align-items:center;gap:9px;color:var(--navy);margin:0 0 9px;font-size:19px}
-.admin-excel-head p{font-size:12px;color:var(--muted);margin:0;line-height:1.9;max-width:700px}
-.admin-excel-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:17px 0 12px}
-.admin-excel-controls .admin-field{min-width:0;margin:0;display:grid;gap:8px}
-.admin-excel-controls input[type=file]{width:100%;min-width:0;max-width:100%;background:#fff;border:1px solid #d6e0eb;border-radius:10px;padding:11px;font-size:12px}
-.admin-excel-help{display:flex;gap:11px;align-items:flex-start;background:#edf3fb;border-radius:11px;padding:13px;margin:13px 0;color:#4d6180;font-size:12px;line-height:2}
-.admin-excel-help svg{flex:0 0 auto;margin-top:4px}
-.admin-excel-caption{font-size:12px;line-height:1.8;color:#435b7c;padding:6px 0}
-.admin-excel-preview{background:#fff;border:1px solid #dce6f0;border-radius:11px;padding:13px;margin:15px 0;min-width:0}
-.admin-excel-preview h4{font-size:15px;margin:0 0 10px;color:var(--navy)}
-.admin-excel-scroll{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.admin-excel-scroll table{border-collapse:collapse;min-width:580px;width:100%;text-align:right;font-size:12px}
-.admin-excel-scroll th,.admin-excel-scroll td{padding:10px 12px;border-bottom:1px solid #e6ecf4;vertical-align:top;overflow-wrap:anywhere}
-.admin-excel-scroll th{background:#f0f5fa;color:var(--navy);white-space:nowrap}
-.admin-excel-scroll tr:last-child td{border-bottom:0}
-.admin-excel-errors{background:#fff0ec;border:1px solid #eac0b9;color:#a44339;border-radius:10px;padding:12px 15px;margin:15px 0;font-size:12px;line-height:1.8;max-height:240px;overflow:auto}
-.admin-excel-errors p{margin:4px 0}
-.admin-excel-progress{display:flex;gap:8px;align-items:center;color:var(--navy);font-weight:700;font-size:13px;padding:8px 0}
-.admin-excel-submit{margin:15px 0 10px;min-height:44px}
-.admin-excel-import>.hint{font-size:12px;margin:10px 0 0;line-height:1.9}
+/* Product catalog Excel download — matches dashboard controls. */
+.admin-product-excel-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+.admin-excel-progress{display:flex;gap:8px;align-items:center;font-weight:700;color:var(--navy);font-size:12px;margin:11px 0}
 @media(max-width:720px){
-  .admin-product-import-actions{width:100%;justify-content:stretch}
-  .admin-product-import-actions .btn{flex:1;min-width:0;padding:10px 9px;font-size:11px}
-  .admin-excel-import{padding:12px;margin:14px 0}
-  .admin-excel-head h3{font-size:16px}
-  .admin-excel-controls{grid-template-columns:minmax(0,1fr);gap:13px}
-  .admin-excel-help{font-size:11px;line-height:1.9;padding:10px}
-  .admin-excel-scroll table{min-width:560px}
-  .admin-excel-submit{width:100%;justify-content:center}
+  .admin-product-excel-actions{width:100%;justify-content:stretch}
+  .admin-product-excel-actions .btn{flex:1;min-width:0;padding:10px 9px;font-size:11px}
 }
