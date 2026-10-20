@@ -9,6 +9,8 @@ import {googleMapsEmbedUrl} from '../../utils/googleMaps';
 import {groupProductsByCategory,duplicateProduct} from '../../utils/adminProducts';
 import {SortHandle} from './SortHandle';
 import {orderedCategories,reorderCategories,reorderWithinCategory} from '../../utils/menuOrdering';
+import {ExcelProductImport} from './ExcelProductImport';
+import {productImageWebP} from '../../utils/productExcel';
 
 type Tab='overview'|'products'|'categories'|'orders'|'reviews'|'promos'|'slides'|'settings';
 const createId=()=>globalThis.crypto?.randomUUID?.()||'id-'+Date.now()+'-'+Math.random().toString(36).slice(2);
@@ -69,6 +71,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const [filterDate,setFilterDate]=useState('');
   const [search,setSearch]=useState('');
   const [productCategoryFilter,setProductCategoryFilter]=useState('all');
+  const [excelImportOpen,setExcelImportOpen]=useState(false);
   const [collapsedProductGroups,setCollapsedProductGroups]=useState<string[]>([]);
   const productEditorRef=useRef<HTMLDivElement>(null);
   const [configured,setConfigured]=useState<{githubConfigured:boolean;ordersEncrypted:boolean;githubAccess?:boolean|null;githubError?:string}|null>(null);
@@ -169,6 +172,21 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
       setSavedSha(out.sha);setDirty(false);setMessage('تم حفظ التغييرات على GitHub بنجاح. قد يستغرق تحديث نشر Vercel لحظات.');await onReload();
     }catch(e:any){setMessage('خطأ: '+e.message);}finally{setSaving(false);}
   }
+  async function uploadExcelImage(file:File):Promise<string>{
+    const normalized=await productImageWebP(file);
+    const out=await auth('/api/admin/upload',{method:'POST',body:JSON.stringify({data:normalized})});
+    if(typeof out?.url!=='string'||!out.url)throw Error('تعذر تأكيد رابط الصورة بعد رفعها.');
+    return out.url;
+  }
+  function finishExcelImport(newCategories:ProductCategory[],imported:Product[]){
+    if(!draft||!imported.length)return;
+    change({...draft,categories:[...draft.categories,...newCategories],items:[...draft.items,...imported]});
+    setExcelImportOpen(false);
+    setProductCategoryFilter('all');
+    setSearch('');
+    setMessage('تم تجهيز '+imported.length+' منتج'+(newCategories.length?' وإنشاء '+newCategories.length+' قسم جديد':'')+
+      ' في القائمة. اضغط «حفظ التغييرات» أعلى الصفحة لتسجيلها ونشرها.');
+  }
   async function imageUpload(file:File|null,callback:(url:string)=>void,key:string){
     if(!file)return;
     if(!['image/jpeg','image/png','image/webp'].includes(file.type)){setMessage('يرجى رفع صورة JPG أو PNG أو WebP');return;}
@@ -263,8 +281,15 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     {tab==='overview'&&<><div className="stats-grid">
       {[['المنتجات',draft.items.length,Package],['الأقسام',draft.categories.length,MenuIcon],['الطلبات الجديدة',orders.filter(o=>o.status==='pending').length,ShoppingBag],['العروض النشطة',draft.items.filter(p=>p.offerEnabled).length,BadgePercent]].map(([name,value,Icon]:any)=><div className="stat-card" key={name}><Icon size={22}/><span>{name}</span><strong>{value}</strong></div>)}
     </div><section className="admin-panel"><h2>حالة التكامل</h2><p>الربط مع GitHub: {configured?.githubAccess===true?'اتصال ناجح بالقائمة على GitHub':configured?.githubAccess===false?'يوجد خطأ في الاتصال أو الصلاحيات':configured?.githubConfigured?'تم إدخال الرمز، جارٍ التحقق':'يحتاج إعداد GITHUB_TOKEN على Vercel'}</p>{configured?.githubError&&<p className="form-error">{configured.githubError}</p>}<p>حفظ الطلبات المشفّر: {configured?.ordersEncrypted?'مفعّل':'يحتاج إعداد ORDERS_ENCRYPTION_KEY'}</p><p>يتم حفظ منتجات المطعم والأقسام والإعدادات في مستودع GitHub وتحديثها على الموقع. تُشفّر بيانات الطلبات قبل إرسالها للمستودع.</p><button className="btn outline" onClick={getOrders}>تحديث الطلبات</button></section></>}
-    {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><div><h2>إدارة المنتجات حسب القسم</h2><p className="hint">اسحب أيقونة الترتيب لترتيب الأقسام والمنتجات داخل كل قسم، ثم اضغط «حفظ التغييرات». يمكنك أيضًا نسخ المنتجات وتعديلها.</p></div><button type="button" className="btn primary" disabled={!draft.categories.length} onClick={()=>createProduct()}><Plus size={17}/> إضافة منتج</button></div>
-      {!draft.categories.length&&<p className="form-error">أنشئ قسمًا في صفحة الأقسام قبل إضافة المنتجات.</p>}
+    {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><div><h2>إدارة المنتجات حسب القسم</h2><p className="hint">اسحب أيقونة الترتيب لترتيب الأقسام والمنتجات داخل كل قسم، ثم اضغط «حفظ التغييرات». يمكنك أيضًا نسخ المنتجات وتعديلها.</p></div><div className="admin-product-import-actions">
+        <button type="button" className="btn outline" onClick={()=>setExcelImportOpen(v=>!v)}>
+          <ImageIcon size={17}/> {excelImportOpen?'إخفاء استيراد Excel':'استيراد من Excel'}
+        </button>
+        <button type="button" className="btn primary" disabled={!draft.categories.length} onClick={()=>createProduct()}><Plus size={17}/> إضافة منتج</button>
+      </div></div>
+      {excelImportOpen&&<ExcelProductImport categories={draft.categories} products={draft.items}
+        uploadImage={uploadExcelImage} onApply={finishExcelImport} onClose={()=>setExcelImportOpen(false)}/>}
+      {!draft.categories.length&&!excelImportOpen&&<p className="form-error">أنشئ قسمًا في صفحة الأقسام قبل إضافة المنتجات أو استورد المنتجات والأقسام من Excel.</p>}
       {productId&&product&&<div className="editor-panel" ref={productEditorRef}>
         <div className="admin-product-editor-head"><h3>بيانات المنتج: {product.name||'منتج جديد'}</h3><button type="button" className="mini-action admin-product-copy-button" onClick={()=>copyProduct(product)}><Copy size={16}/> نسخ هذا المنتج</button></div>
         {!product.isAvailable&&<p className="hint">هذا المنتج غير منشور على الموقع حاليًا. فعّل «المنتج متاح» عندما تنتهي من تعديل النسخة.</p>}
