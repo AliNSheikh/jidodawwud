@@ -25,7 +25,7 @@ async function readJson(r:Response){
   catch {
     const isServerError=raw.includes('FUNCTION_INVOCATION_FAILED')||raw.includes('A server error');
     throw new Error(isServerError
-      ? 'تعذر تشغيل وظيفة الحفظ على Vercel (HTTP '+r.status+'). يرجى مراجعة إعدادات الخادم أو إعادة النشر.'
+      ? 'تعذر تشغيل خدمة الموقع على Vercel (HTTP '+r.status+'). يرجى المحاولة أو مراجعة إعدادات الخادم.'
       : 'الخادم لم يعطِ استجابة JSON صالحة (HTTP '+r.status+'). يرجى المحاولة لاحقًا.');
   }
   if(!contentType.includes('application/json')&&r.ok)throw new Error('استجابة الخادم ليست من النوع المتوقع.');
@@ -52,6 +52,8 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   const [promoId,setPromoId]=useState<string|null>(null);
   const [slideId,setSlideId]=useState<string|null>(null);
   const [orders,setOrders]=useState<Order[]>([]);
+  const [ordersLoaded,setOrdersLoaded]=useState(false);
+  const [ordersLoading,setOrdersLoading]=useState(false);
   const ordersByProduct=useMemo(()=>{
     const counts:Record<string,number>={};
     const seenOrderIds=new Set<string>();
@@ -199,8 +201,17 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
   }
   async function getOrders(){
     setOrdersError('');
-    try{const d=await auth('/api/admin/orders');setOrders(d.orders||[]);}
-    catch(e:any){setOrdersError(e.message);}
+    setOrdersLoading(true);
+    try{
+      const d=await auth('/api/admin/orders');
+      setOrders(d.orders||[]);
+      setOrdersLoaded(true);
+    }catch(e:any){
+      setOrdersLoaded(false);
+      setOrdersError('تعذر تحميل طلبات الزبائن: '+e.message);
+    }finally{
+      setOrdersLoading(false);
+    }
   }
   async function changeStatus(id:string,status:OrderStatus){
     try{await auth('/api/admin/orders/status',{method:'POST',body:JSON.stringify({id,status})});setOrders(old=>old.map(o=>o.id===id?{...o,status}:o));}
@@ -376,17 +387,17 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
       {slideId&&slide&&<div className="editor-panel"><div className="admin-form-grid"><TextInput label="العنوان" value={slide.title} onChange={v=>modifySlide({...slide,title:v})}/><div className="admin-field"><span>صورة الشريحة</span><Upload id={'slide-'+slide.id} onPick={f=>imageUpload(f,url=>modifySlide({...slide,imageUrl:url}),'slide-'+slide.id)}/></div></div>
         <label className="admin-field">الوصف<textarea rows={2} value={slide.description} onChange={e=>modifySlide({...slide,description:e.target.value})}/></label><CheckInput label="الشريحة مفعّلة" value={slide.enabled} onChange={v=>modifySlide({...slide,enabled:v})}/>{slide.imageUrl&&<img className="admin-wide-preview" src={slide.imageUrl} alt="معاينة"/>}<button className="btn outline" onClick={()=>setSlideId(null)}>إغلاق المحرر</button></div>}
       <div className="admin-list">{draft.slides.map(s=><div className="admin-list-row" key={s.id}>{s.imageUrl?<img src={s.imageUrl} alt=""/>:<ImageIcon/>}<div className="list-info"><strong>{s.title||'شريحة جديدة'}</strong><small>{s.enabled?'مفعّلة':'غير مفعّلة'}</small></div><button className="mini-action" onClick={()=>setSlideId(s.id)}>تعديل</button><button className="icon-danger" onClick={()=>{if(confirm('حذف الشريحة؟')){update('slides',draft.slides.filter(x=>x.id!==s.id));setSlideId(null);}}}><Trash2 size={17}/></button></div>)}</div></section>}
-    {tab==='orders'&&<section className="admin-panel"><div className="admin-section-title"><h2>طلبات الزبائن</h2><div className="admin-toolbar"><button className="btn outline" onClick={getOrders}>تحديث</button><button className="btn primary" onClick={exportExcel}>تصدير Excel</button></div></div>
+    {tab==='orders'&&<section className="admin-panel"><div className="admin-section-title"><h2>طلبات الزبائن</h2><div className="admin-toolbar"><button className="btn outline" disabled={ordersLoading} onClick={getOrders}>{ordersLoading?'جارٍ التحميل...':'تحديث'}</button><button className="btn primary" disabled={!ordersLoaded||ordersLoading} onClick={exportExcel}>تصدير Excel</button></div></div>
       {ordersError&&<p className="form-error">{ordersError}</p>}
       <div className="admin-form-grid"><label className="admin-field">فلترة حسب الحالة<select value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}><option value="all">كل الحالات</option>{Object.entries(statusNames).map(([v,n])=><option value={v} key={v}>{n}</option>)}</select></label><TextInput label="فلترة حسب التاريخ" type="date" value={filterDate} onChange={setFilterDate}/></div>
-      <p className="hint">{visibleOrders.length} طلب مطابق — الطلبات غير المنجزة تظهر أولًا</p>
+      <p className="hint">{ordersLoading?'جارٍ تحميل طلبات الزبائن...':ordersLoaded?visibleOrders.length+' طلب مطابق — الطلبات غير المنجزة تظهر أولًا':'لم يتم تحميل بيانات الطلبات بعد.'}</p>
       <div className="orders-list">{visibleOrders.map(o=><article className="order-card" key={o.id}>
         <div className="order-top"><div><strong>{o.id}</strong><small>{new Date(o.createdAt).toLocaleString('ar-SA')}</small></div><span className={'order-status status-'+o.status}>{statusNames[o.status]}</span></div>
         <div className="order-detail-grid"><span><b>العميل:</b> {o.customerName}</span><span><b>الجوال:</b> <a href={'tel:'+o.phone}>{o.phone}</a></span><span><b>طريقة الاستلام:</b> {o.service==='delivery'?'توصيل':'استلام'}</span><span><b>الدفع:</b> {o.payment==='visa'?'فيزا عند الاستلام':'نقدًا'}</span>{o.address&&<span className="order-address"><b>العنوان:</b> {o.address}</span>}</div>
         <div className="order-items">{o.items.map((p,i)=><div key={i}><span>{p.name} × {p.quantity}</span><strong><RiyalPrice amount={p.total}/></strong></div>)}</div>
         <div className="order-totals"><span>خصم: <RiyalPrice amount={o.discount}/></span><span>توصيل: <RiyalPrice amount={o.deliveryFee}/></span><strong>الإجمالي: <RiyalPrice amount={o.total}/></strong></div>{o.notes&&<p className="order-notes">ملاحظات: {o.notes}</p>}
         <label className="admin-field">تغيير الحالة<select value={o.status} onChange={e=>changeStatus(o.id,e.target.value as OrderStatus)}>{Object.entries(statusNames).map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
-      </article>)}{visibleOrders.length===0&&<div className="empty-state">لا توجد طلبات مطابقة</div>}</div></section>}
+      </article>)}{ordersLoaded&&!ordersLoading&&visibleOrders.length===0&&<div className="empty-state">لا توجد طلبات مطابقة</div>}</div></section>}
     {tab==='reviews'&&<ReviewManagement products={draft.items}/>}
     {tab==='settings'&&<section className="admin-panel"><h2>هوية المطعم ومعلومات الاتصال</h2>
       <div className="admin-form-grid">
