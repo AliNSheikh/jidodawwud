@@ -139,7 +139,8 @@ export async function embeddedImages(file:File,sheetName:string,column:number):P
     // Archive metadata makes decompression-bomb-like images in Excel less likely.
     const payload=await image.async('uint8array');
     if(payload.byteLength>12*1024*1024)throw Error('الصورة المضمنة في الصف '+(row+1)+' تتجاوز 12 ميغابايت.');
-    map.set(row,new File([payload],mediaPath.split('/').pop()||'excel-image.png',{type}));
+    const safe=new Uint8Array(payload.byteLength);safe.set(payload);
+    map.set(row,new File([safe],mediaPath.split('/').pop()||'excel-image.png',{type}));
   }
   return map;
 }
