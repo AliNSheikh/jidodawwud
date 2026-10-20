@@ -1144,6 +1144,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792510925458-2f884f22d1277712.webp",
       "displayOrder": 5,
       "isAvailable": true
+    },
+    {
+      "id": "18694208-6423-48ed-843f-edda753884e5",
+      "name": "زعتر سادة",
+      "description": "",
+      "categoryId": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "basePrice": 6,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792511120138-bea5c3909c94a53c.webp",
+      "displayOrder": 6,
+      "isAvailable": true
     }
   ],
   "promos": [],
