@@ -1,5 +1,5 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
-import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X, Star, ChevronDown, ChevronLeft} from 'lucide-react';
+import {ArrowRight, BadgePercent, BarChart3, Check, Copy, Image as ImageIcon, LayoutDashboard, Loader2, LogOut, Menu as MenuIcon, Package, Plus, Save, Settings, ShoppingBag, Tag, Trash2, Truck, X, Star, ChevronDown, ChevronLeft, FileSpreadsheet} from 'lucide-react';
 import type {StoreData,Product,ProductVariant,ProductCategory,Promo,Slide,Order,OrderStatus} from '../../types/store';
 import {priceOf,linkToProduct,linkToCategory,variantPriceInfo} from '../../types/store';
 import {RiyalPrice} from '../RiyalPrice';
@@ -284,7 +284,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     {tab==='products'&&<section className="admin-panel"><div className="admin-section-title"><div><h2>إدارة المنتجات حسب القسم</h2><p className="hint">اسحب أيقونة الترتيب لترتيب الأقسام والمنتجات داخل كل قسم، ثم اضغط «حفظ التغييرات». يمكنك أيضًا نسخ المنتجات وتعديلها.</p></div><div className="admin-product-import-actions">
         <button type="button" className="btn outline" disabled={excelExporting||!draft.items.length}
           onClick={()=>void exportProducts()}>
-          <ImageIcon size={17}/> {excelExporting?'جارٍ تجهيز Excel...':'تنزيل المنتجات Excel'}
+          <FileSpreadsheet size={17}/> {excelExporting?'جارٍ تجهيز Excel...':'تنزيل المنتجات Excel'}
         </button>
         <button type="button" className="btn primary" disabled={!draft.categories.length} onClick={()=>createProduct()}><Plus size={17}/> إضافة منتج</button>
       </div></div>
