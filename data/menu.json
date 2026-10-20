@@ -852,6 +852,36 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493156433-2f3169f16fbad9db.webp",
       "displayOrder": 5,
       "isAvailable": true
+    },
+    {
+      "id": "4b109adc-8c69-44c8-b9f6-7ada039451c3",
+      "name": "سندويش شامي",
+      "description": "",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "basePrice": 11,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493207489-98abdb8d7a436614.webp",
+      "displayOrder": 6,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "f5219ed8-7e92-47af-9a30-95f507ca7b60",
+          "name": "صغير",
+          "imageUrl": "",
+          "price": 6,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "b2197d59-9d19-4da2-858a-3cc54ca4bed0",
+          "name": "صاروخ",
+          "imageUrl": "",
+          "price": 11,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     }
   ],
   "promos": [],
