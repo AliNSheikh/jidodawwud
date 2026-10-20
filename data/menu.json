@@ -742,6 +742,44 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792415025727-3eb3a222b09ebf97.webp",
       "displayOrder": 1,
       "isAvailable": true
+    },
+    {
+      "id": "872759d2-2a82-4196-b368-87069a952537",
+      "name": "شاورما فرط",
+      "description": "",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
+      "basePrice": 108,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792492295296-35c4f8e09da1ac09.webp",
+      "displayOrder": 0,
+      "isAvailable": true,
+      "variants": [
+        {
+          "id": "9a5984cd-19fc-43cc-8fb2-5d3924df9b36",
+          "name": "250 غرام",
+          "imageUrl": "",
+          "price": 27,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "b5c0d528-7cfd-4956-a9b5-2812a7016843",
+          "name": "500 غرام",
+          "imageUrl": "",
+          "price": 54,
+          "offerEnabled": false,
+          "offerPrice": null
+        },
+        {
+          "id": "5f08fdfe-bf48-4cb2-a649-4e5d6f025760",
+          "name": "1000 غرام",
+          "imageUrl": "",
+          "price": 108,
+          "offerEnabled": false,
+          "offerPrice": null
+        }
+      ]
     }
   ],
   "promos": [],
