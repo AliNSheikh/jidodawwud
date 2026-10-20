@@ -797,24 +797,12 @@
       "id": "bc32d462-23ca-4e65-b7d0-f0a051219d74",
       "name": "سندويش شاورما سق ولدع",
       "description": "",
-      "categoryId": "main",
+      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
       "basePrice": 12,
       "offerPrice": 0,
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792492944787-6a0e3418f31d1b16.webp",
       "displayOrder": 3,
-      "isAvailable": true
-    },
-    {
-      "id": "b9c2d195-aa86-411e-bbe7-378cf0c26faa",
-      "name": "سندويش شاورما سق ولدع",
-      "description": "",
-      "categoryId": "570138e2-92d7-4461-b389-f80b71c9b858",
-      "basePrice": 12,
-      "offerPrice": 0,
-      "offerEnabled": false,
-      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792492996392-35bf92a96986edef.webp",
-      "displayOrder": 2,
       "isAvailable": true
     },
     {
