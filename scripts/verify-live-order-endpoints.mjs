@@ -5,6 +5,8 @@
 const origin='https://jidodawwud.vercel.app';
 const cases=[
   {name:'health',path:'/api/health',method:'GET'},
+  {name:'reviews',path:'/api/reviews',method:'GET'},
+  {name:'login invalid',path:'/api/admin/login',method:'POST',body:{password:'wrong-password'}},
   {name:'admin/orders unauthorized',path:'/api/admin/orders',method:'GET'},
   {name:'order validation',path:'/api/order',method:'POST',
     body:{customerName:'',phone:'',items:[],service:'pickup',payment:'cash'}}
@@ -31,6 +33,8 @@ for (const test of cases){
     console.log(JSON.stringify(safe));
     if(!ct.includes('application/json')||!data||
        (test.name==='health'&&res.status!==200)||
+       (test.name==='reviews'&&res.status!==200)||
+       (test.name==='login invalid'&&![401,503].includes(res.status))||
        (test.name==='admin/orders unauthorized'&&res.status!==401)||
        (test.name==='order validation'&&!([400,503].includes(res.status)))){
        failures++;
