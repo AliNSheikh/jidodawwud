@@ -67,31 +67,45 @@
       "isActive": true
     },
     {
+      "id": "0de7e1ed-edb8-4617-ae97-2fd589c5292e",
+      "name": "الفطائر",
+      "description": "",
+      "displayOrder": 6,
+      "isActive": true
+    },
+    {
+      "id": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "name": "المناقيش",
+      "description": "",
+      "displayOrder": 7,
+      "isActive": true
+    },
+    {
       "id": "starters",
       "name": "المقبلات",
       "description": "",
-      "displayOrder": 6,
+      "displayOrder": 8,
       "isActive": true
     },
     {
       "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
       "name": "السلطات",
       "description": "",
-      "displayOrder": 7,
+      "displayOrder": 9,
       "isActive": true
     },
     {
       "id": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
       "name": "صوصات",
       "description": "",
-      "displayOrder": 8,
+      "displayOrder": 10,
       "isActive": true
     },
     {
       "id": "drinks",
       "name": "المشروبات",
       "description": "",
-      "displayOrder": 9,
+      "displayOrder": 11,
       "isActive": true
     }
   ],
