@@ -12,10 +12,6 @@ export type ExcelExportRow={
 export type ExcelImage={rowIndex:number;bytes:Uint8Array};
 export type ExportResult={total:number;embedded:number;missing:number;lowResolution:number};
 
-const escapeXML=(text:string)=>text.replace(/[<>&"']/g,sign=>({
-  '<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'
-}[sign]||sign));
-
 /** Preserve the same section and product ordering shown in the control panel. */
 export function exportRows(categories:ProductCategory[],products:Product[]):ExcelExportRow[]{
   const ordered=orderedCategories(categories);
@@ -104,7 +100,8 @@ export async function attachImagesToXlsx(file:Uint8Array,images:ExcelImage[]):Pr
   zip.file(relPath,sheetRels);
 
   let sheetSrc=src;
-  if(!/xmlns:r=/.test(sheetSrc.slice(0,sheetSrc.indexOf('>')+1))){
+  const worksheetOpening=sheetSrc.match(/<worksheet\b[^>]*>/)?.[0]||'';
+  if(!/xmlns:r=/.test(worksheetOpening)){
     sheetSrc=sheetSrc.replace(/<worksheet\b/,'<worksheet xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"');
   }
   sheetSrc=sheetSrc.replace('</worksheet>','<drawing r:id="'+id+'"/></worksheet>');
