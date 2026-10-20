@@ -1120,6 +1120,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792510306303-19f6c181e23d4ced.webp",
       "displayOrder": 7,
       "isAvailable": true
+    },
+    {
+      "id": "e91ea8d1-ada8-421a-aeee-72a8bf2f412e",
+      "name": "لبنة سادة",
+      "description": "",
+      "categoryId": "0de7e1ed-edb8-4617-ae97-2fd589c5292e",
+      "basePrice": 6,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792510671902-d3f1f86026f33c57.webp",
+      "displayOrder": 8,
+      "isAvailable": true
     }
   ],
   "promos": [],
