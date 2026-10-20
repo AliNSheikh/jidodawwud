@@ -1011,6 +1011,18 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509002135-0a6f543d2a15e73a.webp",
       "displayOrder": 3,
       "isAvailable": true
+    },
+    {
+      "id": "3f01e20d-a7c9-4abe-b728-16b4ee511195",
+      "name": "سبانخ بالجبنة",
+      "description": "",
+      "categoryId": "0de7e1ed-edb8-4617-ae97-2fd589c5292e",
+      "basePrice": 7,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509421796-0194c4846129022c.webp",
+      "displayOrder": 4,
+      "isAvailable": true
     }
   ],
   "promos": [],
