@@ -963,6 +963,30 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792497100728-e8f2691523fa4303.webp",
       "displayOrder": 4,
       "isAvailable": true
+    },
+    {
+      "id": "3cb70980-d73f-498c-b1b8-8c2f70ffb48a",
+      "name": "لبنة زعتر",
+      "description": "",
+      "categoryId": "0de7e1ed-edb8-4617-ae97-2fd589c5292e",
+      "basePrice": 6,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792508688711-6f3bed32d0581f86.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "4fb8639f-1f4c-4c29-b965-6f64054c5b3e",
+      "name": "بوكس جدو داوود",
+      "description": "",
+      "categoryId": "0de7e1ed-edb8-4617-ae97-2fd589c5292e",
+      "basePrice": 45,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792508840686-048dc56b2c6426d3.webp",
+      "displayOrder": 0,
+      "isAvailable": true
     }
   ],
   "promos": [],
