@@ -1,31 +1,66 @@
 import type {Product,ProductCategory} from '../types/store';
-import {priceOf} from '../types/store';
+import {basePriceOf,variantPriceInfo,variantsOf} from '../types/store';
 import {orderedCategories,orderedProducts} from './menuOrdering';
 
 export type ExcelExportRow={
   productId:string;
+  variantId?:string;
   imageUrl:string;
   category:string;
   name:string;
+  variantName:string;
+  rowType:'منتج بدون خيارات'|'منتج أساسي (مرجع)'|'خيار';
+  basePrice:number;
+  regularPrice:number;
+  discount:number;
   price:number;
+  priceSource:'السعر الأساسي'|'يرث سعر المنتج'|'سعر مستقل';
 };
 export type ExcelImage={rowIndex:number;bytes:Uint8Array};
-export type ExportResult={total:number;embedded:number;missing:number;lowResolution:number};
+export type ExportResult={total:number;variants:number;rows:number;embedded:number;missing:number;lowResolution:number};
 
-/** Preserve the same section and product ordering shown in the control panel. */
+/** Include every product (including inactive ones) and a separate line for
+ * EVERY variant in its saved order. Product base rows are reference-only
+ * when variants exist, because customers must choose a specific variant.
+ */
 export function exportRows(categories:ProductCategory[],products:Product[]):ExcelExportRow[]{
   const ordered=orderedCategories(categories);
   const seen=new Set(ordered.map(c=>c.id));
-  const categoriesIncludingOrphans=[...ordered.map(c=>({id:c.id,name:c.name})),{id:'__unclassified__',name:'بدون قسم'}];
-  return categoriesIncludingOrphans.flatMap(category=>
+  const includingOrphans=[...ordered.map(c=>({id:c.id,name:c.name})),{id:'__unclassified__',name:'بدون قسم'}];
+  return includingOrphans.flatMap(category=>
     orderedProducts(products.filter(p=>category.id==='__unclassified__'?!seen.has(p.categoryId):p.categoryId===category.id))
-      .map(product=>({
-        productId:product.id,
-        imageUrl:product.imageUrl||'',
-        category:category.name,
-        name:product.name,
-        price:priceOf(product)
-      }))
+      .flatMap(product=>{
+        const variants=variantsOf(product);
+        const basePrice=product.basePrice;
+        const baseFinal=basePriceOf(product);
+        const base:ExcelExportRow={
+          productId:product.id,
+          imageUrl:product.imageUrl||'',
+          category:category.name,
+          name:product.name,
+          variantName:'—',
+          rowType:variants.length?'منتج أساسي (مرجع)':'منتج بدون خيارات',
+          basePrice,regularPrice:basePrice,
+          discount:Math.max(0,Math.round((basePrice-baseFinal)*100)/100),
+          price:baseFinal,
+          priceSource:'السعر الأساسي'
+        };
+        const options:ExcelExportRow[]=variants.map(variant=>{
+          const info=variantPriceInfo(product,variant);
+          return {
+            productId:product.id,variantId:variant.id,
+            imageUrl:variant.imageUrl||product.imageUrl||'',
+            category:category.name,name:product.name,
+            variantName:variant.name||'خيار بدون اسم',
+            rowType:'خيار',
+            basePrice,regularPrice:info.original,
+            discount:Math.max(0,Math.round((info.original-info.price)*100)/100),
+            price:info.price,
+            priceSource:variant.price==null?'يرث سعر المنتج':'سعر مستقل'
+          };
+        });
+        return [base,...options];
+      })
   );
 }
 export function pictureLink(url:string){
@@ -155,31 +190,47 @@ export async function downloadProductsExcel(
   const XLSX=await import('xlsx');
   const rows=exportRows(categories,products);
   if(!rows.length)throw Error('لا توجد منتجات لتصديرها.');
-  // The photo link remains usable even when a third-party host blocks downloads.
-  const cells=[['صورة المنتج','القسم','اسم المنتج','السعر (ر.س)'],...rows.map(r=>[
-    r.imageUrl?'الصورة مرفقة — اضغط لفتح الأصل':'لا توجد صورة',r.category,r.name,r.price
+  // Distinguish reference-only base records from selectable variants, while
+  // preserving source-photo hyperlinks even if CORS prevents embedding.
+  const cells=[[
+    'صورة المنتج','القسم','اسم المنتج','الخيار / النوع','نوع السطر',
+    'سعر المنتج الأساسي (ر.س)','سعر الخيار قبل الخصم (ر.س)',
+    'قيمة الخصم (ر.س)','السعر النهائي (ر.س)','طريقة التسعير'
+  ],...rows.map(r=>[
+    r.imageUrl?'الصورة مرفقة — اضغط لفتح الأصل':'لا توجد صورة',
+    r.category,r.name,r.variantName,r.rowType,
+    r.basePrice,r.regularPrice,r.discount,r.price,r.priceSource
   ])];
   const sheet=XLSX.utils.aoa_to_sheet(cells);
-  sheet['!cols']=[{wpx:146},{wpx:210},{wpx:310},{wpx:145}];
-  sheet['!rows']=[{hpx:35},...rows.map(()=>({hpx:134}))];
-  sheet['!autofilter']={ref:'A1:D'+(rows.length+1)};
+  sheet['!cols']=[
+    {wpx:146},{wpx:170},{wpx:235},{wpx:150},{wpx:155},
+    {wpx:170},{wpx:184},{wpx:132},{wpx:165},{wpx:145}
+  ];
+  sheet['!rows']=[{hpx:42},...rows.map(()=>({hpx:134}))];
+  sheet['!autofilter']={ref:'A1:J'+(rows.length+1)};
   for(let i=0;i<rows.length;i++){
-    const cell=sheet['A'+(i+2)];
-    if(cell&&pictureLink(rows[i].imageUrl))XLSX.utils.cell_set_hyperlink(cell,pictureLink(rows[i].imageUrl),'فتح الصورة بدقتها الأصلية');
-    const price=sheet['D'+(i+2)];
-    if(price)price.z='#,##0.00';
+    const photo=sheet['A'+(i+2)];
+    const link=pictureLink(rows[i].imageUrl);
+    if(photo&&link)XLSX.utils.cell_set_hyperlink(photo,link,'فتح الصورة بدقتها الأصلية');
+    for(const col of ['F','G','H','I']){
+      const amount=sheet[col+(i+2)];
+      if(amount)amount.z='#,##0.00';
+    }
   }
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,sheet,'المنتجات');
   const content=XLSX.write(wb,{type:'array',bookType:'xlsx',compression:true});
   const images:ExcelImage[]=[];
   let missing=0,lowResolution=0;
+  const photoCache=new Map<string,ReturnType<typeof jpegForWorkbook>>();
   for(let index=0;index<rows.length;index++){
     const row=rows[index];
     onProgress?.('تجهيز صور المنتجات بدقة عالية: '+(index+1)+' / '+rows.length);
     if(!row.imageUrl){missing++;continue;}
     try{
-      const photo=await jpegForWorkbook(row.imageUrl);
+      let task=photoCache.get(row.imageUrl);
+      if(!task){task=jpegForWorkbook(row.imageUrl);photoCache.set(row.imageUrl,task);}
+      const photo=await task;
       images.push({rowIndex:index+1,bytes:photo.bytes});
       if(photo.lowResolution)lowResolution++;
     }catch(error){
@@ -200,5 +251,6 @@ export async function downloadProductsExcel(
   a.click();
   a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60_000);
-  return {total:rows.length,embedded:images.length,missing,lowResolution};
+  return {total:products.length,variants:rows.filter(r=>r.rowType==='خيار').length,rows:rows.length,
+    embedded:images.length,missing,lowResolution};
 }
