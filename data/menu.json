@@ -1048,6 +1048,54 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509721892-0f14a3e6e4c2a23b.webp",
       "displayOrder": 0,
       "isAvailable": true
+    },
+    {
+      "id": "c5bbd17d-3cec-4eea-ac63-1a8220aa005b",
+      "name": "جبنة عكاوي",
+      "description": "",
+      "categoryId": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "basePrice": 8,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509807122-0de0fe3bd3a5b863.webp",
+      "displayOrder": 1,
+      "isAvailable": true
+    },
+    {
+      "id": "c736604e-8d7f-4483-ac62-686ea8a07471",
+      "name": "محمرة سادة",
+      "description": "",
+      "categoryId": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "basePrice": 6,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509841902-d3d725b983567279.webp",
+      "displayOrder": 2,
+      "isAvailable": true
+    },
+    {
+      "id": "5afc681d-e371-4847-a4fb-762064921b9f",
+      "name": "محمرة بالقشقوان",
+      "description": "",
+      "categoryId": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "basePrice": 7,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509880288-f8519560fedd8497.webp",
+      "displayOrder": 3,
+      "isAvailable": true
+    },
+    {
+      "id": "553f2eb1-aa7f-4d95-8c10-fa5522afd8a1",
+      "name": "زعتر بالخضار",
+      "description": "",
+      "categoryId": "a5160db1-0569-4578-9cb4-032f08dfb654",
+      "basePrice": 7,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792509901070-941907c8a8ae6b14.webp",
+      "displayOrder": 4,
+      "isAvailable": true
     }
   ],
   "promos": [],
