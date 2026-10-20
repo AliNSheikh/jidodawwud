@@ -913,6 +913,42 @@
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792496975921-ed25d9d8ad845a1e.webp",
       "displayOrder": 1,
       "isAvailable": true
+    },
+    {
+      "id": "c9081841-85da-472c-82e6-8dcb1d7c407b",
+      "name": "نوتيلا",
+      "description": "",
+      "categoryId": "eae91d41-cff3-4ac0-ade7-f481e9fd0b8a",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792497056595-ea349ae5c0db8ca3.webp",
+      "displayOrder": 2,
+      "isAvailable": true
+    },
+    {
+      "id": "a7d7cc3b-2226-4f11-8943-08a30e412556",
+      "name": "نوتيلا و جبنة موزاريلا",
+      "description": "",
+      "categoryId": "eae91d41-cff3-4ac0-ade7-f481e9fd0b8a",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792497081341-00f7e514e4d4dfae.webp",
+      "displayOrder": 3,
+      "isAvailable": true
+    },
+    {
+      "id": "969fdac9-d145-49a0-aad3-9def91cb9ca6",
+      "name": "قشقوان",
+      "description": "",
+      "categoryId": "eae91d41-cff3-4ac0-ade7-f481e9fd0b8a",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792497100728-e8f2691523fa4303.webp",
+      "displayOrder": 4,
+      "isAvailable": false
     }
   ],
   "promos": [],
