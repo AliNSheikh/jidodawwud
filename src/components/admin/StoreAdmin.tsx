@@ -178,7 +178,7 @@ export function StoreAdmin({data,sha,onReload}:{data:StoreData|null;sha:string;o
     setExcelExporting(true);setExcelProgress('');setExcelNotice('');setMessage('');
     try{
       const result=await downloadProductsExcel(draft.categories,draft.items,setExcelProgress);
-      setExcelNotice('تم تنزيل ملف Excel يحتوي على '+result.total+' منتج و'+result.embedded+' صورة مضمّنة بدقة 1024×1024.'+
+      setExcelNotice('تم تنزيل ملف Excel يحتوي على '+result.total+' منتج و'+result.variants+' خيار ضمن '+result.rows+' صف، مع '+result.embedded+' صورة مضمّنة بدقة 1024×1024.'+
         (result.missing?' تعذّر إدراج '+result.missing+' صورة؛ ستجد رابط الصورة الأصلية داخل الملف إن كان متاحًا.':'')+
         (result.lowResolution?' انتبه: توجد '+result.lowResolution+' صورة مصدرها أقل من 800×800 بكسل؛ يُنصح باستبدالها بصور أعلى دقة.':''));
     }catch(e:any){
