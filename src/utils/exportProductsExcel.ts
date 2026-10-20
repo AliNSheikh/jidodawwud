@@ -82,14 +82,13 @@ export async function jpegForWorkbook(url:string):Promise<{bytes:Uint8Array;lowR
   }
 }
 
-type ZipLike=Awaited<ReturnType<typeof import('jszip')['default']['loadAsync']>>;
 /** Enrich a standards-compliant SheetJS workbook with actual Excel pictures,
  * not just image links. Images use 1024x1024 JPEG encoded at 93% quality and
  * display inside 128px tall photo cells without losing their source pixels. */
 export async function attachImagesToXlsx(file:Uint8Array,images:ExcelImage[]):Promise<Uint8Array>{
   if(!images.length)return file;
   const JSZip=(await import('jszip')).default;
-  const zip:ZipLike=await JSZip.loadAsync(file);
+  const zip=await JSZip.loadAsync(file);
   const sheet='xl/worksheets/sheet1.xml';
   const src=await zip.file(sheet)?.async('text');
   const ct=await zip.file('[Content_Types].xml')?.async('text');
