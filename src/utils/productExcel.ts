@@ -102,7 +102,7 @@ const mime=(path:string)=>/\.png$/i.test(path)?'image/png':/\.webp$/i.test(path)
   /\.jpe?g$/i.test(path)?'image/jpeg':'';
 export async function embeddedImages(file:File,sheetName:string,column:number):Promise<Map<number,File>>{
   const map=new Map<number,File>();
-  if(!file.name.toLowerCase().endsWith('.xlsx'))return map;
+  if(!file.name.toLowerCase().endsWith('.xlsx')||typeof DOMParser==='undefined')return map;
   const JSZip=(await import('jszip')).default;
   const zip=await JSZip.loadAsync(file);
   const text=async(path:string)=>zip.file(path)?.async('text');
