@@ -8,8 +8,10 @@ const cases=[
   {name:'reviews',path:'/api/reviews',method:'GET'},
   {name:'login invalid',path:'/api/admin/login',method:'POST',body:{password:'wrong-password'}},
   {name:'admin/orders unauthorized',path:'/api/admin/orders',method:'GET'},
-  {name:'order validation',path:'/api/order',method:'POST',
-    body:{customerName:'',phone:'',items:[],service:'pickup',payment:'cash'}}
+  // Valid contact fields with a nonexistent item exercise the GitHub/menu
+  // read and encryption configuration, but CANNOT create a customer order.
+  {name:'order GitHub validation',path:'/api/order',method:'POST',
+    body:{customerName:'تشخيص آلي',phone:'0500000000',items:[{productId:'__diagnostic_missing_product__',quantity:1}],service:'pickup',payment:'cash'}}
 ];
 let failures=0;
 for (const test of cases){
@@ -36,7 +38,7 @@ for (const test of cases){
        (test.name==='reviews'&&res.status!==200)||
        (test.name==='login invalid'&&![401,503].includes(res.status))||
        (test.name==='admin/orders unauthorized'&&res.status!==401)||
-       (test.name==='order validation'&&!([400,503].includes(res.status)))){
+       (test.name==='order GitHub validation'&&res.status!==400)){
        failures++;
        console.error('LIVE API DIAGNOSIS: '+test.name+' produced an unexpected response');
     }
