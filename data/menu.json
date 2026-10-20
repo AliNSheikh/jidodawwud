@@ -60,31 +60,38 @@
       "isActive": true
     },
     {
+      "id": "eae91d41-cff3-4ac0-ade7-f481e9fd0b8a",
+      "name": "العرايس",
+      "description": "",
+      "displayOrder": 5,
+      "isActive": true
+    },
+    {
       "id": "starters",
       "name": "المقبلات",
       "description": "",
-      "displayOrder": 5,
+      "displayOrder": 6,
       "isActive": true
     },
     {
       "id": "7ee579fe-1711-4ad9-98ae-ce1cdd41147d",
       "name": "السلطات",
       "description": "",
-      "displayOrder": 6,
+      "displayOrder": 7,
       "isActive": true
     },
     {
       "id": "a267c0ce-d1bc-49c4-92b1-100cc7516944",
       "name": "صوصات",
       "description": "",
-      "displayOrder": 7,
+      "displayOrder": 8,
       "isActive": true
     },
     {
       "id": "drinks",
       "name": "المشروبات",
       "description": "",
-      "displayOrder": 8,
+      "displayOrder": 9,
       "isActive": true
     }
   ],
@@ -881,6 +888,30 @@
       "offerEnabled": false,
       "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792493266286-421f81a3fe77ef1e.webp",
       "displayOrder": 7,
+      "isAvailable": true
+    },
+    {
+      "id": "bf6451ba-a97f-4ecc-9966-a3c5cc906a9e",
+      "name": "دجاج مكسيكي",
+      "description": "",
+      "categoryId": "eae91d41-cff3-4ac0-ade7-f481e9fd0b8a",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792496959958-522107c79f3d37f3.webp",
+      "displayOrder": 0,
+      "isAvailable": true
+    },
+    {
+      "id": "edc90496-7acf-4608-be54-b0e79d7129cd",
+      "name": "مشكل اجبان",
+      "description": "",
+      "categoryId": "eae91d41-cff3-4ac0-ade7-f481e9fd0b8a",
+      "basePrice": 9,
+      "offerPrice": 0,
+      "offerEnabled": false,
+      "imageUrl": "https://raw.githubusercontent.com/AliNSheikh/jidodawwud/main/public/uploads/1792496975921-ed25d9d8ad845a1e.webp",
+      "displayOrder": 1,
       "isAvailable": true
     }
   ],
